@@ -45,9 +45,9 @@ export default async function ReviewQueuePage() {
           const diffs = JSON.parse(row.field_diffs) as FieldDiff[];
           return (
             <div key={row.id} className="rounded-xl border border-neutral-200 p-5">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <h2 className="font-semibold text-lg">{row.program_name}</h2>
-                <span className="text-xs text-neutral-400">{new Date(row.created_at).toLocaleString()}</span>
+                <span className="text-xs text-neutral-400 shrink-0">{new Date(row.created_at).toLocaleString()}</span>
               </div>
 
               {row.suspicion && (
@@ -57,64 +57,66 @@ export default async function ReviewQueuePage() {
                 </div>
               )}
 
-              <table className="mt-4 w-full text-sm">
-                <thead>
-                  <tr className="text-left text-neutral-400 text-xs uppercase">
-                    <th className="py-1 font-medium">Field</th>
-                    <th className="py-1 font-medium">Current</th>
-                    <th className="py-1 font-medium">Proposed</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {diffs.map((d, i) => (
-                    <tr key={i} className="border-t border-neutral-100">
-                      {d.type === "program_field" ? (
-                        <>
-                          <td className="py-2 pr-2">{d.label}</td>
-                          <td className="py-2 pr-2 text-neutral-500">{formatDiffValue(d.field, d.old_value)}</td>
-                          <td className="py-2 font-medium">{formatDiffValue(d.field, d.new_value)}</td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="py-2 pr-2">
-                            Deadline: {d.cycle_label} ({d.kind})
-                          </td>
-                          <td className="py-2 pr-2 text-neutral-500">{d.old_due_at ?? "none on file"}</td>
-                          <td className="py-2 font-medium">{d.new_due_at}</td>
-                        </>
-                      )}
+              <div className="mt-4 overflow-x-auto">
+                <table className="w-full text-sm min-w-[420px]">
+                  <thead>
+                    <tr className="text-left text-neutral-400 text-xs uppercase">
+                      <th className="py-1 font-medium">Field</th>
+                      <th className="py-1 font-medium">Current</th>
+                      <th className="py-1 font-medium">Proposed</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {diffs.map((d, i) => (
+                      <tr key={i} className="border-t border-neutral-100">
+                        {d.type === "program_field" ? (
+                          <>
+                            <td className="py-2 pr-2">{d.label}</td>
+                            <td className="py-2 pr-2 text-neutral-500">{formatDiffValue(d.field, d.old_value)}</td>
+                            <td className="py-2 font-medium">{formatDiffValue(d.field, d.new_value)}</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="py-2 pr-2">
+                              Deadline: {d.cycle_label} ({d.kind})
+                            </td>
+                            <td className="py-2 pr-2 text-neutral-500">{d.old_due_at ?? "none on file"}</td>
+                            <td className="py-2 font-medium">{d.new_due_at}</td>
+                          </>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-              <div className="mt-4 flex items-center gap-3">
-                <form action={approveReview} className="flex items-center gap-2">
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                <form action={approveReview} className="flex flex-col sm:flex-row gap-2">
                   <input type="hidden" name="id" value={row.id} />
                   <input
                     name="initials"
                     placeholder="Your initials"
                     required
-                    className="rounded-lg border border-neutral-300 px-2 py-1.5 text-sm w-32"
+                    className="rounded-lg border border-neutral-300 px-2 py-1.5 text-sm w-full sm:w-32"
                   />
                   <button
                     type="submit"
-                    className="rounded-lg bg-neutral-900 text-white px-4 py-1.5 text-sm font-medium hover:bg-neutral-700"
+                    className="rounded-lg bg-neutral-900 text-white px-4 py-1.5 text-sm font-medium hover:bg-neutral-700 whitespace-nowrap"
                   >
                     Approve &amp; publish
                   </button>
                 </form>
-                <form action={rejectReview} className="flex items-center gap-2">
+                <form action={rejectReview} className="flex flex-col sm:flex-row gap-2">
                   <input type="hidden" name="id" value={row.id} />
                   <input
                     name="initials"
                     placeholder="Your initials"
                     required
-                    className="rounded-lg border border-neutral-300 px-2 py-1.5 text-sm w-32"
+                    className="rounded-lg border border-neutral-300 px-2 py-1.5 text-sm w-full sm:w-32"
                   />
                   <button
                     type="submit"
-                    className="rounded-lg border border-neutral-300 px-4 py-1.5 text-sm font-medium hover:border-neutral-500"
+                    className="rounded-lg border border-neutral-300 px-4 py-1.5 text-sm font-medium hover:border-neutral-500 whitespace-nowrap"
                   >
                     Reject
                   </button>

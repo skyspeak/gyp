@@ -117,7 +117,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
         <h2 className="text-lg font-semibold">Deadlines</h2>
         <ul className="mt-2 divide-y divide-neutral-200 border-t border-b border-neutral-200">
           {deadlines.map((d) => (
-            <li key={d.id} className="py-3 flex items-center justify-between text-sm">
+            <li key={d.id} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4 text-sm">
               <div>
                 <span className="font-medium">{d.cycle_label}</span>{" "}
                 <span className="text-neutral-500">
@@ -125,7 +125,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                   {d.note ? ` — ${d.note}` : ""})
                 </span>
               </div>
-              <div className="text-neutral-700">{formatDeadline(d.due_at, d.source_tz)}</div>
+              <div className="text-neutral-700 shrink-0">{formatDeadline(d.due_at, d.source_tz)}</div>
             </li>
           ))}
           {deadlines.length === 0 && (

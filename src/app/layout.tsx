@@ -27,18 +27,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
         <header className="border-b border-neutral-200">
-          <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="font-semibold text-lg tracking-tight">
+          <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between gap-3">
+            <Link href="/" className="font-semibold text-base sm:text-lg tracking-tight whitespace-nowrap">
               Stipend Clock
             </Link>
-            <nav className="flex items-center gap-6 text-sm">
+            <nav className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
               <Link href="/programs" className="hover:underline">
                 Programs
               </Link>
               <Link href="/deadlines" className="hover:underline">
                 Deadlines
               </Link>
-              <Link href="/start" className="hover:underline">
+              <Link href="/start" className="hover:underline whitespace-nowrap">
                 Find my fit
               </Link>
             </nav>

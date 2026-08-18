@@ -29,7 +29,7 @@ export default function WatchButton({ programId, programName }: { programId: str
 
   return (
     <form
-      className="flex flex-wrap items-center gap-2"
+      className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 w-full sm:w-auto"
       onSubmit={async (e) => {
         e.preventDefault();
         setStatus("loading");
@@ -52,12 +52,12 @@ export default function WatchButton({ programId, programName }: { programId: str
         placeholder="you@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm w-56"
+        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm w-full sm:w-56"
       />
       <select
         value={cohort}
         onChange={(e) => setCohort(e.target.value as "pre_college" | "post_grad")}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm w-full sm:w-auto"
       >
         <option value="post_grad">I&apos;m a recent/upcoming grad</option>
         <option value="pre_college">I have a deferred college seat</option>
@@ -65,7 +65,7 @@ export default function WatchButton({ programId, programName }: { programId: str
       <button
         type="submit"
         disabled={status === "loading"}
-        className="inline-flex items-center rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium hover:bg-neutral-700 disabled:opacity-50"
+        className="inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium hover:bg-neutral-700 disabled:opacity-50 w-full sm:w-auto"
       >
         {status === "loading" ? "Saving…" : "Start watching"}
       </button>

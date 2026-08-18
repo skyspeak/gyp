@@ -143,7 +143,7 @@ export default async function ProgramsPage({
                     {p.degree_required ? "Degree required" : "No degree required"}
                   </p>
                 </div>
-                <div className="text-sm text-right shrink-0 w-40">
+                <div className="text-sm text-left sm:text-right shrink-0 sm:w-40">
                   <div className="font-medium">{formatPayShort(p)}</div>
                   <div className="text-neutral-500">
                     {deadline ? `Due ${formatDateShort(deadline.due_at)}` : "Rolling"}

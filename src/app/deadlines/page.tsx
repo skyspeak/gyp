@@ -20,7 +20,7 @@ export default async function DeadlinesPage({
       <h1 className="text-3xl font-semibold tracking-tight">Upcoming deadlines</h1>
       <p className="mt-2 text-neutral-600">Sorted soonest first, across the whole catalog.</p>
 
-      <div className="mt-6 flex gap-2 text-sm">
+      <div className="mt-6 flex flex-wrap gap-2 text-sm">
         <Link
           href="/deadlines"
           className={`px-3 py-1.5 rounded-full border ${!degreeParam ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
@@ -45,8 +45,8 @@ export default async function DeadlinesPage({
         {deadlines.map((d) => {
           const days = daysUntil(d.due_at);
           return (
-            <li key={d.id} className="py-4 flex items-start justify-between gap-4 text-sm">
-              <div>
+            <li key={d.id} className="py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 text-sm">
+              <div className="min-w-0 sm:flex-1">
                 <Link href={`/programs/${d.program_slug}`} className="font-medium hover:underline">
                   {d.program_name}
                 </Link>
@@ -55,7 +55,7 @@ export default async function DeadlinesPage({
                   {d.note ? ` — ${d.note}` : ""}
                 </p>
               </div>
-              <div className="text-right shrink-0">
+              <div className="text-left sm:text-right sm:shrink-0">
                 <div className="font-medium">{formatDeadline(d.due_at, d.source_tz)}</div>
                 {days != null && <div className="text-neutral-500">{days} days away</div>}
               </div>

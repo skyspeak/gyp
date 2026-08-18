@@ -85,14 +85,14 @@ export default async function StartPage({
           <legend className="text-sm font-medium">
             Do you have (or will you have, before the program starts) a bachelor&apos;s degree?
           </legend>
-          <div className="mt-1.5 flex gap-4 text-sm">
-            <label className="flex items-center gap-2">
-              <input type="radio" name="degree" value="yes" defaultChecked={answers.degree === "yes"} required />
-              Yes / currently enrolled
+          <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:gap-6 text-sm">
+            <label className="flex items-start gap-2">
+              <input type="radio" name="degree" value="yes" defaultChecked={answers.degree === "yes"} required className="mt-0.5" />
+              <span>Yes / currently enrolled</span>
             </label>
-            <label className="flex items-center gap-2">
-              <input type="radio" name="degree" value="no" defaultChecked={answers.degree === "no"} />
-              No — high school grad, deferred college seat, or similar
+            <label className="flex items-start gap-2">
+              <input type="radio" name="degree" value="no" defaultChecked={answers.degree === "no"} className="mt-0.5" />
+              <span>No — high school grad, deferred college seat, or similar</span>
             </label>
           </div>
         </fieldset>
@@ -105,7 +105,7 @@ export default async function StartPage({
             id="citizenship"
             name="citizenship"
             defaultValue={answers.citizenship ?? "us_citizen"}
-            className="mt-1.5 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full sm:w-auto rounded-lg border border-neutral-300 px-3 py-2 text-sm"
           >
             <option value="us_citizen">U.S. citizen</option>
             <option value="us_citizen_or_lpr">U.S. lawful permanent resident (not a citizen)</option>
@@ -121,7 +121,7 @@ export default async function StartPage({
             id="start"
             name="start"
             defaultValue={answers.start ?? ""}
-            className="mt-1.5 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full sm:w-auto rounded-lg border border-neutral-300 px-3 py-2 text-sm"
           >
             <option value="">No preference</option>
             <option value="fall_2027">Fall 2027</option>
@@ -133,7 +133,7 @@ export default async function StartPage({
 
         <button
           type="submit"
-          className="inline-flex items-center rounded-lg bg-neutral-900 text-white px-6 py-3 text-sm font-medium hover:bg-neutral-700"
+          className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-6 py-3 text-sm font-medium hover:bg-neutral-700"
         >
           Show my shortlist
         </button>
@@ -149,14 +149,14 @@ export default async function StartPage({
               const deadline = deadlineMap.get(p.id);
               return (
                 <li key={p.id} className="py-4">
-                  <Link href={`/programs/${p.slug}`} className="group flex items-baseline justify-between gap-4">
-                    <div>
+                  <Link href={`/programs/${p.slug}`} className="group flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                    <div className="min-w-0">
                       <div className="font-medium group-hover:underline">{p.name}</div>
                       <div className="text-sm text-neutral-500">
                         {p.operator} · {CATEGORY_LABELS[p.category] ?? p.category}
                       </div>
                     </div>
-                    <div className="text-sm text-right shrink-0">
+                    <div className="text-sm text-left sm:text-right shrink-0">
                       <div>{formatPayShort(p)}</div>
                       <div className="text-neutral-500">
                         {deadline ? `Due ${formatDateShort(deadline.due_at)}` : "Rolling"}
