@@ -58,7 +58,7 @@ repo is phase 1 only: no accounts, no payments, no plan builder.
 npm install
 cp .env.example .env.local   # fill in what you have; everything degrades gracefully when unset
 npm run db:migrate           # creates all tables in local.db (or your Turso DB if configured)
-npm run db:seed              # seeds 74 programs across all three money directions
+npm run db:seed              # seeds 110 programs across all three money directions
 npm run dev
 ```
 
@@ -121,9 +121,20 @@ post-grad cohort and as an admissions deferral to institutions. The exact-match
 
 ## Data integrity notes for whoever seeds/expands the catalog next
 
-- The catalog currently has **74 programs** across three seed files. Expand by
-  adding a new `seed-data-N.ts` and wiring it into `scripts/seed.ts`, then
-  re-run `npm run db:seed` (idempotent, upserts by slug).
+- The catalog currently has **110 programs** from two kinds of source.
+  - **Hand-written TypeScript** (`seed-data.ts`, `-2`, `-3`) — edit directly.
+  - **Research-agent JSON** in `scratch/research-*.json`, loaded mechanically
+    by `scripts/load-research.ts`. Do NOT transcribe these into `.ts` by hand;
+    transcription is how a wrong pay figure gets introduced. Add a new file to
+    `RESEARCH_FILES` in `scripts/seed.ts` and it gets picked up. Missing files
+    are skipped, so a partial research run still seeds.
+  - Entries with an `exclude_reason` are dropped at load time but kept in the
+    JSON, so a rejected program stays auditable instead of vanishing. Used for
+    programs that are fee-only, defunct, duplicated, or aimed at currently
+    enrolled students rather than people taking a year off.
+  - Anything the researcher marked `confidence: "low"` gets an automatic
+    warning prepended to its `caveat_note`, so unverified figures are visible
+    on the page rather than buried in a scratch file.
   - `seed-data.ts` (26) and `seed-data-2.ts` (20) were verified against
     operator sites via live research on 2026-08-16.
   - **`seed-data-3.ts` (28) came from the owner's own comparison table and has

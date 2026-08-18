@@ -3,11 +3,25 @@ import { newId, nowIso } from "../src/lib/ids";
 import { CORE_PROGRAMS, type SeedProgram } from "./seed-data";
 import { EXPANSION_PROGRAMS } from "./seed-data-2";
 import { COMPARISON_TABLE_PROGRAMS } from "./seed-data-3";
+import { loadResearch } from "./load-research";
+
+// Research-agent output is loaded straight from scratch/*.json rather than
+// transcribed into a .ts file — transcription is how a wrong pay figure gets
+// introduced. Missing files are skipped, so a partial research run still seeds.
+const RESEARCH_FILES = [
+  "research-teaching-abroad.json",
+  "research-fellowships.json",
+  "research-college-funded.json",
+  "research-seasonal-work.json",
+  "research-visas-exchange.json",
+  "research-participant-pays.json",
+];
 
 const ALL_PROGRAMS: SeedProgram[] = [
   ...CORE_PROGRAMS,
   ...EXPANSION_PROGRAMS,
   ...COMPARISON_TABLE_PROGRAMS,
+  ...RESEARCH_FILES.flatMap(loadResearch),
 ];
 
 async function upsertProgram(p: SeedProgram) {
@@ -80,7 +94,22 @@ async function main() {
   const client = db();
   const slugToId = new Map<string, string>();
 
+  // Hand-written batches win over research output on a slug collision: they've
+  // had a human read them. Warn loudly rather than silently overwriting, since
+  // a collision usually means the same program was researched twice under
+  // different framings and the two rows disagree about pay.
+  const seen = new Set<string>();
+  const deduped: SeedProgram[] = [];
   for (const p of ALL_PROGRAMS) {
+    if (seen.has(p.slug)) {
+      console.warn(`  ! duplicate slug '${p.slug}' — keeping the earlier definition, skipping this one`);
+      continue;
+    }
+    seen.add(p.slug);
+    deduped.push(p);
+  }
+
+  for (const p of deduped) {
     const { id, slug } = await upsertProgram(p);
     slugToId.set(slug, id);
     console.log(`upserted ${slug}`);
@@ -88,7 +117,7 @@ async function main() {
 
   // Fallbacks, second pass once every id is known
   await client.execute("DELETE FROM fallbacks");
-  for (const p of ALL_PROGRAMS) {
+  for (const p of deduped) {
     if (!p.fallback_slugs) continue;
     const fromId = slugToId.get(p.slug);
     for (const subSlug of p.fallback_slugs) {
@@ -102,7 +131,7 @@ async function main() {
     }
   }
 
-  console.log(`Seeded ${ALL_PROGRAMS.length} programs.`);
+  console.log(`Seeded ${deduped.length} programs.`);
 }
 
 main()
