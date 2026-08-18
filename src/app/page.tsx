@@ -12,10 +12,10 @@ export default async function Home() {
           Every deadline for the year that pays you.
         </h1>
         <p className="mt-5 text-base sm:text-lg text-neutral-600 max-w-xl mx-auto">
-          A free directory of gap year and post-grad programs with a stipend, living
-          allowance, education award, or wage — for students with a deferred college seat and
-          for grads figuring out what&apos;s next. We never list a program you pay to join, and
-          we never take a commission on a placement.
+          A free directory of gap year and post-grad paths with a stipend, living allowance,
+          education award, or wage — for students with a deferred college seat and for grads
+          figuring out what&apos;s next. We also show what the pay-to-join programs actually
+          cost, so you can compare. We never take a commission on any of it.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <Link

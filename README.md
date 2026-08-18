@@ -1,17 +1,42 @@
 # Stipend Clock
 
 Phase 1 of a four-phase gap-year platform: a free, ad-free directory and
-deadline tracker for gap-year and post-grad programs that **pay the
-participant** — stipends, living allowances, education awards, or wages.
-Never a program the participant pays to join, never a commission on a
-placement.
+deadline tracker for gap-year and post-grad paths, built around a single
+question the rest of the industry avoids — **which way does the money flow?**
 
-Two cohorts, one non-overlapping split (`degree_required`):
+The directory routes toward paths that **pay the participant** (stipends,
+living allowances, education awards, wages). It *also* indexes the ones that
+charge the participant, behind an explicit comparison toggle, with their full
+cost rendered as prominently as anyone else's pay.
 
-- **Pre-college deferral / no degree required** — 18-year-olds with a
-  deposited, deferred college seat, or any recent high school grad.
-- **Post-grad / degree required** — college grads (or soon-to-be) figuring
-  out what's next.
+**We never take a commission or referral fee on anything listed, in either
+direction.** That is what makes the comparison credible: a router with a rake
+cannot tell you a $17,950 semester costs more than nine months of VISTA pays.
+Indexing something in order to price it honestly is the opposite of selling it.
+
+## The two primary splits
+
+Both are first-class indexed columns, never tags, because both partition the
+catalog into non-overlapping sets that a given student only ever wants one of.
+
+**`degree_required`** — the cohort split:
+- **No degree required** — 18-year-olds with a deposited, deferred college
+  seat, or any recent high school grad.
+- **Degree required** — college grads (or soon-to-be) figuring out what's next.
+
+**`money_direction`** — the money split:
+- **`participant_earns`** — pays a stipend, allowance, award, or wage. The
+  default view; the only thing the product routes toward.
+- **`net_neutral`** — roughly breaks even (costs are covered, but nothing is
+  banked). Princeton Bridge Year, WWOOF, Workaway.
+- **`participant_pays`** — the participant pays. Indexed for comparison only,
+  never recommended, always shown with `cost_low`/`cost_high`/`cost_note`.
+
+A third flag, **`us_eligible`**, marks schemes Americans cannot use (European
+Solidarity Corps, Germany's weltwärts). These are hidden by default but kept
+deliberately — "why can't I do the EU one" is one of the most common false
+leads given to American students, and silence is a worse answer than a labelled
+row.
 
 See the full four-phase spec for the product thesis and phase gates. This
 repo is phase 1 only: no accounts, no payments, no plan builder.
@@ -33,7 +58,7 @@ repo is phase 1 only: no accounts, no payments, no plan builder.
 npm install
 cp .env.example .env.local   # fill in what you have; everything degrades gracefully when unset
 npm run db:migrate           # creates all tables in local.db (or your Turso DB if configured)
-npm run db:seed              # seeds 46 hand-verified programs
+npm run db:seed              # seeds 74 programs across all three money directions
 npm run dev
 ```
 
@@ -76,7 +101,7 @@ an alert.
 ## Admin access
 
 `/admin/review` is protected by HTTP Basic Auth via `ADMIN_USER` /
-`ADMIN_PASSWORD` (see `src/middleware.ts`). Unset either and the route
+`ADMIN_PASSWORD` (see `src/proxy.ts`). Unset either and the route
 returns 503 rather than silently opening up.
 
 ## Deploying
@@ -96,15 +121,19 @@ post-grad cohort and as an admissions deferral to institutions. The exact-match
 
 ## Data integrity notes for whoever seeds/expands the catalog next
 
-- The catalog currently has 46 programs, hand-verified via live web research
-  as of 2026-08-16, short of the phase-1 target of ~60. The remaining gap is
-  mostly individual state/regional conservation corps not yet researched —
-  expanding further should follow the same pattern: add to
-  `scripts/seed-data.ts` or a new `seed-data-N.ts` file wired into
-  `scripts/seed.ts`, then re-run `npm run db:seed` (idempotent, upserts by
-  slug). Several entries have `pay_low`/`pay_high` left `null` with an
-  explanatory `pay_note` where a current org-wide figure couldn't be
-  confirmed — worth another verification pass before heavy distribution.
+- The catalog currently has **74 programs** across three seed files. Expand by
+  adding a new `seed-data-N.ts` and wiring it into `scripts/seed.ts`, then
+  re-run `npm run db:seed` (idempotent, upserts by slug).
+  - `seed-data.ts` (26) and `seed-data-2.ts` (20) were verified against
+    operator sites via live research on 2026-08-16.
+  - **`seed-data-3.ts` (28) came from the owner's own comparison table and has
+    NOT been source-verified.** Every row carries a `caveat_note` saying so,
+    and all deadlines are deliberately empty rather than guessed. Clear that
+    backlog before any real distribution push — these rows are currently the
+    weakest link in the catalog's credibility.
+- Several entries have `pay_low`/`pay_high` left `null` with an explanatory
+  `pay_note` where a current org-wide figure couldn't be confirmed. That is
+  the correct behaviour — never backfill a guess.
 - `pay_low`/`pay_high` are integer minor-units: cents for USD/EUR, whole
   units for zero-decimal currencies like JPY (set `pay_currency`
   accordingly — see `src/lib/format.ts`).
@@ -113,11 +142,18 @@ post-grad cohort and as an admissions deferral to institutions. The exact-match
   JET's 2027 window, TAPIF's 2027-28 window) were **not yet published** at
   seed time and are marked `note`-only with no `due_at`. Don't backfill a
   guessed date — leave it null until confirmed.
-- Princeton Bridge Year and Tufts 1+4 were deliberately excluded from the
-  seed despite being named in the original spec: Princeton's is need-based
-  cost coverage with no flat stipend (conflicts with "must pay the
-  participant"), and Tufts has been on hiatus since COVID with no announced
-  restart. Re-add if either changes.
+- **Cost is integer cents too** (`cost_low`/`cost_high`), same rule as pay.
+  `cost_note` must state what the headline fee *excludes* — a $13,900 course
+  that excludes $1,500 of airfare is really $15,400, and saying so is most of
+  the value this directory adds over an operator's own page.
+- Princeton Bridge Year was originally excluded for paying no stipend, then
+  re-added as `net_neutral` once `money_direction` could express "costs
+  nothing, pays nothing." Tufts 1+4 remains excluded: confirmed on hiatus
+  since COVID with no announced restart.
+- `pay_type: "hourly"` exists for wage work. For those rows the useful fields
+  are `pay_note` and `cost_note` describing **deductions** — a $22/hr resort
+  job with $600/mo housing deducted nets less than an $18/hr job with free
+  housing, and the headline rate hides that.
 
 ## Phase gate — read before writing phase 2 code
 

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Stipend Clock — Paid gap year and post-grad programs",
   description:
-    "A free directory and deadline tracker for gap year and post-grad programs that pay you: stipends, living allowances, education awards, and wages. No commissions, no paid placements.",
+    "A free directory and deadline tracker for gap year and post-grad paths that pay you — stipends, living allowances, education awards, and wages — with honest cost comparisons against the ones that charge you. No commissions, ever.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -48,8 +48,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="border-t border-neutral-200 mt-16">
           <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-neutral-500 flex flex-col gap-2">
             <p>
-              Stipend Clock only lists programs that pay participants. We never take a
-              commission on a placement and never list a program the participant pays to join.
+              Stipend Clock routes toward paths that pay you. We also index the ones that
+              charge you, clearly labelled with what they cost, so you can compare honestly.
+              We never take a commission or a referral fee on anything listed here, in either
+              direction, and we have no relationship with any operator.
             </p>
             <p>&copy; {new Date().getFullYear()} Stipend Clock.</p>
           </div>
