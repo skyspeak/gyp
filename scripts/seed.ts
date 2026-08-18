@@ -15,6 +15,7 @@ const RESEARCH_FILES = [
   "research-seasonal-work.json",
   "research-visas-exchange.json",
   "research-participant-pays.json",
+  "research-inline-batch.json",
 ];
 
 const ALL_PROGRAMS: SeedProgram[] = [

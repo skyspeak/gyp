@@ -58,7 +58,7 @@ repo is phase 1 only: no accounts, no payments, no plan builder.
 npm install
 cp .env.example .env.local   # fill in what you have; everything degrades gracefully when unset
 npm run db:migrate           # creates all tables in local.db (or your Turso DB if configured)
-npm run db:seed              # seeds 110 programs across all three money directions
+npm run db:seed              # seeds 156 programs across all three money directions
 npm run dev
 ```
 
@@ -121,7 +121,7 @@ post-grad cohort and as an admissions deferral to institutions. The exact-match
 
 ## Data integrity notes for whoever seeds/expands the catalog next
 
-- The catalog currently has **110 programs** from two kinds of source.
+- The catalog currently has **156 programs** from two kinds of source.
   - **Hand-written TypeScript** (`seed-data.ts`, `-2`, `-3`) — edit directly.
   - **Research-agent JSON** in `scratch/research-*.json`, loaded mechanically
     by `scripts/load-research.ts`. Do NOT transcribe these into `.ts` by hand;
