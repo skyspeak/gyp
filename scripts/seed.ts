@@ -2,8 +2,13 @@ import { db } from "../src/lib/db";
 import { newId, nowIso } from "../src/lib/ids";
 import { CORE_PROGRAMS, type SeedProgram } from "./seed-data";
 import { EXPANSION_PROGRAMS } from "./seed-data-2";
+import { COMPARISON_TABLE_PROGRAMS } from "./seed-data-3";
 
-const ALL_PROGRAMS: SeedProgram[] = [...CORE_PROGRAMS, ...EXPANSION_PROGRAMS];
+const ALL_PROGRAMS: SeedProgram[] = [
+  ...CORE_PROGRAMS,
+  ...EXPANSION_PROGRAMS,
+  ...COMPARISON_TABLE_PROGRAMS,
+];
 
 async function upsertProgram(p: SeedProgram) {
   const client = db();
@@ -18,30 +23,39 @@ async function upsertProgram(p: SeedProgram) {
   await client.execute({
     sql: `INSERT INTO programs (
         id, slug, name, operator, category, summary, source_url,
-        degree_required, min_age, max_age, citizenship, other_eligibility,
+        degree_required, money_direction, stage,
+        min_age, max_age, citizenship, us_eligible, other_eligibility, selectivity,
         pay_type, pay_low, pay_high, pay_currency, pay_note,
-        housing_provided, airfare_covered, education_award,
-        term_min_weeks, term_max_weeks,
+        cost_low, cost_high, cost_note,
+        housing_provided, meals_provided, airfare_covered, education_award,
+        term_min_weeks, term_max_weeks, college_credit_note, caveat_note,
         funding_status, funding_note, last_verified_at, created_at, updated_at
-      ) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?, ?,?,?,?,?)
+      ) VALUES (?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?,?,?)
       ON CONFLICT(slug) DO UPDATE SET
         name=excluded.name, operator=excluded.operator, category=excluded.category,
         summary=excluded.summary, source_url=excluded.source_url,
-        degree_required=excluded.degree_required, min_age=excluded.min_age,
+        degree_required=excluded.degree_required, money_direction=excluded.money_direction,
+        stage=excluded.stage, min_age=excluded.min_age,
         max_age=excluded.max_age, citizenship=excluded.citizenship,
-        other_eligibility=excluded.other_eligibility, pay_type=excluded.pay_type,
+        us_eligible=excluded.us_eligible, other_eligibility=excluded.other_eligibility,
+        selectivity=excluded.selectivity, pay_type=excluded.pay_type,
         pay_low=excluded.pay_low, pay_high=excluded.pay_high, pay_currency=excluded.pay_currency, pay_note=excluded.pay_note,
-        housing_provided=excluded.housing_provided, airfare_covered=excluded.airfare_covered,
+        cost_low=excluded.cost_low, cost_high=excluded.cost_high, cost_note=excluded.cost_note,
+        housing_provided=excluded.housing_provided, meals_provided=excluded.meals_provided,
+        airfare_covered=excluded.airfare_covered,
         education_award=excluded.education_award, term_min_weeks=excluded.term_min_weeks,
-        term_max_weeks=excluded.term_max_weeks, funding_status=excluded.funding_status,
+        term_max_weeks=excluded.term_max_weeks, college_credit_note=excluded.college_credit_note,
+        caveat_note=excluded.caveat_note, funding_status=excluded.funding_status,
         funding_note=excluded.funding_note, last_verified_at=excluded.last_verified_at,
         updated_at=excluded.updated_at`,
     args: [
       id, p.slug, p.name, p.operator, p.category, p.summary, p.source_url,
-      p.degree_required, p.min_age, p.max_age, p.citizenship, p.other_eligibility,
+      p.degree_required, p.money_direction, p.stage ?? null,
+      p.min_age, p.max_age, p.citizenship, p.us_eligible ?? 1, p.other_eligibility, p.selectivity ?? null,
       p.pay_type, p.pay_low, p.pay_high, p.pay_currency ?? "USD", p.pay_note,
-      p.housing_provided, p.airfare_covered, p.education_award,
-      p.term_min_weeks, p.term_max_weeks,
+      p.cost_low ?? null, p.cost_high ?? null, p.cost_note ?? null,
+      p.housing_provided, p.meals_provided ?? 0, p.airfare_covered, p.education_award,
+      p.term_min_weeks, p.term_max_weeks, p.college_credit_note ?? null, p.caveat_note ?? null,
       p.funding_status, p.funding_note, now, now, now,
     ],
   });

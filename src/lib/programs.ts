@@ -10,20 +10,30 @@ export type Program = {
   summary: string;
   source_url: string;
   degree_required: number;
+  money_direction: string;
+  stage: string | null;
   min_age: number | null;
   max_age: number | null;
   citizenship: string | null;
+  us_eligible: number;
   other_eligibility: string | null;
+  selectivity: string | null;
   pay_type: string;
   pay_low: number | null;
   pay_high: number | null;
   pay_currency: string;
   pay_note: string | null;
+  cost_low: number | null;
+  cost_high: number | null;
+  cost_note: string | null;
   housing_provided: number;
+  meals_provided: number;
   airfare_covered: number;
   education_award: number | null;
   term_min_weeks: number | null;
   term_max_weeks: number | null;
+  college_credit_note: string | null;
+  caveat_note: string | null;
   funding_status: string;
   funding_note: string | null;
   last_verified_at: string;
@@ -42,15 +52,30 @@ export type Deadline = {
 
 export type ProgramFilters = {
   degreeRequired?: 0 | 1; // undefined = both
+  // Defaults to earning-only. Passing "all" is the explicit comparison mode
+  // that surfaces net-neutral and pay-to-play rows; there is no code path
+  // that recommends those, only one that shows them next to what they cost.
+  moneyDirection?: "participant_earns" | "net_neutral" | "participant_pays" | "all";
   category?: string;
   minAge?: number;
   fundingActiveOnly?: boolean;
+  includeUsIneligible?: boolean;
   sort?: "deadline" | "pay";
 };
 
 export async function listPrograms(filters: ProgramFilters = {}): Promise<Program[]> {
   const where: string[] = [];
   const args: InValue[] = [];
+
+  const money = filters.moneyDirection ?? "participant_earns";
+  if (money !== "all") {
+    where.push("money_direction = ?");
+    args.push(money);
+  }
+
+  if (!filters.includeUsIneligible) {
+    where.push("us_eligible = 1");
+  }
 
   if (filters.degreeRequired === 0 || filters.degreeRequired === 1) {
     where.push("degree_required = ?");
@@ -138,6 +163,32 @@ export const CATEGORY_LABELS: Record<string, string> = {
   research: "Research",
   health: "Health",
   trades: "Trades",
+  outdoor: "Outdoor / wilderness",
+  travel_study: "Travel & study",
+  work: "Paid work",
+};
+
+export const MONEY_DIRECTION_LABELS: Record<
+  string,
+  { label: string; short: string; tone: "earn" | "neutral" | "pay" }
+> = {
+  participant_earns: { label: "Pays you", short: "Pays you", tone: "earn" },
+  net_neutral: { label: "Roughly breaks even", short: "Breaks even", tone: "neutral" },
+  participant_pays: { label: "You pay", short: "You pay", tone: "pay" },
+};
+
+export const SELECTIVITY_LABELS: Record<string, string> = {
+  open: "Open enrollment",
+  moderate: "Moderately competitive",
+  selective: "Selective",
+  highly_competitive: "Highly competitive",
+  quota_limited: "Quota-limited",
+};
+
+export const STAGE_LABELS: Record<string, string> = {
+  post_hs: "After high school",
+  post_undergrad: "After college",
+  both: "Either stage",
 };
 
 export const FUNDING_LABELS: Record<string, { label: string; tone: "ok" | "warn" | "bad" }> = {

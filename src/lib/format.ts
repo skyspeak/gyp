@@ -13,6 +13,7 @@ export function formatCents(cents: number | null | undefined, currency: string =
 }
 
 const PAY_TYPE_LABEL: Record<string, string> = {
+  hourly: "/hr",
   weekly: "/wk",
   monthly: "/mo",
   annual: "/yr",
@@ -54,6 +55,29 @@ export function formatPay(program: PayFields): string {
     base = `${low ?? high}${suffix}`;
   }
   return program.pay_note ? `${base} · ${program.pay_note}` : base;
+}
+
+type CostFields = {
+  cost_low: number | null;
+  cost_high: number | null;
+  cost_note?: string | null;
+};
+
+// Cost renders with the same weight as pay, never in smaller or greyer type.
+// A student comparing a $17,950 fee against $600/wk should see both figures
+// stated the same way.
+export function formatCostShort(program: CostFields): string | null {
+  if (program.cost_low == null && program.cost_high == null) return null;
+  const low = formatCents(program.cost_low);
+  const high = formatCents(program.cost_high);
+  if (low && high && low !== high) return `${low}–${high}`;
+  return `${low ?? high}`;
+}
+
+export function formatCost(program: CostFields): string | null {
+  const base = formatCostShort(program);
+  if (!base) return program.cost_note ?? null;
+  return program.cost_note ? `${base} · ${program.cost_note}` : base;
 }
 
 export function formatTerm(minWeeks: number | null, maxWeeks: number | null): string | null {

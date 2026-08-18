@@ -19,28 +19,54 @@ export type SeedDeadline = {
   note: string | null;
 };
 
+export type Category =
+  | "service"
+  | "conservation"
+  | "teaching_abroad"
+  | "research"
+  | "health"
+  | "trades"
+  | "outdoor"
+  | "travel_study"
+  | "work";
+
+// Which way the money flows. The directory routes only toward participant_earns.
+// participant_pays rows are indexed for comparison and never recommended or sold;
+// we take no commission on any row, in either direction.
+export type MoneyDirection = "participant_earns" | "net_neutral" | "participant_pays";
+
 export type SeedProgram = {
   slug: string;
   name: string;
   operator: string;
-  category: "service" | "conservation" | "teaching_abroad" | "research" | "health" | "trades";
+  category: Category;
   summary: string;
   source_url: string;
   degree_required: 0 | 1;
+  money_direction: MoneyDirection;
+  stage?: "post_hs" | "post_undergrad" | "both" | null;
   min_age: number | null;
   max_age: number | null;
   citizenship: "us_citizen" | "us_citizen_or_lpr" | "any" | null;
+  us_eligible?: 0 | 1; // 0 = Americans cannot use this. Kept and labelled on purpose.
   other_eligibility: string | null;
-  pay_type: "weekly" | "monthly" | "annual" | "stipend_total" | "none";
+  selectivity?: "open" | "moderate" | "selective" | "highly_competitive" | "quota_limited" | null;
+  pay_type: "hourly" | "weekly" | "monthly" | "annual" | "stipend_total" | "none";
   pay_low: number | null; // minor units: cents for USD/EUR, whole units for zero-decimal currencies (e.g. JPY)
   pay_high: number | null;
   pay_currency?: string; // ISO 4217, defaults to USD
   pay_note: string | null;
+  cost_low?: number | null; // cents the participant pays out of pocket
+  cost_high?: number | null;
+  cost_note?: string | null; // must state what the headline fee EXCLUDES
   housing_provided: 0 | 1;
+  meals_provided?: 0 | 1;
   airfare_covered: 0 | 1;
   education_award: number | null; // cents
   term_min_weeks: number | null;
   term_max_weeks: number | null;
+  college_credit_note?: string | null;
+  caveat_note?: string | null; // visa/legal reality, operator finances, marketing-vs-reality
   funding_status: "active" | "at_risk" | "paused" | "defunded";
   funding_note: string | null;
   deadlines: SeedDeadline[];
@@ -66,6 +92,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Places U.S. citizens as English teaching assistants in schools abroad for roughly an academic year, with a grant/stipend set independently by each host country. Enrolled students apply through their campus Fulbright Program Adviser; alumni apply At-Large.",
     source_url: "https://us.fulbrightonline.org/applicants/types-of-awards/english-teaching-assistant-awards",
     degree_required: 1,
+    money_direction: "participant_earns",
     min_age: null,
     max_age: null,
     citizenship: "us_citizen",
@@ -99,6 +126,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Places U.S. citizens and permanent residents as English teaching assistants in French primary and secondary schools for a 7-month contract (October–April), paying a monthly stipend. Requires B1-level French and at least two years of higher education.",
     source_url: "https://www.tapif.org/",
     degree_required: 1,
+    money_direction: "participant_earns",
     min_age: 20,
     max_age: 35,
     citizenship: "us_citizen_or_lpr",
@@ -129,6 +157,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Places U.S. university graduates as Assistant Language Teachers in Japanese public schools on a one-year contract, renewable up to five years, with a set annual salary, airfare, and visa sponsorship. No Japanese language ability required for the ALT track.",
     source_url: "https://jetprogramusa.org/contract-information/",
     degree_required: 1,
+    money_direction: "participant_earns",
     min_age: null,
     max_age: null,
     citizenship: "us_citizen",
@@ -159,6 +188,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "One- to two-year, full-time paid research position at NIH intramural labs for recent bachelor's-degree graduates planning to apply to grad or med school. Explicitly designed to let students defer graduate school matriculation, hired individually by NIH labs on a rolling basis.",
     source_url: "https://www.training.nih.gov/programs/postbac_irta",
     degree_required: 1,
+    money_direction: "participant_earns",
     min_age: null,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -188,6 +218,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "27-month international service program (3 months training plus 24 months service) open to U.S. citizens 18 and older. Volunteers receive a country-specific living allowance, full housing, medical/dental care, and a $10,000 readjustment allowance upon completion.",
     source_url: "https://www.peacecorps.gov/volunteer/eligibility/",
     degree_required: 1,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen",
@@ -221,6 +252,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Team-based, residential national service program for young adults 18-24 (Team Leaders 18+), serving a 10-month term on disaster response, conservation, and community-development projects nationwide. Members receive a living allowance, room and board, and a Segal Education Award.",
     source_url: "https://www.americorps.gov/serve/americorps/americorps-nccc",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 24,
     citizenship: "us_citizen_or_lpr",
@@ -251,6 +283,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Full-time, one-year individual-placement anti-poverty service program in which members build capacity at nonprofits and public agencies, from thousands of individual site postings under one national program. Living allowance plus a Segal Education Award or cash stipend at completion.",
     source_url: "https://www.americorps.gov/members-volunteers/vista/benefits",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -281,6 +314,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Umbrella nonprofit running regional conservation corps — including Arizona Conservation Corps and Southwest Conservation Corps — offering crew-based and individual-placement conservation service, mostly structured as AmeriCorps positions with a living stipend and education award.",
     source_url: "https://conservationlegacy.org/programs",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -309,6 +343,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "National nonprofit placing young people in conservation internships and AmeriCorps crew positions on public lands. Most positions include a subsistence living allowance, a $650 one-time travel allowance, and free housing, with many roles earning a Segal Education Award.",
     source_url: "https://thesca.org/sca-and-americorps",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 17,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -337,6 +372,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Nonprofit conservation corps running AmeriCorps crew and individual-placement programs on public lands nationwide. Members receive a taxable weekly living stipend, free housing during their term, and — for AmeriCorps-affiliated positions — a Segal Education Award.",
     source_url: "https://www.usaconservation.org/conservation-crew/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 17,
     max_age: 35,
     citizenship: "us_citizen_or_lpr",
@@ -365,6 +401,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Full-time, year-long AmeriCorps tutoring and mentoring program placing young adults in under-resourced K-12 schools across roughly 29 U.S. city sites. Members receive a biweekly living stipend, health coverage, and a Segal Education Award.",
     source_url: "https://www.cityyear.org/experience/benefits-resources/compensation/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 25,
     citizenship: "us_citizen_or_lpr",
@@ -393,6 +430,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "One-year workforce-development program combining about six months of technical/professional-skills training with a six-month paid internship at a partner company. Open to young adults 18-29 with a high school diploma or equivalent; no bachelor's degree required.",
     source_url: "https://www.yearup.org/students/how-it-works",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 29,
     citizenship: "any",
@@ -421,6 +459,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "An $8,000 stipend fellowship for admitted UNC-Chapel Hill first-years (via the Early Action deadline) to pursue a self-designed gap year of travel, service, or work before enrolling. A related Bridge Year Fellowship offers a similar award to a small cohort of current sophomores.",
     source_url: "https://globalgap.unc.edu/global-gap-year-fellowship/application/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "any",
@@ -450,6 +489,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps national service program placing members in schools to teach nutrition education and strengthen school food systems over an 11-month term. FoodCorps pays the maximum living stipend allowable for an AmeriCorps grantee.",
     source_url: "https://foodcorps.org/why-foodcorps-is-paying-our-corps-members-the-maximum-stipend-allowed-by-americorps/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -478,6 +518,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps program placing members in full-time community-health roles at Philadelphia-area health organizations for a year of service, with a living stipend and Segal Education Award.",
     source_url: "https://www.nationalhealthcorps.org/serve/chf",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -506,6 +547,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "State-run, year-long residential conservation corps for California young adults ages 18-25, providing paid work experience on environmental and emergency-response projects with a monthly stipend plus room and board.",
     source_url: "https://ccc.ca.gov/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 25,
     citizenship: "any",
@@ -534,6 +576,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "State-run AmeriCorps conservation corps for young adults 18-25 (plus veterans and people with disabilities of any age), running roughly October-September crews on environmental restoration statewide. Living allowance, health insurance, and a Segal Education Award.",
     source_url: "https://ecology.wa.gov/about-us/jobs-at-ecology/washington-conservation-corps/join-wcc",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 25,
     citizenship: "us_citizen_or_lpr",
@@ -562,6 +605,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Regional AmeriCorps conservation corps offering crew-based (17-30), youth-leader (21-35), and individual-placement intern/fellow (18+) programs across Montana, each with a biweekly living stipend and Segal Education Award.",
     source_url: "https://www.mtcorps.org/joinmcc/join-mcc-today.html",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 17,
     max_age: 35,
     citizenship: "us_citizen_or_lpr",
@@ -590,6 +634,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps conservation and disaster-response corps for young people ages 16-35 in Texas, with 3-11 month terms. Members receive a weekly living allowance plus a separate housing stipend and a Segal Education Award.",
     source_url: "https://americanyouthworks.org/what-we-do/cc",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 16,
     max_age: 35,
     citizenship: "any",
@@ -618,6 +663,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps conservation corps in Vermont for members 17 and older with a high school diploma/GED (or working toward one), offering a living stipend during service and a Segal Education Award on completion, under the 'SerVermont' AmeriCorps program.",
     source_url: "https://www.vycc.org/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 17,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -646,6 +692,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Residential conservation corps based in Oregon serving both youth (16-19, spring/fall/leadership programs) and young adults (19+, main AmeriCorps crew programs), providing a stipend plus meals, transportation, and camping accommodations.",
     source_url: "https://www.nwyouthcorps.org/young-adult/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 16,
     max_age: null,
     citizenship: "us_citizen_or_lpr",
@@ -674,6 +721,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps conservation corps for young adults 18-30 (to 35 for veterans) in Minnesota and Iowa, offering a monthly stipend and Segal Education Award. The organization's Summer Youth Corps track specifically is not running in 2026.",
     source_url: "https://conservationcorps.org/faqs/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 35,
     citizenship: "us_citizen_or_lpr",
@@ -702,6 +750,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Seattle-based AmeriCorps program combining a yearlong leadership-training track for U.S. members (18-26) with an International Corps Member track (18-28) open to non-U.S. participants, focused on urban forest and watershed restoration.",
     source_url: "https://www.earthcorps.org/join-the-corps/corps-program-faq/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 28,
     citizenship: "us_citizen_or_lpr",
@@ -730,6 +779,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Residential environmental conservation and education corps based in Colorado (with related programming in New Mexico), serving youth and young adults roughly ages 16-30. Living stipend and AmeriCorps education award for qualifying terms.",
     source_url: "https://youthcorps.org/programs-and-crews/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 16,
     max_age: 30,
     citizenship: "us_citizen_or_lpr",
@@ -758,6 +808,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "Oakland-based AmeriCorps program re-engaging young adults 18-26 to earn a high school diploma, gain job skills (including a conservation-corps track), and pursue college or careers. Monthly service stipend and Segal Education Award.",
     source_url: "https://cvcorps.org/programs/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: 26,
     citizenship: "us_citizen_or_lpr",
@@ -786,6 +837,7 @@ export const CORE_PROGRAMS: SeedProgram[] = [
       "AmeriCorps conservation corps based at Utah State University, offering field-crew and individual-placement positions for members 18 and older. Biweekly living allowance and Segal Education Award; reimburses health-insurance premiums for 1,700-hour members.",
     source_url: "https://ucc.usu.edu/",
     degree_required: 0,
+    money_direction: "participant_earns",
     min_age: 18,
     max_age: null,
     citizenship: "us_citizen_or_lpr",

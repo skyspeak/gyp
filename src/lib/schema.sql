@@ -17,26 +17,46 @@ CREATE TABLE IF NOT EXISTS programs (
   slug              TEXT UNIQUE NOT NULL,
   name              TEXT NOT NULL,
   operator          TEXT NOT NULL,          -- 'AmeriCorps', 'IIE', 'CLAIR'
-  category          TEXT NOT NULL,          -- service | conservation | teaching_abroad | research | health | trades
+  category          TEXT NOT NULL,          -- service | conservation | teaching_abroad | research | health | trades | outdoor | travel_study | work
   summary           TEXT NOT NULL,          -- 2 sentences max
   source_url        TEXT NOT NULL,
-  -- eligibility
+  -- cohort splits. these two are the primary filters and are never tags.
   degree_required   INTEGER NOT NULL,       -- 0 | 1  <-- primary cohort split
+  -- Which way the money flows. The product routes only toward participant_earns;
+  -- participant_pays rows exist so a student can compare a $17,950 fee against
+  -- an option that pays them, and are never recommended or sold. We take no
+  -- commission on any row here, in either direction.
+  money_direction   TEXT NOT NULL DEFAULT 'participant_earns',
+                                            -- participant_earns | net_neutral | participant_pays
+  stage             TEXT,                   -- post_hs | post_undergrad | both
+  -- eligibility
   min_age           INTEGER,
   max_age           INTEGER,
   citizenship       TEXT,                   -- us_citizen | us_citizen_or_lpr | any
+  us_eligible       INTEGER NOT NULL DEFAULT 1,  -- 0 for schemes Americans cannot use (kept, and labelled, on purpose)
   other_eligibility TEXT,                   -- freeform, rendered verbatim
+  selectivity       TEXT,                   -- open | moderate | selective | highly_competitive | quota_limited
   -- compensation. cents integers only. never floats, never strings
-  pay_type          TEXT NOT NULL,          -- weekly | monthly | annual | stipend_total | none
+  pay_type          TEXT NOT NULL,          -- hourly | weekly | monthly | annual | stipend_total | none
   pay_low           INTEGER,
   pay_high          INTEGER,
   pay_currency      TEXT NOT NULL DEFAULT 'USD',
   pay_note          TEXT,                   -- 'plus $650 travel stipend'
+  -- what the participant pays out of pocket. mirror of pay_*, same cents rule.
+  cost_low          INTEGER,
+  cost_high         INTEGER,
+  cost_note         TEXT,                   -- must state what the headline fee EXCLUDES (airfare, insurance, deposit)
   housing_provided  INTEGER NOT NULL DEFAULT 0,
+  meals_provided    INTEGER NOT NULL DEFAULT 0,
   airfare_covered   INTEGER NOT NULL DEFAULT 0,
   education_award   INTEGER,                -- cents
   term_min_weeks    INTEGER,
   term_max_weeks    INTEGER,
+  -- Earning college credit can forfeit incoming-freshman aid and merit awards,
+  -- and can convert a deferred admit into a transfer applicant. Captured in
+  -- phase 1 because it is the phase 2 headline feature.
+  college_credit_note TEXT,
+  caveat_note       TEXT,                   -- freeform, rendered verbatim: visa/legal reality, operator finances, marketing-vs-reality
   -- integrity
   funding_status    TEXT NOT NULL DEFAULT 'active',  -- active | at_risk | paused | defunded
   funding_note      TEXT,
@@ -145,7 +165,14 @@ CREATE TABLE IF NOT EXISTS review_queue (
   resolved_by   TEXT
 );
 
+-- @indexes -- scripts/migrate.ts splits the file here and runs everything below
+-- AFTER its additive ALTER TABLE pass, so an index can reference a column that
+-- was added to an already-existing table.
+
 CREATE INDEX IF NOT EXISTS idx_programs_cohort   ON programs(degree_required, funding_status);
+-- money_direction is a primary filter, not a tag: the directory defaults to
+-- participant_earns and only shows the rest behind an explicit comparison toggle.
+CREATE INDEX IF NOT EXISTS idx_programs_money    ON programs(money_direction, degree_required);
 CREATE INDEX IF NOT EXISTS idx_deadlines_due     ON deadlines(due_at);
 CREATE INDEX IF NOT EXISTS idx_deadlines_program ON deadlines(program_id);
 CREATE INDEX IF NOT EXISTS idx_listings_program  ON listings(program_id);
