@@ -1,21 +1,26 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import {
   listPrograms,
   getSoonestDeadlines,
   CATEGORY_LABELS,
-  FUNDING_LABELS,
-  MONEY_DIRECTION_LABELS,
   type ProgramFilters,
 } from "@/lib/programs";
-import { formatPayShort, formatCostShort, formatDateShort } from "@/lib/format";
+import { formatPayShort, formatCostShort, formatDateShort, daysUntil } from "@/lib/format";
+import { MONEY_UI, FUNDING_UI, TONE_BADGE, TONE_TEXT } from "@/lib/money-ui";
+import { approxAnnualUsd } from "@/lib/pay-sort";
+import { FilterPill } from "@/components/filter-pill";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-export const metadata = {
-  title: "Programs — Stipend Clock",
-};
+export const metadata = { title: "Programs — Stipend Clock" };
 
-function toBool(v: string | string[] | undefined) {
-  return v === "1" || v === "true";
-}
+const MONEY_TABS = [
+  { value: undefined, label: "Pays you" },
+  { value: "net_neutral", label: "Breaks even" },
+  { value: "participant_pays", label: "You pay" },
+  { value: "all", label: "Compare all" },
+] as const;
 
 export default async function ProgramsPage({
   searchParams,
@@ -23,13 +28,12 @@ export default async function ProgramsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = await searchParams;
-  const degreeParam = Array.isArray(sp.degree) ? sp.degree[0] : sp.degree;
-  const categoryParam = Array.isArray(sp.category) ? sp.category[0] : sp.category;
-  const sortParam = Array.isArray(sp.sort) ? sp.sort[0] : sp.sort;
-  const ageParam = Array.isArray(sp.age) ? sp.age[0] : sp.age;
-  const activeOnly = toBool(Array.isArray(sp.active) ? sp.active[0] : sp.active);
-  // Default is earning-only. ?money=all is the explicit comparison mode.
-  const moneyParam = Array.isArray(sp.money) ? sp.money[0] : sp.money;
+  const one = (k: string) => (Array.isArray(sp[k]) ? sp[k]?.[0] : sp[k]);
+  const degreeParam = one("degree");
+  const categoryParam = one("category");
+  const sortParam = one("sort");
+  const moneyParam = one("money");
+
   const moneyDirection =
     moneyParam === "all" || moneyParam === "net_neutral" || moneyParam === "participant_pays"
       ? moneyParam
@@ -39,17 +43,13 @@ export default async function ProgramsPage({
     degreeRequired: degreeParam === "0" ? 0 : degreeParam === "1" ? 1 : undefined,
     moneyDirection,
     category: categoryParam || undefined,
-    minAge: ageParam ? Number(ageParam) : undefined,
-    fundingActiveOnly: activeOnly,
   };
 
   const programs = await listPrograms(filters);
   const deadlineMap = await getSoonestDeadlines(programs.map((p) => p.id));
 
   const sorted = [...programs].sort((a, b) => {
-    if (sortParam === "pay") {
-      return (b.pay_high ?? b.pay_low ?? 0) - (a.pay_high ?? a.pay_low ?? 0);
-    }
+    if (sortParam === "pay") return approxAnnualUsd(b) - approxAnnualUsd(a);
     const da = deadlineMap.get(a.id)?.due_at;
     const db_ = deadlineMap.get(b.id)?.due_at;
     if (da && db_) return da.localeCompare(db_);
@@ -60,153 +60,168 @@ export default async function ProgramsPage({
 
   function qs(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
-    const merged = { degree: degreeParam, category: categoryParam, sort: sortParam, age: ageParam, money: moneyParam, ...overrides };
-    for (const [k, v] of Object.entries(merged)) {
-      if (v) params.set(k, v);
-    }
+    const merged = {
+      degree: degreeParam,
+      category: categoryParam,
+      sort: sortParam,
+      money: moneyParam,
+      ...overrides,
+    };
+    for (const [k, v] of Object.entries(merged)) if (v) params.set(k, v);
     const s = params.toString();
     return s ? `/programs?${s}` : "/programs";
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-3xl font-semibold tracking-tight">Programs</h1>
-      <p className="mt-2 text-neutral-600 max-w-2xl">
-        {moneyDirection === "participant_earns"
-          ? "Showing only paths that pay you — a stipend, living allowance, education award, or wage. Switch to Compare all to see what the pay-to-participate options cost."
-          : "Comparison view. Paths that charge you are shown with their full cost. We take no commission on anything listed here, in either direction."}
-      </p>
-
-      {/* Money direction is the primary filter, above the cohort split. */}
-      <div className="mt-6 flex flex-wrap gap-2 text-sm">
-        <Link
-          href={qs({ money: undefined })}
-          className={`px-3 py-1.5 rounded-full border ${moneyDirection === "participant_earns" ? "bg-emerald-700 text-white border-emerald-700" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          Pays you
-        </Link>
-        <Link
-          href={qs({ money: "net_neutral" })}
-          className={`px-3 py-1.5 rounded-full border ${moneyDirection === "net_neutral" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          Breaks even
-        </Link>
-        <Link
-          href={qs({ money: "participant_pays" })}
-          className={`px-3 py-1.5 rounded-full border ${moneyDirection === "participant_pays" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          You pay
-        </Link>
-        <Link
-          href={qs({ money: "all" })}
-          className={`px-3 py-1.5 rounded-full border ${moneyDirection === "all" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          Compare all
-        </Link>
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Programs</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {sorted.length} paths ·{" "}
+            {moneyDirection === "participant_earns" ? "all of these pay you" : "comparison view"}
+          </p>
+        </div>
+        <div className="flex items-center gap-1 text-sm">
+          <span className="text-muted-foreground mr-1">Sort</span>
+          <FilterPill href={qs({ sort: undefined })} active={sortParam !== "pay"} size="sm">
+            Deadline
+          </FilterPill>
+          <FilterPill href={qs({ sort: "pay" })} active={sortParam === "pay"} size="sm">
+            Pay
+          </FilterPill>
+        </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2 text-sm">
-        <Link
-          href={qs({ degree: undefined })}
-          className={`px-3 py-1.5 rounded-full border ${!degreeParam ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          All
-        </Link>
-        <Link
-          href={qs({ degree: "1" })}
-          className={`px-3 py-1.5 rounded-full border ${degreeParam === "1" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          Have a degree / enrolled
-        </Link>
-        <Link
-          href={qs({ degree: "0" })}
-          className={`px-3 py-1.5 rounded-full border ${degreeParam === "0" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          No degree required
-        </Link>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-2 text-sm">
-        <Link
-          href={qs({ category: undefined })}
-          className={`px-3 py-1 rounded-full border text-xs ${!categoryParam ? "bg-neutral-100 border-neutral-400" : "border-neutral-200 text-neutral-500 hover:border-neutral-400"}`}
-        >
-          All categories
-        </Link>
-        {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-          <Link
-            key={key}
-            href={qs({ category: key })}
-            className={`px-3 py-1 rounded-full border text-xs ${categoryParam === key ? "bg-neutral-100 border-neutral-400" : "border-neutral-200 text-neutral-500 hover:border-neutral-400"}`}
+      {/* Money direction first — it's the primary split. */}
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        {MONEY_TABS.map((t) => (
+          <FilterPill
+            key={t.label}
+            href={qs({ money: t.value })}
+            active={moneyDirection === (t.value ?? "participant_earns")}
           >
-            {label}
-          </Link>
+            {t.label}
+          </FilterPill>
         ))}
       </div>
 
-      <div className="mt-4 flex items-center gap-4 text-sm text-neutral-500">
-        <span>Sort:</span>
-        <Link href={qs({ sort: undefined })} className={!sortParam || sortParam === "deadline" ? "underline font-medium text-neutral-900" : "hover:underline"}>
-          Soonest deadline
-        </Link>
-        <Link href={qs({ sort: "pay" })} className={sortParam === "pay" ? "underline font-medium text-neutral-900" : "hover:underline"}>
-          Highest pay
-        </Link>
-        <span className="ml-auto">{sorted.length} programs</span>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        <FilterPill href={qs({ degree: undefined })} active={!degreeParam} size="sm">
+          Any stage
+        </FilterPill>
+        <FilterPill href={qs({ degree: "0" })} active={degreeParam === "0"} size="sm">
+          No degree
+        </FilterPill>
+        <FilterPill href={qs({ degree: "1" })} active={degreeParam === "1"} size="sm">
+          Have a degree
+        </FilterPill>
+        <span className="mx-1 hidden w-px self-stretch bg-border sm:block" aria-hidden />
+        <FilterPill href={qs({ category: undefined })} active={!categoryParam} size="sm">
+          All types
+        </FilterPill>
+        {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+          <FilterPill
+            key={key}
+            href={qs({ category: key })}
+            active={categoryParam === key}
+            size="sm"
+          >
+            {label}
+          </FilterPill>
+        ))}
       </div>
 
-      <ul className="mt-6 divide-y divide-neutral-200 border-t border-b border-neutral-200">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {sorted.map((p) => {
-          const deadline = deadlineMap.get(p.id);
-          const funding = FUNDING_LABELS[p.funding_status] ?? FUNDING_LABELS.active;
-          const money = MONEY_DIRECTION_LABELS[p.money_direction] ?? MONEY_DIRECTION_LABELS.participant_earns;
+          const money = MONEY_UI[p.money_direction] ?? MONEY_UI.participant_earns;
+          const funding = FUNDING_UI[p.funding_status];
           const cost = formatCostShort(p);
+          const isPaying = p.money_direction === "participant_pays" && Boolean(cost);
+          const deadline = deadlineMap.get(p.id);
+          const days = daysUntil(deadline?.due_at ?? null);
+
           return (
-            <li key={p.id} className="py-5">
-              <Link href={`/programs/${p.slug}`} className="group flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-medium text-lg group-hover:underline">{p.name}</span>
-                    {/* Only badge the non-earning rows, so the default view stays uncluttered. */}
-                    {money.tone !== "earn" && (
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${
-                          money.tone === "pay" ? "bg-rose-100 text-rose-900" : "bg-neutral-100 text-neutral-700"
-                        }`}
-                      >
-                        {money.short}
-                      </span>
+            <Link
+              key={p.id}
+              href={`/programs/${p.slug}`}
+              className="group relative flex flex-col rounded-xl border bg-card p-4 transition-all hover:border-foreground/20 hover:shadow-sm"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <h2 className="font-medium leading-snug group-hover:underline decoration-1 underline-offset-2">
+                  {p.name}
+                </h2>
+                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+
+              <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
+                {p.operator}
+              </p>
+
+              {/* The money figure is the point of the card, so it gets the size.
+                  Cost leads ONLY when the participant is net paying — an earning
+                  job with an upfront cost (STCW certification, fire boots) still
+                  leads with its pay, and shows the outlay underneath. */}
+              <p
+                className={cn(
+                  "mt-3 text-lg font-semibold tabular-nums",
+                  isPaying ? TONE_TEXT.pay : "text-foreground"
+                )}
+              >
+                {isPaying ? cost : formatPayShort(p)}
+                {isPaying && <span className="ml-1 text-xs font-normal opacity-70">to join</span>}
+              </p>
+              {!isPaying && cost && (
+                <p className="mt-0.5 text-xs text-muted-foreground">{cost} upfront to start</p>
+              )}
+
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                {money.tone !== "earn" && (
+                  <Badge variant="outline" className={TONE_BADGE[money.tone]}>
+                    {money.label}
+                  </Badge>
+                )}
+                {funding && (
+                  <Badge variant="outline" className={TONE_BADGE[funding.tone]}>
+                    {funding.label}
+                  </Badge>
+                )}
+                <Badge variant="outline" className="border-border text-muted-foreground">
+                  {CATEGORY_LABELS[p.category] ?? p.category}
+                </Badge>
+                {p.degree_required === 1 && (
+                  <Badge variant="outline" className="border-border text-muted-foreground">
+                    Degree
+                  </Badge>
+                )}
+              </div>
+
+              <div className="mt-3 border-t pt-2.5 text-xs text-muted-foreground">
+                {deadline?.due_at ? (
+                  <span>
+                    Due {formatDateShort(deadline.due_at)}
+                    {days != null && days >= 0 && (
+                      <span className="text-foreground font-medium"> · {days}d left</span>
                     )}
-                    {funding.tone !== "ok" && (
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${
-                          funding.tone === "warn" ? "bg-amber-100 text-amber-800" : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {funding.label}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-neutral-500 mt-0.5">
-                    {p.operator} · {CATEGORY_LABELS[p.category] ?? p.category} ·{" "}
-                    {p.degree_required ? "Degree required" : "No degree required"}
-                  </p>
-                </div>
-                <div className="text-sm text-left sm:text-right shrink-0 sm:w-44">
-                  {cost ? (
-                    <div className="font-medium text-rose-800">{cost} to join</div>
-                  ) : (
-                    <div className="font-medium">{formatPayShort(p)}</div>
-                  )}
-                  <div className="text-neutral-500">
-                    {deadline ? `Due ${formatDateShort(deadline.due_at)}` : "Rolling"}
-                  </div>
-                </div>
-              </Link>
-            </li>
+                  </span>
+                ) : (
+                  <span>Rolling — no fixed deadline</span>
+                )}
+              </div>
+            </Link>
           );
         })}
-      </ul>
+      </div>
+
+      {sorted.length === 0 && (
+        <p className="mt-10 text-center text-sm text-muted-foreground">
+          Nothing matches those filters.{" "}
+          <Link href="/programs" className="underline">
+            Clear them
+          </Link>
+          .
+        </p>
+      )}
     </div>
   );
 }

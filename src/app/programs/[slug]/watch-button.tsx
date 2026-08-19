@@ -1,8 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { Bell, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export default function WatchButton({ programId, programName }: { programId: string; programName: string }) {
+export default function WatchButton({
+  programId,
+  programName,
+}: {
+  programId: string;
+  programName: string;
+}) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [cohort, setCohort] = useState<"pre_college" | "post_grad">("post_grad");
@@ -10,26 +26,23 @@ export default function WatchButton({ programId, programName }: { programId: str
 
   if (status === "done") {
     return (
-      <p className="text-sm text-green-700">
-        You&apos;re watching {programName}. We&apos;ll email deadline reminders to {email}.
+      <p className="flex items-center gap-1.5 text-sm text-earn-foreground">
+        <Check className="size-4" /> Watching {programName} — reminders go to {email}
       </p>
     );
   }
 
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center rounded-lg border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-neutral-500"
-      >
-        Watch — get deadline reminders
-      </button>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        <Bell className="size-3.5" /> Remind me
+      </Button>
     );
   }
 
   return (
     <form
-      className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 w-full sm:w-auto"
+      className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center"
       onSubmit={async (e) => {
         e.preventDefault();
         setStatus("loading");
@@ -46,30 +59,29 @@ export default function WatchButton({ programId, programName }: { programId: str
         }
       }}
     >
-      <input
+      <Input
         type="email"
         required
         placeholder="you@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm w-full sm:w-56"
+        className="sm:w-52"
       />
-      <select
-        value={cohort}
-        onChange={(e) => setCohort(e.target.value as "pre_college" | "post_grad")}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm w-full sm:w-auto"
-      >
-        <option value="post_grad">I&apos;m a recent/upcoming grad</option>
-        <option value="pre_college">I have a deferred college seat</option>
-      </select>
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium hover:bg-neutral-700 disabled:opacity-50 w-full sm:w-auto"
-      >
-        {status === "loading" ? "Saving…" : "Start watching"}
-      </button>
-      {status === "error" && <span className="text-sm text-red-600">Something went wrong. Try again.</span>}
+      <Select value={cohort} onValueChange={(v) => setCohort(v as "pre_college" | "post_grad")}>
+        <SelectTrigger className="sm:w-56">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="post_grad">Recent / upcoming grad</SelectItem>
+          <SelectItem value="pre_college">Deferred college seat</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button type="submit" disabled={status === "loading"}>
+        {status === "loading" ? "Saving…" : "Watch"}
+      </Button>
+      {status === "error" && (
+        <span className="text-sm text-destructive">Something went wrong.</span>
+      )}
     </form>
   );
 }

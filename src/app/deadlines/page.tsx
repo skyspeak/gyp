@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listUpcomingDeadlines } from "@/lib/programs";
-import { formatDeadline, daysUntil } from "@/lib/format";
+import { formatDeadline, formatDateShort, daysUntil } from "@/lib/format";
+import { FilterPill } from "@/components/filter-pill";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Deadlines — Stipend Clock" };
 
@@ -16,54 +18,65 @@ export default async function DeadlinesPage({
   const deadlines = await listUpcomingDeadlines({ degreeRequired });
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-3xl font-semibold tracking-tight">Upcoming deadlines</h1>
-      <p className="mt-2 text-neutral-600">Sorted soonest first, across the whole catalog.</p>
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Deadlines</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {deadlines.length} upcoming, soonest first
+      </p>
 
-      <div className="mt-6 flex flex-wrap gap-2 text-sm">
-        <Link
-          href="/deadlines"
-          className={`px-3 py-1.5 rounded-full border ${!degreeParam ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          All
-        </Link>
-        <Link
-          href="/deadlines?degree=1"
-          className={`px-3 py-1.5 rounded-full border ${degreeParam === "1" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          Have a degree / enrolled
-        </Link>
-        <Link
-          href="/deadlines?degree=0"
-          className={`px-3 py-1.5 rounded-full border ${degreeParam === "0" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
-        >
-          No degree required
-        </Link>
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        <FilterPill href="/deadlines" active={!degreeParam} size="sm">
+          Any stage
+        </FilterPill>
+        <FilterPill href="/deadlines?degree=0" active={degreeParam === "0"} size="sm">
+          No degree
+        </FilterPill>
+        <FilterPill href="/deadlines?degree=1" active={degreeParam === "1"} size="sm">
+          Have a degree
+        </FilterPill>
       </div>
 
-      <ul className="mt-6 divide-y divide-neutral-200 border-t border-b border-neutral-200">
+      <ul className="mt-5 divide-y rounded-xl border overflow-hidden">
         {deadlines.map((d) => {
           const days = daysUntil(d.due_at);
+          const urgent = days != null && days <= 30;
           return (
-            <li key={d.id} className="py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 text-sm">
-              <div className="min-w-0 sm:flex-1">
-                <Link href={`/programs/${d.program_slug}`} className="font-medium hover:underline">
-                  {d.program_name}
-                </Link>
-                <p className="text-neutral-500 mt-0.5">
-                  {d.cycle_label} · {d.kind.replace("_", " ")}
-                  {d.note ? ` — ${d.note}` : ""}
-                </p>
-              </div>
-              <div className="text-left sm:text-right sm:shrink-0">
-                <div className="font-medium">{formatDeadline(d.due_at, d.source_tz)}</div>
-                {days != null && <div className="text-neutral-500">{days} days away</div>}
-              </div>
+            <li key={d.id}>
+              <Link
+                href={`/programs/${d.program_slug}`}
+                className="flex flex-col gap-1.5 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+              >
+                <div className="min-w-0">
+                  <p className="font-medium leading-snug">{d.program_name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {d.cycle_label} · {d.kind.replace(/_/g, " ")}
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-baseline gap-3 text-sm sm:flex-col sm:items-end sm:gap-0.5">
+                  <span
+                    className={cn(
+                      "font-semibold tabular-nums",
+                      urgent ? "text-destructive" : "text-foreground"
+                    )}
+                  >
+                    {days}d left
+                  </span>
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {formatDateShort(d.due_at)}
+                  </span>
+                </div>
+              </Link>
+              {/* Timezone is stated once, quietly, rather than in every row's
+                  main line — but never dropped, since a 5pm ET cutoff read as
+                  local time is how someone misses a deadline by three hours. */}
+              <p className="px-4 pb-2 -mt-1 text-[11px] text-muted-foreground">
+                {formatDeadline(d.due_at, d.source_tz)}
+              </p>
             </li>
           );
         })}
         {deadlines.length === 0 && (
-          <li className="py-4 text-sm text-neutral-500">No fixed deadlines on file yet.</li>
+          <li className="p-4 text-sm text-muted-foreground">No dated deadlines on file yet.</li>
         )}
       </ul>
     </div>

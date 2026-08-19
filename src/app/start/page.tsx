@@ -1,27 +1,29 @@
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { listPrograms, getSoonestDeadlines, CATEGORY_LABELS, type Program } from "@/lib/programs";
-import { formatPayShort, formatDateShort } from "@/lib/format";
+import { formatPayShort, formatCostShort, formatDateShort } from "@/lib/format";
+import { approxAnnualUsd } from "@/lib/pay-sort";
+import { MONEY_UI, TONE_BADGE, TONE_TEXT } from "@/lib/money-ui";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Find my fit — Stipend Clock" };
 
-type Answers = {
-  age?: string;
-  degree?: string; // "yes" | "no"
-  citizenship?: string; // us_citizen | us_citizen_or_lpr | non_us
-  start?: string; // free text season/year, informational
-};
+type Answers = { age?: string; degree?: string; citizenship?: string };
 
 function filterByAnswers(programs: Program[], answers: Answers): Program[] {
   let list = programs;
 
-  if (answers.degree === "no") {
-    // Removed entirely, not grayed out, per spec.
-    list = list.filter((p) => p.degree_required === 0);
-  }
+  // Removed entirely, not greyed out: if you don't have a degree, a
+  // degree-required program is not a "maybe".
+  if (answers.degree === "no") list = list.filter((p) => p.degree_required === 0);
 
   const age = answers.age ? Number(answers.age) : undefined;
   if (age != null && Number.isFinite(age)) {
-    list = list.filter((p) => (p.min_age == null || age >= p.min_age) && (p.max_age == null || age <= p.max_age));
+    list = list.filter(
+      (p) => (p.min_age == null || age >= p.min_age) && (p.max_age == null || age <= p.max_age)
+    );
   }
 
   if (answers.citizenship === "non_us") {
@@ -29,10 +31,12 @@ function filterByAnswers(programs: Program[], answers: Answers): Program[] {
   } else if (answers.citizenship === "us_citizen_or_lpr") {
     list = list.filter((p) => p.citizenship !== "us_citizen");
   }
-  // us_citizen qualifies for everything, no filter needed.
 
   return list;
 }
+
+const FIELD =
+  "mt-1.5 w-full rounded-md border bg-background px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50";
 
 export default async function StartPage({
   searchParams,
@@ -45,137 +49,143 @@ export default async function StartPage({
     age: get("age"),
     degree: get("degree"),
     citizenship: get("citizenship"),
-    start: get("start"),
   };
-  const hasAnswered = Boolean(answers.age || answers.degree || answers.citizenship || answers.start);
+  const answered = Boolean(answers.age && answers.degree);
 
   let results: Program[] = [];
   let deadlineMap: Awaited<ReturnType<typeof getSoonestDeadlines>> = new Map();
-  if (hasAnswered) {
-    const all = await listPrograms();
-    results = filterByAnswers(all, answers);
+  if (answered) {
+    const all = await listPrograms({ moneyDirection: "all" });
+    results = filterByAnswers(all, answers).sort(
+      (a, b) => approxAnnualUsd(b) - approxAnnualUsd(a)
+    );
     deadlineMap = await getSoonestDeadlines(results.map((p) => p.id));
   }
 
+  const earning = results.filter((p) => p.money_direction === "participant_earns");
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-3xl font-semibold tracking-tight">Find my fit</h1>
-      <p className="mt-2 text-neutral-600">
-        Four questions, no account needed. This just filters the public directory — nothing is saved.
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Find my fit</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Three questions. No account, nothing saved.
       </p>
 
-      <form method="get" action="/start" className="mt-8 space-y-6">
+      {/* GET form so the result is a shareable URL and needs no client state. */}
+      <form method="get" action="/start" className="mt-6 grid gap-4 sm:grid-cols-3">
         <div>
-          <label className="block text-sm font-medium" htmlFor="age">
-            Your age when the program would start
+          <label className="text-sm font-medium" htmlFor="age">
+            Your age at start
           </label>
           <input
             id="age"
             name="age"
             type="number"
             min={16}
-            max={40}
-            defaultValue={answers.age}
+            max={45}
             required
-            className="mt-1.5 w-32 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            defaultValue={answers.age}
+            className={FIELD}
           />
         </div>
-
-        <fieldset>
-          <legend className="text-sm font-medium">
-            Do you have (or will you have, before the program starts) a bachelor&apos;s degree?
-          </legend>
-          <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:gap-6 text-sm">
-            <label className="flex items-start gap-2">
-              <input type="radio" name="degree" value="yes" defaultChecked={answers.degree === "yes"} required className="mt-0.5" />
-              <span>Yes / currently enrolled</span>
-            </label>
-            <label className="flex items-start gap-2">
-              <input type="radio" name="degree" value="no" defaultChecked={answers.degree === "no"} className="mt-0.5" />
-              <span>No — high school grad, deferred college seat, or similar</span>
-            </label>
-          </div>
-        </fieldset>
-
         <div>
-          <label className="block text-sm font-medium" htmlFor="citizenship">
+          <label className="text-sm font-medium" htmlFor="degree">
+            Bachelor&apos;s degree?
+          </label>
+          <select id="degree" name="degree" defaultValue={answers.degree ?? ""} required className={FIELD}>
+            <option value="" disabled>
+              Choose…
+            </option>
+            <option value="yes">Yes / enrolled</option>
+            <option value="no">Not yet</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium" htmlFor="citizenship">
             Citizenship
           </label>
           <select
             id="citizenship"
             name="citizenship"
             defaultValue={answers.citizenship ?? "us_citizen"}
-            className="mt-1.5 w-full sm:w-auto rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            className={FIELD}
           >
             <option value="us_citizen">U.S. citizen</option>
-            <option value="us_citizen_or_lpr">U.S. lawful permanent resident (not a citizen)</option>
+            <option value="us_citizen_or_lpr">U.S. permanent resident</option>
             <option value="non_us">Neither</option>
           </select>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium" htmlFor="start">
-            Earliest you could start
-          </label>
-          <select
-            id="start"
-            name="start"
-            defaultValue={answers.start ?? ""}
-            className="mt-1.5 w-full sm:w-auto rounded-lg border border-neutral-300 px-3 py-2 text-sm"
-          >
-            <option value="">No preference</option>
-            <option value="fall_2027">Fall 2027</option>
-            <option value="spring_2028">Spring 2028</option>
-            <option value="summer_2027">Summer 2027</option>
-            <option value="flexible">Flexible / rolling</option>
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-6 py-3 text-sm font-medium hover:bg-neutral-700"
-        >
-          Show my shortlist
-        </button>
+        <Button type="submit" className="sm:col-span-3 sm:w-fit">
+          Show my matches <ArrowRight className="size-4" />
+        </Button>
       </form>
 
-      {hasAnswered && (
-        <div className="mt-12 border-t border-neutral-200 pt-8">
-          <h2 className="text-lg font-semibold">
-            {results.length} program{results.length === 1 ? "" : "s"} match
-          </h2>
-          <ul className="mt-4 divide-y divide-neutral-200 border-t border-b border-neutral-200">
+      {answered && (
+        <div className="mt-10">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="font-semibold">
+              {results.length} match{results.length === 1 ? "" : "es"}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {earning.length} pay you · sorted by pay
+            </p>
+          </div>
+
+          <ul className="mt-3 divide-y rounded-xl border overflow-hidden">
             {results.map((p) => {
+              const money = MONEY_UI[p.money_direction] ?? MONEY_UI.participant_earns;
+              const cost = formatCostShort(p);
+              const isPaying = p.money_direction === "participant_pays" && Boolean(cost);
               const deadline = deadlineMap.get(p.id);
               return (
-                <li key={p.id} className="py-4">
-                  <Link href={`/programs/${p.slug}`} className="group flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                <li key={p.id}>
+                  <Link
+                    href={`/programs/${p.slug}`}
+                    className="group flex items-center justify-between gap-4 p-4 transition-colors hover:bg-muted/50"
+                  >
                     <div className="min-w-0">
-                      <div className="font-medium group-hover:underline">{p.name}</div>
-                      <div className="text-sm text-neutral-500">
-                        {p.operator} · {CATEGORY_LABELS[p.category] ?? p.category}
-                      </div>
+                      <p className="font-medium leading-snug group-hover:underline decoration-1 underline-offset-2">
+                        {p.name}
+                      </p>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                        <span>{CATEGORY_LABELS[p.category] ?? p.category}</span>
+                        {money.tone !== "earn" && (
+                          <Badge variant="outline" className={TONE_BADGE[money.tone]}>
+                            {money.label}
+                          </Badge>
+                        )}
+                        {deadline?.due_at && <span>· due {formatDateShort(deadline.due_at)}</span>}
+                      </p>
                     </div>
-                    <div className="text-sm text-left sm:text-right shrink-0">
-                      <div>{formatPayShort(p)}</div>
-                      <div className="text-neutral-500">
-                        {deadline ? `Due ${formatDateShort(deadline.due_at)}` : "Rolling"}
-                      </div>
-                    </div>
+                    <span
+                      className={cn(
+                        "shrink-0 text-sm font-semibold tabular-nums",
+                        isPaying && TONE_TEXT.pay
+                      )}
+                    >
+                      {isPaying ? cost : formatPayShort(p)}
+                    </span>
                   </Link>
                 </li>
               );
             })}
             {results.length === 0 && (
-              <li className="py-4 text-sm text-neutral-500">
-                Nothing matches yet — try widening your answers, or{" "}
+              <li className="p-4 text-sm text-muted-foreground">
+                Nothing matched. Try widening your answers, or{" "}
                 <Link href="/programs" className="underline">
-                  browse the full directory
+                  browse everything
                 </Link>
                 .
               </li>
             )}
           </ul>
+
+          <Link
+            href="/programs"
+            className="mt-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            Browse the full directory <ArrowUpRight className="size-3.5" />
+          </Link>
         </div>
       )}
     </div>

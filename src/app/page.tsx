@@ -1,65 +1,129 @@
 import Link from "next/link";
-import { listUpcomingDeadlines } from "@/lib/programs";
-import { formatDateShort, daysUntil } from "@/lib/format";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { listUpcomingDeadlines, listPrograms } from "@/lib/programs";
+import { formatDateShort, daysUntil, formatPayShort } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { TONE_BADGE } from "@/lib/money-ui";
+import { approxAnnualUsd } from "@/lib/pay-sort";
 
 export default async function Home() {
-  const deadlines = (await listUpcomingDeadlines()).slice(0, 5);
+  const [deadlines, earning, paying] = await Promise.all([
+    listUpcomingDeadlines(),
+    listPrograms({ moneyDirection: "participant_earns" }),
+    listPrograms({ moneyDirection: "participant_pays" }),
+  ]);
+
+  // One row per program here. Several programs carry both a campus and a
+  // national deadline, which matters on /deadlines but just looks like a
+  // duplicate name on the homepage.
+  const seen = new Set<string>();
+  const next = deadlines
+    .filter((d) => !seen.has(d.program_slug) && seen.add(d.program_slug))
+    .slice(0, 6);
 
   return (
     <div>
-      <section className="mx-auto max-w-3xl px-4 pt-12 sm:pt-20 pb-12 sm:pb-16 text-center">
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
-          Every deadline for the year that pays you.
+      <section className="mx-auto max-w-4xl px-4 pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
+        <Badge variant="outline" className={TONE_BADGE.earn}>
+          No commissions, ever
+        </Badge>
+        <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
+          The year off that pays you.
         </h1>
-        <p className="mt-5 text-base sm:text-lg text-neutral-600 max-w-xl mx-auto">
-          A free directory of gap year and post-grad paths with a stipend, living allowance,
-          education award, or wage — for students with a deferred college seat and for grads
-          figuring out what&apos;s next. We also show what the pay-to-join programs actually
-          cost, so you can compare. We never take a commission on any of it.
+        <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg text-muted-foreground text-pretty">
+          {earning.length} paths with a stipend, wage, or education award — and {paying.length}{" "}
+          that charge you, priced honestly so you can tell the difference.
         </p>
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-          <Link
-            href="/start"
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-6 py-3 text-sm font-medium hover:bg-neutral-700"
-          >
-            Find my fit
-          </Link>
-          <Link
-            href="/programs"
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-neutral-300 px-6 py-3 text-sm font-medium hover:border-neutral-500"
-          >
-            Browse all programs
-          </Link>
+        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+          <Button size="lg" nativeButton={false} render={<Link href="/start" />}>
+            Find my fit <ArrowRight className="size-4" />
+          </Button>
+          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/programs" />}>
+            Browse all {earning.length + paying.length}
+          </Button>
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-4 pb-20">
-        <div className="rounded-xl border border-neutral-200 p-4 sm:p-6">
-          <h2 className="font-semibold">Next deadlines</h2>
-          <ul className="mt-4 divide-y divide-neutral-200">
-            {deadlines.map((d) => {
+      <section className="mx-auto max-w-4xl px-4 pb-20">
+        <div className="rounded-xl border overflow-hidden">
+          <div className="flex items-center justify-between gap-3 border-b bg-muted/40 px-4 py-2.5">
+            <h2 className="text-sm font-semibold">Closing soon</h2>
+            <Link
+              href="/deadlines"
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+            >
+              All deadlines <ArrowUpRight className="size-3" />
+            </Link>
+          </div>
+          <ul className="divide-y">
+            {next.map((d) => {
               const days = daysUntil(d.due_at);
+              const urgent = days != null && days <= 30;
               return (
-                <li key={d.id} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4 text-sm">
-                  <Link href={`/programs/${d.program_slug}`} className="hover:underline">
-                    {d.program_name}
+                <li key={d.id}>
+                  <Link
+                    href={`/programs/${d.program_slug}`}
+                    className="flex items-center justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-muted/50"
+                  >
+                    <span className="min-w-0 truncate">{d.program_name}</span>
+                    <span className="flex shrink-0 items-baseline gap-2 tabular-nums">
+                      <span className="text-muted-foreground">{formatDateShort(d.due_at)}</span>
+                      {days != null && days >= 0 && (
+                        <span
+                          className={
+                            urgent ? "font-semibold text-destructive" : "text-muted-foreground"
+                          }
+                        >
+                          {days}d
+                        </span>
+                      )}
+                    </span>
                   </Link>
-                  <span className="text-neutral-500 shrink-0">
-                    {formatDateShort(d.due_at)}
-                    {days != null && days >= 0 && ` · ${days}d`}
-                  </span>
                 </li>
               );
             })}
-            {deadlines.length === 0 && (
-              <li className="py-3 text-sm text-neutral-500">No fixed deadlines on file yet.</li>
+            {next.length === 0 && (
+              <li className="px-4 py-3 text-sm text-muted-foreground">
+                No dated deadlines on file yet.
+              </li>
             )}
           </ul>
-          <Link href="/deadlines" className="mt-4 inline-block text-sm underline text-neutral-600">
-            See all upcoming deadlines →
-          </Link>
         </div>
+
+        {/* One concrete comparison does more than a paragraph of positioning. */}
+        <TopEarners />
       </section>
+    </div>
+  );
+}
+
+async function TopEarners() {
+  const top = (await listPrograms({ moneyDirection: "participant_earns" }))
+    .filter((p) => p.pay_low != null)
+    .sort((a, b) => approxAnnualUsd(b) - approxAnnualUsd(a))
+    .slice(0, 3);
+
+  if (top.length === 0) return null;
+
+  return (
+    <div className="mt-4 rounded-xl border overflow-hidden">
+      <div className="border-b bg-muted/40 px-4 py-2.5">
+        <h2 className="text-sm font-semibold">Highest paying right now</h2>
+      </div>
+      <ul className="divide-y">
+        {top.map((p) => (
+          <li key={p.id}>
+            <Link
+              href={`/programs/${p.slug}`}
+              className="flex items-center justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-muted/50"
+            >
+              <span className="min-w-0 truncate">{p.name}</span>
+              <span className="shrink-0 font-semibold tabular-nums">{formatPayShort(p)}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
