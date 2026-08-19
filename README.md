@@ -1,4 +1,4 @@
-# Stipend Clock
+# Gap Year Platform
 
 Phase 1 of a four-phase gap-year platform: a free, ad-free directory and
 deadline tracker for gap-year and post-grad paths, built around a single
@@ -114,10 +114,19 @@ returns 503 rather than silently opening up.
 
 ## Naming
 
-Working name is **Stipend Clock**, chosen to lead with the money and the
-deadline rather than the phrase "gap year" — which reads as failure to the
-post-grad cohort and as an admissions deferral to institutions. The exact-match
-`.com` has not been secured; do that before any real distribution push.
+Working name is **Gap Year Platform**.
+
+Recorded so it stays a deliberate choice: this runs against the original
+spec, which said *"Do not name it after gap years — the phrase reads as
+failure to the post-grad cohort and as admissions deferrals to
+institutions,"* and recommended naming it after the money or the deadline
+instead. Roughly a third of the catalog is post-undergrad (Fulbright,
+Rhodes, JET, NIH) where "gap year" is the wrong frame, and phase 3 sells to
+admissions offices, for whom the phrase means deferrals specifically.
+
+Worth revisiting before the domain is bought and any SEO work starts, since
+the name is cheap to change now and expensive later. The exact-match `.com`
+has not been secured.
 
 ## Data integrity notes for whoever seeds/expands the catalog next
 

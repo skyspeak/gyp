@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown, SlidersHorizontal } from "lucide-react";
 import {
   listPrograms,
   getSoonestDeadlines,
@@ -13,7 +13,7 @@ import { FilterPill } from "@/components/filter-pill";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export const metadata = { title: "Programs — Stipend Clock" };
+export const metadata = { title: "Programs — Gap Year Platform" };
 
 const MONEY_TABS = [
   { value: undefined, label: "Pays you" },
@@ -58,6 +58,17 @@ export default async function ProgramsPage({
     return a.name.localeCompare(b.name);
   });
 
+  // Drives both the summary label and whether the panel starts open, so the
+  // collapsed state can never hide a filter that's actually applied.
+  const activeSummary = [
+    moneyDirection !== "participant_earns"
+      ? MONEY_TABS.find((t) => (t.value ?? "participant_earns") === moneyDirection)?.label
+      : null,
+    degreeParam === "0" ? "No degree" : degreeParam === "1" ? "Have a degree" : null,
+    categoryParam ? CATEGORY_LABELS[categoryParam] ?? categoryParam : null,
+  ].filter((x): x is string => Boolean(x));
+  const hasActiveFilters = activeSummary.length > 0;
+
   function qs(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
     const merged = {
@@ -93,44 +104,82 @@ export default async function ProgramsPage({
         </div>
       </div>
 
-      {/* Money direction first — it's the primary split. */}
-      <div className="mt-5 flex flex-wrap gap-1.5">
-        {MONEY_TABS.map((t) => (
-          <FilterPill
-            key={t.label}
-            href={qs({ money: t.value })}
-            active={moneyDirection === (t.value ?? "participant_earns")}
-          >
-            {t.label}
-          </FilterPill>
-        ))}
-      </div>
+      {/* Collapsed by default so the catalog is the first thing you see.
+          Native <details> rather than a client component: the filters live in
+          the querystring, so this page stays server-rendered with no
+          hydration. Opens automatically when a filter is already applied, so
+          a shared URL never hides the state that produced it. */}
+      <details open={hasActiveFilters} className="group mt-5">
+        <summary className="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors hover:bg-muted [&::-webkit-details-marker]:hidden">
+          <SlidersHorizontal className="size-3.5 text-muted-foreground" />
+          <span className="font-medium">Filters</span>
+          {activeSummary.length > 0 && (
+            <span className="text-muted-foreground">· {activeSummary.join(", ")}</span>
+          )}
+          <ChevronDown className="size-3.5 text-muted-foreground transition-transform group-open:rotate-180" />
+        </summary>
 
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        <FilterPill href={qs({ degree: undefined })} active={!degreeParam} size="sm">
-          Any stage
-        </FilterPill>
-        <FilterPill href={qs({ degree: "0" })} active={degreeParam === "0"} size="sm">
-          No degree
-        </FilterPill>
-        <FilterPill href={qs({ degree: "1" })} active={degreeParam === "1"} size="sm">
-          Have a degree
-        </FilterPill>
-        <span className="mx-1 hidden w-px self-stretch bg-border sm:block" aria-hidden />
-        <FilterPill href={qs({ category: undefined })} active={!categoryParam} size="sm">
-          All types
-        </FilterPill>
-        {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-          <FilterPill
-            key={key}
-            href={qs({ category: key })}
-            active={categoryParam === key}
-            size="sm"
-          >
-            {label}
-          </FilterPill>
-        ))}
-      </div>
+        <div className="mt-3 rounded-xl border bg-muted/20 p-3">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            Money direction
+          </p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {MONEY_TABS.map((t) => (
+              <FilterPill
+                key={t.label}
+                href={qs({ money: t.value })}
+                active={moneyDirection === (t.value ?? "participant_earns")}
+                size="sm"
+              >
+                {t.label}
+              </FilterPill>
+            ))}
+          </div>
+
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            Stage
+          </p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <FilterPill href={qs({ degree: undefined })} active={!degreeParam} size="sm">
+              Any stage
+            </FilterPill>
+            <FilterPill href={qs({ degree: "0" })} active={degreeParam === "0"} size="sm">
+              No degree
+            </FilterPill>
+            <FilterPill href={qs({ degree: "1" })} active={degreeParam === "1"} size="sm">
+              Have a degree
+            </FilterPill>
+          </div>
+
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            Type
+          </p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <FilterPill href={qs({ category: undefined })} active={!categoryParam} size="sm">
+              All types
+            </FilterPill>
+            {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+              <FilterPill
+                key={key}
+                href={qs({ category: key })}
+                active={categoryParam === key}
+                size="sm"
+              >
+                {label}
+              </FilterPill>
+            ))}
+          </div>
+
+          {hasActiveFilters && (
+            <Link
+              href="/programs"
+              className="mt-3 inline-block text-xs text-muted-foreground underline hover:text-foreground"
+            >
+              Clear all filters
+            </Link>
+          )}
+        </div>
+      </details>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {sorted.map((p) => {

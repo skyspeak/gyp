@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { approveReview, rejectReview } from "./actions";
 
-export const metadata = { title: "Review queue — Stipend Clock admin" };
+export const metadata = { title: "Review queue — Gap Year Platform admin" };
 export const dynamic = "force-dynamic";
 
 type ReviewRow = {

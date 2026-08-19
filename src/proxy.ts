@@ -5,7 +5,7 @@ export const config = { matcher: ["/admin/:path*"] };
 function unauthorized() {
   return new NextResponse("Authentication required.", {
     status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Stipend Clock admin"' },
+    headers: { "WWW-Authenticate": 'Basic realm="Gap Year Platform admin"' },
   });
 }
 

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   await sendEmail({
     to: email,
     subject: `Watching: ${program.rows[0].name}`,
-    html: `<p>You're now watching <strong>${program.rows[0].name}</strong> on Stipend Clock. We'll email you at 30, 7, and 1 day before each deadline.</p>
+    html: `<p>You're now watching <strong>${program.rows[0].name}</strong> on Gap Year Platform. We'll email you at 30, 7, and 1 day before each deadline.</p>
            <p><a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/deadlines">See all your deadlines</a></p>
            <p style="color:#888;font-size:12px">Unsubscribe: ${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/unsubscribe?token=${person.unsub_token}</p>`,
   });

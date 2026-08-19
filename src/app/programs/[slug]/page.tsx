@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const program = await getProgramBySlug(slug);
   if (!program) return {};
-  return { title: `${program.name} — Stipend Clock` };
+  return { title: `${program.name} — Gap Year Platform` };
 }
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: string }) {

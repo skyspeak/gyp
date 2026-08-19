@@ -14,6 +14,6 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     console.log(`[email:skipped, no RESEND_API_KEY] to=${opts.to} subject=${opts.subject}`);
     return;
   }
-  const from = process.env.RESEND_FROM_EMAIL ?? "Stipend Clock <deadlines@stipendclock.com>";
+  const from = process.env.RESEND_FROM_EMAIL ?? "Gap Year Platform <deadlines@example.com>";
   await r.emails.send({ from, to: opts.to, subject: opts.subject, html: opts.html });
 }

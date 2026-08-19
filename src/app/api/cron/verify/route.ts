@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
       if (process.env.ADMIN_EMAIL) {
         await sendEmail({
           to: process.env.ADMIN_EMAIL,
-          subject: `[Stipend Clock] Funding risk detected: ${row.name}`,
+          subject: `[Gap Year Platform] Funding risk detected: ${row.name}`,
           html: `<p><strong>${row.name}</strong> was auto-flagged at_risk based on source page language:</p><blockquote>${extraction.suspension_language}</blockquote><p>Source: <a href="${row.source_url}">${row.source_url}</a></p>`,
         });
       }

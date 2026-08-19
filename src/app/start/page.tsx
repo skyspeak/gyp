@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export const metadata = { title: "Find my fit — Stipend Clock" };
+export const metadata = { title: "Find my fit — Gap Year Platform" };
 
 type Answers = { age?: string; degree?: string; citizenship?: string };
 

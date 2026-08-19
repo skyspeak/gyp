@@ -4,7 +4,7 @@ import { formatDeadline, formatDateShort, daysUntil } from "@/lib/format";
 import { FilterPill } from "@/components/filter-pill";
 import { cn } from "@/lib/utils";
 
-export const metadata = { title: "Deadlines — Stipend Clock" };
+export const metadata = { title: "Deadlines — Gap Year Platform" };
 
 export default async function DeadlinesPage({
   searchParams,
