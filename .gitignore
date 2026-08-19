@@ -47,5 +47,6 @@ next-env.d.ts
 *.db-wal
 *.db-shm
 
-# scratch research output, not part of the app
+# throwaway working files. NOTE: committed seed data lives in data/research/,
+# because scripts/seed.ts depends on it to reproduce the full catalog.
 /scratch

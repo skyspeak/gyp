@@ -135,11 +135,13 @@ export function toSeedProgram(r: ResearchProgram): SeedProgram {
   };
 }
 
-// Reads a research JSON file from scratch/ and returns seed rows. Entries with
-// an exclude_reason are dropped: the agent flagged them as not meeting the
-// directory's bar (fee-only, defunct, or duplicate).
+// Reads a research JSON file from data/research/ and returns seed rows.
+// These files are COMMITTED, not scratch: the seed depends on them for most of
+// the catalog, so a fresh clone must be able to reproduce the full directory.
+// Entries with an exclude_reason are dropped: flagged as not meeting the
+// directory's bar (fee-only, defunct, duplicate, or aimed at enrolled students).
 export function loadResearch(filename: string): SeedProgram[] {
-  const path = join(__dirname, "../scratch", filename);
+  const path = join(__dirname, "../data/research", filename);
   if (!existsSync(path)) {
     console.warn(`  (skipping ${filename} — not present)`);
     return [];
