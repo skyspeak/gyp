@@ -4,6 +4,7 @@ import { CORE_PROGRAMS, type SeedProgram } from "./seed-data";
 import { EXPANSION_PROGRAMS } from "./seed-data-2";
 import { COMPARISON_TABLE_PROGRAMS } from "./seed-data-3";
 import { loadResearch } from "./load-research";
+import { loadCsvPrograms } from "./import-csv";
 
 // Research-agent output is loaded straight from scratch/*.json rather than
 // transcribed into a .ts file — transcription is how a wrong pay figure gets
@@ -23,6 +24,9 @@ const ALL_PROGRAMS: SeedProgram[] = [
   ...EXPANSION_PROGRAMS,
   ...COMPARISON_TABLE_PROGRAMS,
   ...RESEARCH_FILES.flatMap(loadResearch),
+  // Last, so a hand-verified or researched row always wins a slug collision:
+  // these are unconfirmed prose imports.
+  ...loadCsvPrograms(),
 ];
 
 async function upsertProgram(p: SeedProgram) {
@@ -44,8 +48,9 @@ async function upsertProgram(p: SeedProgram) {
         cost_low, cost_high, cost_note,
         housing_provided, meals_provided, airfare_covered, education_award,
         term_min_weeks, term_max_weeks, college_credit_note, caveat_note,
+        referral_note, location, provenance,
         funding_status, funding_note, last_verified_at, created_at, updated_at
-      ) VALUES (?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?,?,?)
+      ) VALUES (?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?, ?,?,?,?,?)
       ON CONFLICT(slug) DO UPDATE SET
         name=excluded.name, operator=excluded.operator, category=excluded.category,
         summary=excluded.summary, source_url=excluded.source_url,
@@ -60,7 +65,9 @@ async function upsertProgram(p: SeedProgram) {
         airfare_covered=excluded.airfare_covered,
         education_award=excluded.education_award, term_min_weeks=excluded.term_min_weeks,
         term_max_weeks=excluded.term_max_weeks, college_credit_note=excluded.college_credit_note,
-        caveat_note=excluded.caveat_note, funding_status=excluded.funding_status,
+        caveat_note=excluded.caveat_note, referral_note=excluded.referral_note,
+        location=excluded.location, provenance=excluded.provenance,
+        funding_status=excluded.funding_status,
         funding_note=excluded.funding_note, last_verified_at=excluded.last_verified_at,
         updated_at=excluded.updated_at`,
     args: [
@@ -71,6 +78,7 @@ async function upsertProgram(p: SeedProgram) {
       p.cost_low ?? null, p.cost_high ?? null, p.cost_note ?? null,
       p.housing_provided, p.meals_provided ?? 0, p.airfare_covered, p.education_award,
       p.term_min_weeks, p.term_max_weeks, p.college_credit_note ?? null, p.caveat_note ?? null,
+      p.referral_note ?? null, p.location ?? null, p.provenance ?? "hand_verified",
       p.funding_status, p.funding_note, now, now, now,
     ],
   });

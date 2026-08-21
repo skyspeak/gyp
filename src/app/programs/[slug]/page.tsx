@@ -12,7 +12,7 @@ import {
   type Program,
 } from "@/lib/programs";
 import {
-  formatPay,
+
   formatPayShort,
   formatCostShort,
   formatTerm,
@@ -62,7 +62,8 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
   const money = MONEY_UI[program.money_direction] ?? MONEY_UI.participant_earns;
   const funding = FUNDING_UI[program.funding_status];
   const cost = formatCostShort(program);
-  const isPaying = program.money_direction === "participant_pays" && Boolean(cost);
+  const isPaying = program.money_direction === "participant_pays";
+  const hasFigure = program.pay_low != null || program.pay_high != null;
 
   // What the same stretch of time would pay instead. Prefer same category,
   // fall back to the whole earning catalog — "these pay instead" is the point,
@@ -112,6 +113,18 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
+      {program.provenance === "bulk_import" && (
+        <div className={cn("mt-3 rounded-lg border p-3.5 text-sm", TONE_ALERT.neutral)}>
+          <p className="flex items-center gap-1.5 font-semibold">
+            <Info className="size-4" /> Not yet verified
+          </p>
+          <p className="mt-1 text-muted-foreground">
+            Imported from a bulk scan and not yet confirmed against the operator&apos;s own page.
+            Details below are quoted as written — check them at the source before relying on them.
+          </p>
+        </div>
+      )}
+
       {program.us_eligible === 0 && (
         <div className={cn("mt-3 rounded-lg border p-3.5 text-sm", TONE_ALERT.neutral)}>
           <p className="flex items-center gap-1.5 font-semibold">
@@ -154,9 +167,18 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
         <p className="text-xs uppercase tracking-wide opacity-70">
           {isPaying ? "Costs you" : "Pays you"}
         </p>
+        {/* With no structured figure the prose IS the answer, but it can run to
+            a paragraph — so the headline stays short and the detail sits below
+            at reading size instead of being blown up to display size. */}
         <p className={cn("mt-0.5 text-2xl font-semibold tabular-nums", isPaying && TONE_TEXT.pay)}>
-          {isPaying ? cost : formatPay(program)}
+          {isPaying ? cost ?? "Amount varies" : hasFigure ? formatPayShort(program) : "Amount varies"}
         </p>
+        {!isPaying && !hasFigure && program.pay_note && (
+          <p className="mt-2 text-sm opacity-90">{program.pay_note}</p>
+        )}
+        {!isPaying && hasFigure && program.pay_note && (
+          <p className="mt-2 text-sm text-muted-foreground">{program.pay_note}</p>
+        )}
         {/* Cost notes run long by design (they list everything the headline fee
             excludes). Show the opening lines here and keep the rest one click
             away rather than dropping a wall of prose on the page. */}
@@ -197,6 +219,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
       {/* ---- Facts as a scannable grid, not prose ---- */}
       <dl className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
         <Stat label="Term" value={formatTerm(program.term_min_weeks, program.term_max_weeks) ?? "Varies"} />
+        {program.location && <Stat label="Where" value={program.location} />}
         <Stat label="Housing" value={program.housing_provided ? "Provided" : "Not provided"} />
         {program.meals_provided === 1 && <Stat label="Meals" value="Provided" />}
         <Stat label="Airfare" value={program.airfare_covered ? "Covered" : "Not covered"} />
@@ -269,6 +292,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
       {(program.other_eligibility ||
         program.caveat_note ||
         program.college_credit_note ||
+        program.referral_note ||
         (isPaying && program.cost_note)) && (
         <Accordion className="mt-7 rounded-lg border px-3">
           {isPaying && program.cost_note && (
@@ -302,6 +326,18 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
               <AccordionTrigger>Eligibility detail</AccordionTrigger>
               <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
                 {program.other_eligibility}
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {program.referral_note && (
+            <AccordionItem value="referral">
+              <AccordionTrigger>Who gets paid to recommend this</AccordionTrigger>
+              <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                <p>{program.referral_note}</p>
+                <p className="mt-2">
+                  We are not paid by anyone on this page, in either direction. This is here so you
+                  can tell whether other &ldquo;advice&rdquo; about it is.
+                </p>
               </AccordionContent>
             </AccordionItem>
           )}

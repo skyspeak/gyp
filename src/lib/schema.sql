@@ -57,6 +57,14 @@ CREATE TABLE IF NOT EXISTS programs (
   -- phase 1 because it is the phase 2 headline feature.
   college_credit_note TEXT,
   caveat_note       TEXT,                   -- freeform, rendered verbatim: visa/legal reality, operator finances, marketing-vs-reality
+  -- Whether the operator pays recruiters or referral commissions. The product
+  -- takes none itself; recording who *offers* them tells a family which
+  -- "advice" they are likely being sold.
+  referral_note     TEXT,
+  location          TEXT,
+  -- hand_verified | research_agent | bulk_import. Drives how much a figure
+  -- should be trusted and which rows the verify cron should prioritise.
+  provenance        TEXT NOT NULL DEFAULT 'hand_verified',
   -- integrity
   funding_status    TEXT NOT NULL DEFAULT 'active',  -- active | at_risk | paused | defunded
   funding_note      TEXT,

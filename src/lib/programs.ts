@@ -34,6 +34,9 @@ export type Program = {
   term_max_weeks: number | null;
   college_credit_note: string | null;
   caveat_note: string | null;
+  referral_note: string | null;
+  location: string | null;
+  provenance: string;
   funding_status: string;
   funding_note: string | null;
   last_verified_at: string;

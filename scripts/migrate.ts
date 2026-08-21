@@ -18,6 +18,9 @@ const ADDITIVE_COLUMNS: Record<string, Record<string, string>> = {
     meals_provided: "INTEGER NOT NULL DEFAULT 0",
     college_credit_note: "TEXT",
     caveat_note: "TEXT",
+    referral_note: "TEXT",
+    location: "TEXT",
+    provenance: "TEXT NOT NULL DEFAULT 'hand_verified'",
   },
   plans: {
     share_token: "TEXT",

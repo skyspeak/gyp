@@ -66,7 +66,10 @@ export type SeedProgram = {
   term_min_weeks: number | null;
   term_max_weeks: number | null;
   college_credit_note?: string | null;
-  caveat_note?: string | null; // visa/legal reality, operator finances, marketing-vs-reality
+  caveat_note?: string | null;
+  referral_note?: string | null;
+  location?: string | null;
+  provenance?: "hand_verified" | "research_agent" | "bulk_import"; // visa/legal reality, operator finances, marketing-vs-reality
   funding_status: "active" | "at_risk" | "paused" | "defunded";
   funding_note: string | null;
   deadlines: SeedDeadline[];
