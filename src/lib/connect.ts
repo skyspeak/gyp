@@ -143,6 +143,56 @@ export const DUE_DILIGENCE: Reference[] = [
   },
 ];
 
+export const CHECK_FUNDING: Reference[] = [
+  {
+    name: "USAspending.gov",
+    what: "Every federal grant and contract award, searchable by recipient.",
+    use: "Look up an AmeriCorps grantee by name to see whether it currently holds an award and for how much. The most direct answer to 'is this program actually funded for my term'.",
+    href: "https://www.usaspending.gov/",
+  },
+  {
+    name: "IRS Tax Exempt Organization Search",
+    what: "The IRS's own register of tax-exempt organisations.",
+    use: "Confirms an operator's exempt status is current, and flags automatic revocation for failing to file.",
+    href: "https://apps.irs.gov/app/eos/",
+    caveat: "Blocks automated checks; open it in a browser.",
+  },
+  {
+    name: "BBB Wise Giving Alliance",
+    what: "Charity accountability reports against twenty published standards.",
+    use: "Covers governance and truthfulness of appeals, not just finances — useful where a 990 looks fine but the marketing does not.",
+    href: "https://www.give.org/",
+  },
+  {
+    name: "SAM.gov",
+    what: "The federal contractor and grantee registry.",
+    use: "Shows whether an organisation is registered to receive federal money, and whether it has been excluded from doing so.",
+    href: "https://sam.gov/",
+  },
+];
+
+export const BEFORE_YOU_GO: Reference[] = [
+  {
+    name: "State Department travel advisories",
+    what: "Country-by-country risk levels and the reasoning behind them.",
+    use: "Check the specific country before committing to any placement abroad. Levels change, and some programs keep recruiting after they do.",
+    href: "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html",
+    caveat: "Blocks automated checks; open it in a browser.",
+  },
+  {
+    name: "CDC Travelers' Health",
+    what: "Required and recommended vaccinations by destination.",
+    use: "Some vaccine courses take months. Worth checking before you accept a start date, not after.",
+    href: "https://wwwnc.cdc.gov/travel",
+  },
+  {
+    name: "Federal Student Aid",
+    what: "The official source on FAFSA, Pell and federal loans.",
+    use: "The authority on whether a program is aid-eligible — over any operator's marketing claim about it.",
+    href: "https://studentaid.gov/",
+  },
+];
+
 export const PRIMARY_SOURCES: Reference[] = [
   {
     name: "AmeriCorps",
@@ -169,5 +219,133 @@ export const PRIMARY_SOURCES: Reference[] = [
     href: "https://www.gapyearassociation.org/",
     caveat:
       "Funded by the operators it accredits, and its membership skews to programs that charge participants. Treat it as an industry directory, not an impartial reviewer.",
+  },
+];
+
+
+// ---------------------------------------------------------------------------
+// Questions worth asking.
+//
+// Not generic "do your research" advice. Every question below exists because
+// something in this catalog turned out to be true and non-obvious: VISTA
+// members served unpaid through the Oct-Nov 2025 shutdown, only a subset of
+// ACE positions carry an education award, Verto's own FAQ contradicts
+// third-party claims about federal aid, EPIK closes early once places fill,
+// and Alaska processing pays nothing when the fish do not run.
+//
+// Written to be pasted into an email as-is.
+// ---------------------------------------------------------------------------
+
+export type Question = { q: string; why: string };
+
+export const QUESTION_BANK: { situation: string; blurb: string; questions: Question[] }[] = [
+  {
+    situation: "Any program that says it pays",
+    blurb: "A headline rate is not take-home. These four questions usually move the number.",
+    questions: [
+      {
+        q: "Is the figure you quote before or after tax, and is housing or food deducted from it?",
+        why: "A $22/hr resort job with $600/month housing deducted nets less than an $18/hr job with housing free. Several listings quote the gross rate and mention deductions nowhere.",
+      },
+      {
+        q: "What did someone in this role actually take home last term, after everything?",
+        why: "Asks for an outcome rather than a rate. If nobody will give you a figure, that is itself the answer.",
+      },
+      {
+        q: "Are the hours guaranteed, or dependent on conditions?",
+        why: "Alaska seafood processing pays well on overtime and nothing when the fish do not run. Wildland fire earnings are back-loaded onto deployments that a quiet season may not produce.",
+      },
+      {
+        q: "What are the upfront costs before my first paycheque — certification, gear, travel to the site?",
+        why: "Yacht crew needs STCW certification at $900-$2,800 before anyone will hire you. Fire crews often buy their own boots.",
+      },
+    ],
+  },
+  {
+    situation: "Anything AmeriCorps-affiliated",
+    blurb:
+      "Roughly a third of this catalog runs on AmeriCorps money, which was materially disrupted in 2025 and is not fully settled.",
+    questions: [
+      {
+        q: "Is this specific position AmeriCorps-affiliated, and does it carry a Segal Education Award?",
+        why: "Only a subset of American Conservation Experience positions are. The listing often does not say which.",
+      },
+      {
+        q: "Is the education award the full amount or prorated for my term length?",
+        why: "A 1,700-hour term and a 675-hour term carry very different awards, and sites frequently quote only the full-time figure.",
+      },
+      {
+        q: "Was this program affected by the 2025 grant terminations, and is your current grant confirmed for my term?",
+        why: "Around $400M in grants were terminated in spring 2025 before courts intervened. Some programs came back; others quietly did not.",
+      },
+      {
+        q: "If there is a federal funding lapse during my term, do I keep being paid on time?",
+        why: "During the Oct-Nov 2025 shutdown roughly 3,000 VISTA members kept serving while their living allowance accrued unpaid. Ask before, not during.",
+      },
+    ],
+  },
+  {
+    situation: "Anything that charges you",
+    blurb:
+      "The fee is rarely the whole cost, and two operators in this catalog were still selling places while winding up.",
+    questions: [
+      {
+        q: "What is excluded from the fee — airfare, insurance, visa, deposit, personal expenses?",
+        why: "A $18,750 headline is realistically $20,000-$21,000 once airfare and visa are counted. The exclusions are usually listed, just not next to the price.",
+      },
+      {
+        q: "Can I use federal financial aid for this? Please confirm in writing.",
+        why: "Verto's own FAQ says it is not eligible for federal aid while third-party write-ups claim FAFSA and Pell apply. Assume not eligible until the operator says otherwise on paper.",
+      },
+      {
+        q: "What is your refund policy if you cancel, and what if I withdraw?",
+        why: "Two operators here dissolved while still marketing. Ask what happens to a deposit if the program does not run.",
+      },
+      {
+        q: "How many people started your last cohort, and how many finished?",
+        why: "Completion rate is the number operators least like publishing and the one that tells you most.",
+      },
+      {
+        q: "Is any part of this scholarship a cash award, or is it a change in accommodation?",
+        why: "One advertised award of up to $17,000 turns out to mean a homestay placement rather than money.",
+      },
+    ],
+  },
+  {
+    situation: "Anything that grants college credit",
+    blurb:
+      "This is the most expensive mistake available in a gap year, and it is made by accident.",
+    questions: [
+      {
+        q: "If I earn credit during my deferral, do I return as a first-year or as a transfer applicant?",
+        why: "Transfer classification commonly forfeits incoming-freshman merit scholarships, first-year-only grants, guaranteed housing and honours eligibility.",
+      },
+      {
+        q: "Does my merit award survive the deferral, and does need-based aid require refiling the FAFSA?",
+        why: "Merit money usually rides through a deferral; need-based aid usually does not carry itself.",
+      },
+      {
+        q: "Which institution actually grants the credit, and will my college accept it?",
+        why: "Credit is issued by a partner university, and transfers cleanly only where an agreement exists.",
+      },
+    ],
+  },
+  {
+    situation: "Anything abroad",
+    blurb: "Visa reality is the thing most commonly misreported to Americans.",
+    questions: [
+      {
+        q: "Which visa will I hold, who sponsors it, and what happens if I leave early?",
+        why: "Work-exchange arrangements are frequently not lawful work on a tourist visa, and carry no employment rights if a placement goes wrong.",
+      },
+      {
+        q: "Is the salary paid in local currency, and what does it cover locally?",
+        why: "A yen or won salary converts poorly to a US savings goal. Ask what it covers where you will live, not what it converts to.",
+      },
+      {
+        q: "When does the application actually close — and do you close early once places fill?",
+        why: "EPIK reviews on a rolling basis and stops when full, regardless of the published window.",
+      },
+    ],
   },
 ];

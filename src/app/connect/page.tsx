@@ -1,6 +1,24 @@
 import Link from "next/link";
-import { ExternalLink, MessageCircleQuestion, ShieldCheck, BookOpen, Info } from "lucide-react";
-import { PEOPLE, DUE_DILIGENCE, PRIMARY_SOURCES, type Reference } from "@/lib/connect";
+import {
+  ExternalLink,
+  MessageCircleQuestion,
+  ShieldCheck,
+  BookOpen,
+  Info,
+  HelpCircle,
+  Plane,
+  Landmark,
+} from "lucide-react";
+import {
+  PEOPLE,
+  QUESTION_BANK,
+  DUE_DILIGENCE,
+  CHECK_FUNDING,
+  BEFORE_YOU_GO,
+  PRIMARY_SOURCES,
+  type Reference,
+} from "@/lib/connect";
+import { QuestionList } from "./question-list";
 import { TONE_ALERT } from "@/lib/money-ui";
 import { ShareMenu } from "@/components/share-menu";
 import { cn } from "@/lib/utils";
@@ -121,7 +139,27 @@ export default function ConnectPage() {
         </section>
       ))}
 
-      <section className="mt-12">
+      <section className="mt-14">
+        <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+          <HelpCircle className="size-4 text-muted-foreground" />
+          Questions worth asking
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Not general advice. Each of these exists because something in this catalog turned out
+          to be true and non-obvious. Tap to copy any of them into an email.
+        </p>
+        <div className="mt-5 space-y-8">
+          {QUESTION_BANK.map((g) => (
+            <div key={g.situation}>
+              <h3 className="text-sm font-semibold">{g.situation}</h3>
+              <p className="mt-0.5 text-xs text-muted-foreground">{g.blurb}</p>
+              <QuestionList questions={g.questions} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14">
         <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
           <ShieldCheck className="size-4 text-muted-foreground" />
           Check an operator before you pay them
@@ -132,6 +170,34 @@ export default function ConnectPage() {
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {DUE_DILIGENCE.map((r) => (
+            <RefCard key={r.name} r={r} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+          <Landmark className="size-4 text-muted-foreground" />
+          Check the funding is real
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          About a third of this catalog runs on federal money that was materially disrupted in
+          2025. These say whether a specific organisation currently holds an award.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {CHECK_FUNDING.map((r) => (
+            <RefCard key={r.name} r={r} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+          <Plane className="size-4 text-muted-foreground" />
+          Before you commit to going
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {BEFORE_YOU_GO.map((r) => (
             <RefCard key={r.name} r={r} />
           ))}
         </div>
