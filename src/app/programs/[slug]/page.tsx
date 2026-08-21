@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import WatchButton from "./watch-button";
+import { ShareMenu } from "@/components/share-menu";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -151,9 +152,23 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
             {program.degree_required ? "Degree required" : "No degree required"}
           </Badge>
         </div>
-        <h1 className="mt-2.5 text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
-          {program.name}
-        </h1>
+        <div className="mt-2.5 flex items-start justify-between gap-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
+            {program.name}
+          </h1>
+          <div className="shrink-0">
+            <ShareMenu
+              title={program.name}
+              summary={
+                isPaying
+                  ? `Costs ${cost ?? "money"} — ${program.operator}`
+                  : hasFigure
+                    ? `Pays ${formatPayShort(program)} — ${program.operator}`
+                    : program.operator
+              }
+            />
+          </div>
+        </div>
         <p className="mt-1 text-sm text-muted-foreground">{program.operator}</p>
       </div>
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeToggle, THEME_INIT_SCRIPT } from "@/components/theme-toggle";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
@@ -22,7 +23,16 @@ const NAV = [
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Sets the theme class before first paint so there is no flash of the
+            wrong colours. Has to be inline and ahead of hydration. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
           <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
@@ -48,6 +58,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                     {item.label}
                   </Link>
                 ))}
+                <span className="ml-1 hidden sm:block">
+                  <ThemeToggle />
+                </span>
               </nav>
             </div>
           </header>
@@ -57,7 +70,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <footer className="border-t mt-16">
             <div className="mx-auto max-w-6xl px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground">
               <p>No commissions. No referral fees. No paid placements — in either direction.</p>
-              <p>&copy; {new Date().getFullYear()} Gap Year Platform</p>
+              <div className="flex items-center gap-3">
+                <span className="sm:hidden">
+                  <ThemeToggle />
+                </span>
+                <p>&copy; {new Date().getFullYear()} Gap Year Platform</p>
+              </div>
             </div>
           </footer>
         </TooltipProvider>
