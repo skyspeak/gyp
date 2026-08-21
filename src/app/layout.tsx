@@ -18,6 +18,7 @@ const NAV = [
   { href: "/programs", label: "Programs" },
   { href: "/deadlines", label: "Deadlines" },
   { href: "/gallery", label: "Examples" },
+  { href: "/connect", label: "Who to ask" },
   { href: "/design", label: "Design a year" },
 ];
 
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
           <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
-            <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-4">
+            <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2 sm:gap-4">
               <Link
                 href="/"
                 className="flex items-center gap-2 font-semibold tracking-tight whitespace-nowrap"
@@ -46,14 +47,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 </span>
                 <span className="text-sm sm:text-base">Gap Year Platform</span>
               </Link>
-              {/* Tight on mobile so the full wordmark and all three links stay
-                  on one line at 375px. */}
-              <nav className="flex items-center gap-0 text-[11px] whitespace-nowrap sm:gap-1 sm:text-sm">
+              {/* Five links plus the wordmark no longer fit at 375px, so the
+                  nav scrolls sideways on small screens rather than truncating
+                  the last items out of reach. */}
+              <nav className="-mr-4 flex min-w-0 items-center gap-0 overflow-x-auto whitespace-nowrap pr-4 text-[11px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mr-0 sm:gap-1 sm:overflow-visible sm:pr-0 sm:text-sm">
                 {NAV.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-md px-1.5 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:px-2.5"
+                    className="shrink-0 rounded-md px-1.5 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:px-2.5"
                   >
                     {item.label}
                   </Link>
