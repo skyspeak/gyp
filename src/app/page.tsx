@@ -7,6 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { TONE_BADGE } from "@/lib/money-ui";
 import { approxAnnualUsd } from "@/lib/pay-sort";
 
+// Reads live catalog data, so it must render per request rather than being
+// prerendered at build time. Without this the build tries to query the
+// database on Vercel, where no database exists yet at build time.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [deadlines, earning, paying] = await Promise.all([
     listUpcomingDeadlines(),
