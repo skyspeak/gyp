@@ -13,6 +13,18 @@ import { formatMonth, type PlanTotals } from "@/lib/plans";
 import { CATEGORY_LABELS } from "@/lib/programs";
 import { cn } from "@/lib/utils";
 
+function addMonthsClient(ym: string, n: number): string {
+  const [y, m] = ym.split("-").map(Number);
+  const total = y * 12 + (m - 1) + n;
+  return `${Math.floor(total / 12)}-${String((total % 12) + 1).padStart(2, "0")}`;
+}
+
+function monthSpan(a: string, b: string): number {
+  const [ay, am] = a.split("-").map(Number);
+  const [by, bm] = b.split("-").map(Number);
+  return Math.max(1, (by - ay) * 12 + (bm - am) + 1);
+}
+
 type ProgramLite = {
   id: string; name: string; operator: string; category: string;
   moneyDirection: string; payType: string;
@@ -70,12 +82,17 @@ export default function PlanBuilder({
   const removeItem = (itemId: string) =>
     call(`/api/plan/${token}/items/${itemId}`, { method: "DELETE" });
 
-  const setDates = (itemId: string, startsOn: string | null, endsOn: string | null) =>
-    call(`/api/plan/${token}/items/${itemId}`, {
+  // Moving a block moves its whole span. The end is always start + length,
+  // so a 10-month program can never be squeezed into three.
+  const setStart = (itemId: string, startsOn: string | null, lengthMonths: number | null) => {
+    const endsOn =
+      startsOn && lengthMonths ? addMonthsClient(startsOn, lengthMonths - 1) : null;
+    return call(`/api/plan/${token}/items/${itemId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ startsOn, endsOn }),
     });
+  };
 
   const working = busy || pending;
 
@@ -123,7 +140,7 @@ export default function PlanBuilder({
               months={cycleMonths}
               disabled={working}
               onRemove={() => removeItem(item.id)}
-              onDates={(s, e) => setDates(item.id, s, e)}
+              onStart={(start, len) => setStart(item.id, start, len)}
             />
           ))}
         </ul>
@@ -276,15 +293,23 @@ function Timeline({ months, items, gaps }: { months: string[]; items: Item[]; ga
 }
 
 function ItemRow({
-  item, months, disabled, onRemove, onDates,
+  item, months, disabled, onRemove, onStart,
 }: {
   item: Item;
   months: string[];
   disabled: boolean;
   onRemove: () => void;
-  onDates: (s: string | null, e: string | null) => void;
+  onStart: (start: string | null, lengthMonths: number | null) => void;
 }) {
   const p = item.program;
+  // Prefer the program's published term; fall back to whatever the block
+  // currently spans so an unpublished-length item still shows something true.
+  const lengthMonths =
+    p?.termMinWeeks != null
+      ? Math.max(1, Math.round(p.termMinWeeks / 4.345))
+      : item.startsOn && item.endsOn
+        ? monthSpan(item.startsOn, item.endsOn)
+        : null;
   const money = p ? MONEY_UI[p.moneyDirection] ?? MONEY_UI.participant_earns : null;
 
   return (
@@ -323,24 +348,28 @@ function ItemRow({
         </button>
       </div>
 
+      {/* Length is the program's, not the planner's. You choose when it
+          starts; how long it runs is a fact about the program. */}
       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-muted-foreground">Starts</span>
         <MonthSelect
           value={item.startsOn}
           months={months}
-          placeholder="Start"
+          placeholder="Pick a month"
           disabled={disabled}
-          onChange={(v) => onDates(v, item.endsOn)}
+          onChange={(v) => onStart(v, lengthMonths)}
         />
-        <span className="text-muted-foreground">→</span>
-        <MonthSelect
-          value={item.endsOn}
-          months={months}
-          placeholder="End"
-          disabled={disabled}
-          onChange={(v) => onDates(item.startsOn, v)}
-        />
-        {!item.startsOn && (
-          <span className="text-muted-foreground">Add months to count its pay</span>
+        {lengthMonths ? (
+          <span className="rounded-full bg-muted px-2 py-1 font-medium">
+            {lengthMonths} month{lengthMonths === 1 ? "" : "s"} long
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Length not published</span>
+        )}
+        {item.startsOn && item.endsOn && (
+          <span className="text-muted-foreground">
+            through {formatMonth(item.endsOn)}
+          </span>
         )}
       </div>
     </li>

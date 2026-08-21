@@ -10,11 +10,11 @@ export default function DesignPage() {
   return (
     <div className="mx-auto max-w-lg px-4 py-10 sm:py-16">
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
-        Design a gap year
+        What should this year do for them?
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Two questions to start. You&apos;ll get a link you can send to anyone — no account, no
-        sign-up.
+        Answer that and we&apos;ll lay out a year using each program&apos;s real length — then you
+        can argue with it. No account, and you get a link to send.
       </p>
       <DesignForm />
     </div>
