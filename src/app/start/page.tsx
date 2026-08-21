@@ -35,6 +35,16 @@ function filterByAnswers(programs: Program[], answers: Answers): Program[] {
   return list;
 }
 
+// The modal visitor is the spec's primary cohort: an 18-year-old with a
+// deposited, deferred seat and no degree yet. Pre-filling to that makes the
+// form answerable in one click instead of presenting three empty boxes.
+// Both controls show the assumed value, so nothing is decided behind anyone's
+// back — and results still wait for an explicit submit rather than asserting
+// an answer the visitor never gave.
+const DEFAULT_AGE = "18";
+const DEFAULT_DEGREE = "no";
+const DEFAULT_CITIZENSHIP = "us_citizen";
+
 const FIELD =
   "mt-1.5 w-full rounded-md border bg-background px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50";
 
@@ -68,7 +78,8 @@ export default async function StartPage({
     <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Find my fit</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Three questions. No account, nothing saved.
+        Three questions, pre-filled with the most common answers. Change anything that&apos;s
+        wrong. No account, nothing saved.
       </p>
 
       {/* GET form so the result is a shareable URL and needs no client state. */}
@@ -84,7 +95,7 @@ export default async function StartPage({
             min={16}
             max={45}
             required
-            defaultValue={answers.age}
+            defaultValue={answers.age ?? DEFAULT_AGE}
             className={FIELD}
           />
         </div>
@@ -92,12 +103,15 @@ export default async function StartPage({
           <label className="text-sm font-medium" htmlFor="degree">
             Bachelor&apos;s degree?
           </label>
-          <select id="degree" name="degree" defaultValue={answers.degree ?? ""} required className={FIELD}>
-            <option value="" disabled>
-              Choose…
-            </option>
-            <option value="yes">Yes / enrolled</option>
+          <select
+            id="degree"
+            name="degree"
+            defaultValue={answers.degree ?? DEFAULT_DEGREE}
+            required
+            className={FIELD}
+          >
             <option value="no">Not yet</option>
+            <option value="yes">Yes / enrolled</option>
           </select>
         </div>
         <div>
@@ -107,7 +121,7 @@ export default async function StartPage({
           <select
             id="citizenship"
             name="citizenship"
-            defaultValue={answers.citizenship ?? "us_citizen"}
+            defaultValue={answers.citizenship ?? DEFAULT_CITIZENSHIP}
             className={FIELD}
           >
             <option value="us_citizen">U.S. citizen</option>
