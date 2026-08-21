@@ -109,6 +109,21 @@ export type Proposal = {
   /** The YEAR is pay-to-participate — not merely an earning year that has an
    *  upfront outlay like STCW certification or fire boots. */
   isPayingYear: boolean;
+  /** Where to go for the rest of the catalog that looks like this one. */
+  moreLike: { href: string; label: string; count: number };
+};
+
+// Lower-case, reads naturally mid-sentence in "see 51 more conservation options".
+const CATEGORY_WORDS: Record<string, string> = {
+  service: "service",
+  conservation: "conservation",
+  teaching_abroad: "teaching-abroad",
+  research: "research",
+  health: "health",
+  trades: "trades",
+  outdoor: "outdoor",
+  travel_study: "travel & study",
+  work: "paid work",
 };
 
 const CYCLE = "2027-28";
@@ -177,6 +192,38 @@ export async function buildGallery(): Promise<Proposal[]> {
       totals.costHigh === 0 &&
       blocks.some((b) => (b.program.pay_currency ?? "USD") !== "USD");
 
+    // "More like this" is derived from what the proposal actually contains,
+    // so it keeps working as the catalog grows. For the pay-to-participate
+    // example the honest onward link is not more fee programs — it is the
+    // earning paths for the same stage.
+    const degree = template.cohort === "post_grad" ? 1 : 0;
+    const counts = new Map<string, number>();
+    for (const b of blocks) counts.set(b.program.category, (counts.get(b.program.category) ?? 0) + 1);
+    const dominant = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+
+    const moreLike = isPayingYear
+      ? {
+          href: `/programs?degree=${degree}`,
+          label: "paths that pay you instead",
+          count: all.filter(
+            (p) =>
+              p.money_direction === "participant_earns" &&
+              p.degree_required === degree &&
+              p.us_eligible === 1
+          ).length,
+        }
+      : {
+          href: `/programs?degree=${degree}${dominant ? `&category=${dominant}` : ""}`,
+          label: dominant ? `more ${CATEGORY_WORDS[dominant] ?? dominant} options` : "more like this",
+          count: all.filter(
+            (p) =>
+              p.money_direction === "participant_earns" &&
+              p.degree_required === degree &&
+              p.us_eligible === 1 &&
+              (!dominant || p.category === dominant)
+          ).length,
+        };
+
     return {
       template,
       blocks,
@@ -185,6 +232,7 @@ export async function buildGallery(): Promise<Proposal[]> {
       couldHaveEarned,
       paidAbroad,
       isPayingYear,
+      moreLike,
     };
   }).filter((p) => p.blocks.length > 0);
 }

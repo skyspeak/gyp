@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { buildGallery } from "@/lib/gallery";
 import { formatCents } from "@/lib/format";
 import { CATEGORY_LABELS } from "@/lib/programs";
@@ -123,12 +124,23 @@ export default async function GalleryPage() {
                 </p>
               )}
 
-              <div className="mt-auto pt-4">
-                <ForkButton
-                  slugs={p.blocks.map((b) => b.program.slug)}
-                  cohort={p.template.cohort}
-                  title={p.template.title}
-                />
+              <div className="mt-auto flex flex-col gap-2 pt-4 sm:flex-row">
+                <div className="sm:flex-1">
+                  <ForkButton
+                    slugs={p.blocks.map((b) => b.program.slug)}
+                    cohort={p.template.cohort}
+                    title={p.template.title}
+                  />
+                </div>
+                {/* The onward path: the rest of the catalog shaped like this
+                    card, already filtered. */}
+                <Link
+                  href={p.moreLike.href}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted sm:flex-1"
+                >
+                  <Search className="size-3.5 text-muted-foreground" />
+                  {p.moreLike.count} {p.moreLike.label}
+                </Link>
               </div>
             </article>
           );
