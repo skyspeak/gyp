@@ -116,6 +116,13 @@ CREATE TABLE IF NOT EXISTS plans (
   status         TEXT NOT NULL DEFAULT 'draft',
                                          -- draft | submitted | approved | active | complete | abandoned
   institution_id TEXT REFERENCES institutions(id),
+  -- Phase 1 has no auth, so the unguessable share_token IS the credential:
+  -- whoever holds the link can view and edit, like an unlisted doc. This is
+  -- what makes a plan shareable without forcing anyone to make an account.
+  share_token    TEXT UNIQUE,
+  title          TEXT,
+  student_name   TEXT,                   -- display only; the person row may have no real email yet
+  created_by     TEXT,                   -- parent | student — who started it, for phase 4 analysis
   created_at     TEXT NOT NULL,
   updated_at     TEXT NOT NULL
 );
@@ -177,6 +184,8 @@ CREATE INDEX IF NOT EXISTS idx_deadlines_due     ON deadlines(due_at);
 CREATE INDEX IF NOT EXISTS idx_deadlines_program ON deadlines(program_id);
 CREATE INDEX IF NOT EXISTS idx_listings_program  ON listings(program_id);
 CREATE INDEX IF NOT EXISTS idx_plan_items_plan   ON plan_items(plan_id, kind);
+-- share_token is the lookup key for every plan page view.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_plans_share_token ON plans(share_token) WHERE share_token IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_plan_items_program ON plan_items(program_id);
 CREATE INDEX IF NOT EXISTS idx_plan_events_plan  ON plan_events(plan_id, occurred_at);
 CREATE INDEX IF NOT EXISTS idx_review_queue_status ON review_queue(status);

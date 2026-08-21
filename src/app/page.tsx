@@ -41,11 +41,11 @@ export default async function Home() {
           that charge you, priced honestly so you can tell the difference.
         </p>
         <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2.5">
-          <Button size="lg" nativeButton={false} render={<Link href="/start" />}>
-            Find my fit <ArrowRight className="size-4" />
+          <Button size="lg" nativeButton={false} render={<Link href="/design" />}>
+            Design a gap year <ArrowRight className="size-4" />
           </Button>
-          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/programs" />}>
-            Browse all {earning.length + paying.length}
+          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/start" />}>
+            Find my fit
           </Button>
         </div>
       </section>

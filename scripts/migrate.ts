@@ -19,6 +19,12 @@ const ADDITIVE_COLUMNS: Record<string, Record<string, string>> = {
     college_credit_note: "TEXT",
     caveat_note: "TEXT",
   },
+  plans: {
+    share_token: "TEXT",
+    title: "TEXT",
+    student_name: "TEXT",
+    created_by: "TEXT",
+  },
 };
 
 async function existingColumns(table: string): Promise<Set<string>> {
