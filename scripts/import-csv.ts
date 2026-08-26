@@ -109,9 +109,43 @@ function inferSelectivity(raw: string): SeedProgram["selectivity"] {
   return null;
 }
 
+// "US citizens are NOT eligible" means the program is alive and closed to
+// Americans — not that it shut down. Conflating the two would publish
+// "Japan Working Holiday Programme: shut down", which is simply false.
+const NOT_FOR_AMERICANS =
+  /\b(u\.?s\.? citizens are not eligible|united states is not|not with the united states|but not with the u\.?s|not among|does not have a (bilateral )?(working holiday|youth mobility)|no yma|us citizens? (are )?(not|ineligible))\b/i;
+
+function inferUsEligible(text: string): 0 | 1 {
+  return NOT_FOR_AMERICANS.test(text) ? 0 : 1;
+}
+
+// The status column states its verdict first — "ACTIVE — ...", "CLOSED – ...",
+// "TERMINATED — ..." — and then explains. Scanning the whole string for
+// closure words reads the explanation as the verdict, which produced three
+// false closures: College Possible ("ACTIVE — Note: College Possible
+// Philadelphia closed", one site of many), AmeriCorps State & National
+// ("ACTIVE WITH CAUTION", where the GRANTS were terminated), and USFS Direct
+// Hire ("Active but most summer 2026 windows closed", meaning application
+// windows). Publishing "College Possible: shut down" would be false and
+// would destroy the credibility this data exists to earn.
+//
+// So: trust the leading verdict, and only fall back to keywords without one.
 function inferFundingStatus(raw: string): SeedProgram["funding_status"] {
-  const s = raw.toLowerCase();
-  if (/defunct|shut down|closed|terminated|dissolved|no longer/.test(s)) return "defunded";
+  const s = raw.trim().toLowerCase();
+  const lead = s.split(/[—–\-:.(]/)[0].trim();
+
+  if (/^(closed|defunct|terminated|dissolved|discontinued|ended)\b/.test(lead)) return "defunded";
+  if (/^(paused|suspended|on hold|hiatus|postponed|inactive)\b/.test(lead)) return "paused";
+  if (/^active with caution\b/.test(lead)) return "at_risk";
+  if (/^(active|operating|running|open)\b/.test(lead)) {
+    // Leading verdict is positive; only a threat to the money downgrades it.
+    return /\b(at risk|threatened|cuts affected|funding chaos|uncertain|may be affected)\b/.test(s)
+      ? "at_risk"
+      : "active";
+  }
+
+  // No leading verdict — fall back to scanning, as before.
+  if (/defunct|shut down|no longer operating|dissolved|terminated/.test(s)) return "defunded";
   if (/paused|hiatus|suspended|not accepting|on hold/.test(s)) return "paused";
   if (/caution|at risk|uncertain|unverified status|may be affected|threatened|cuts/.test(s)) return "at_risk";
   return "active";
@@ -198,6 +232,7 @@ export function loadCsvPrograms(): SeedProgram[] {
       min_age: null,
       max_age: null,
       citizenship: null,
+      us_eligible: inferUsEligible(`${name} ${what}`),
       other_eligibility: null,
       selectivity: inferSelectivity(r[iSel] ?? ""),
       pay_type: money === "participant_pays" ? "none" : "stipend_total",
@@ -219,7 +254,9 @@ export function loadCsvPrograms(): SeedProgram[] {
       referral_note: clean(r[iRef] ?? ""),
       location: clean(r[iLoc] ?? ""),
       provenance: "bulk_import",
-      funding_status: inferFundingStatus(status),
+      funding_status: NOT_FOR_AMERICANS.test(`${name} ${what}`)
+        ? "active"
+        : inferFundingStatus(status),
       funding_note: null,
       deadlines: [], // the CSV has no deadline column; never invent one
     });
