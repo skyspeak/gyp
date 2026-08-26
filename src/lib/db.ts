@@ -2,6 +2,22 @@ import { createClient, type Client } from "@libsql/client";
 
 let client: Client | null = null;
 
+// Names the database a CLI run is about to write to. An empty
+// TURSO_DATABASE_URL silently falls back to the local file and still prints
+// "Seeded 381 programs", which is indistinguishable from a successful
+// production seed — that has already caused one reseed to be believed done
+// when it had not happened.
+export function describeTarget(): string {
+  const url = process.env.TURSO_DATABASE_URL;
+  if (!url) return "LOCAL FILE ./local.db  (TURSO_DATABASE_URL is not set)";
+  if (url.startsWith("file:")) return `LOCAL FILE ${url}`;
+  try {
+    return `REMOTE ${new URL(url).hostname}`;
+  } catch {
+    return `REMOTE ${url}`;
+  }
+}
+
 export function db(): Client {
   if (client) return client;
 

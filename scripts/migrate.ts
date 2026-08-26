@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { join } from "path";
-import { db } from "../src/lib/db";
+import { db, describeTarget } from "../src/lib/db";
 
 // Columns added after the first schema went out. SQLite has no
 // "ADD COLUMN IF NOT EXISTS", so we diff against pragma table_info and add
@@ -34,6 +34,8 @@ async function existingColumns(table: string): Promise<Set<string>> {
   const res = await db().execute(`PRAGMA table_info(${table})`);
   return new Set(res.rows.map((r) => String(r.name)));
 }
+
+console.log(`→ target: ${describeTarget()}`);
 
 async function main() {
   const sql = readFileSync(join(__dirname, "../src/lib/schema.sql"), "utf-8");

@@ -1,4 +1,4 @@
-import { db } from "../src/lib/db";
+import { db, describeTarget } from "../src/lib/db";
 import { newId, nowIso } from "../src/lib/ids";
 import { CORE_PROGRAMS, type SeedProgram } from "./seed-data";
 import { EXPANSION_PROGRAMS } from "./seed-data-2";
@@ -98,6 +98,8 @@ async function upsertProgram(p: SeedProgram) {
 
   return { id, slug: p.slug };
 }
+
+console.log(`→ target: ${describeTarget()}`);
 
 async function main() {
   const client = db();
