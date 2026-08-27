@@ -110,12 +110,27 @@ being unable to say whether it worked.
 Minimum viable instrumentation:
 
 1. A privacy-respecting pageview count (no cookies, no third-party
-   trackers — a trust product cannot ship surveillance).
-2. `?ref=` on every adviser link, recorded on the watch event, so a forward is
-   attributable to the adviser who sent it. That is the "3+ advisers forwarded
-   it" metric, and it is otherwise unknowable.
-3. A simple funnel readout: visitors → watch signups → watchers with 2+
-   programs.
+   trackers — a trust product cannot ship surveillance). **Still missing —
+   this is the remaining blocker.**
+2. ~~`?ref=` on every adviser link~~ **Done.** The lead form on `/`,
+   `/gallery` and `/changes` records `source` (which page converted) and
+   `referrer` (the `?ref=` value), so a signup is attributable to the adviser
+   who forwarded the link. Send advisers links like
+   `…/changes?ref=jsmith-brown` and the forwards become countable — that is
+   the "3+ advisers forwarded it" gate.
+3. A simple funnel readout: visitors → signups → signups with 2+ programs.
+
+Signups also record `role`, so the student / parent / adviser mix is visible
+without asking. Query it directly:
+
+```sql
+SELECT source, role, COUNT(*) FROM people GROUP BY 1, 2 ORDER BY 3 DESC;
+SELECT referrer, COUNT(*) FROM people WHERE referrer IS NOT NULL GROUP BY 1;
+```
+
+**Conversion still has no denominator** until item 1 exists: we can count who
+signed up and who sent them, but not how many people saw the page and did
+nothing.
 
 ## Honest risks
 

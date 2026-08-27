@@ -22,6 +22,13 @@ const ADDITIVE_COLUMNS: Record<string, Record<string, string>> = {
     location: "TEXT",
     provenance: "TEXT NOT NULL DEFAULT 'hand_verified'",
   },
+  people: {
+    intent: "TEXT",
+    cohort: "TEXT",
+    source: "TEXT",
+    referrer: "TEXT",
+    institution_name: "TEXT",
+  },
   plans: {
     share_token: "TEXT",
     title: "TEXT",

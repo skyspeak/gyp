@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Ban, PauseCircle, TriangleAlert, Globe, ArrowUpRight } from "lucide-react";
 import { listPrograms, type Program } from "@/lib/programs";
 import { ShareMenu } from "@/components/share-menu";
+import { LeadForm } from "@/components/lead-form";
 import { TONE_ALERT, TONE_BADGE } from "@/lib/money-ui";
 import { cn } from "@/lib/utils";
 
@@ -186,6 +187,14 @@ export default async function ChangesPage() {
           ))}
         </ul>
       </section>
+
+      <LeadForm
+        source="changes"
+        className="mt-12"
+        heading="Get told the next time this list changes"
+        blurb="Programs close quietly and advising pages keep recommending them for years. We email you when one on this list changes status — nothing else."
+        pitch="One email when a program on this list closes, pauses, or drops US eligibility."
+      />
 
       <div className="mt-12 rounded-xl border p-5">
         <h2 className="font-semibold">How this stays current</h2>

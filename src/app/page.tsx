@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LeadForm } from "@/components/lead-form";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { listUpcomingDeadlines, listPrograms } from "@/lib/programs";
 import { formatDateShort, daysUntil, formatPayShort } from "@/lib/format";
@@ -98,6 +99,8 @@ export default async function Home() {
 
         {/* One concrete comparison does more than a paragraph of positioning. */}
         <TopEarners />
+
+        <LeadForm source="home" className="mt-10" />
       </section>
     </div>
   );

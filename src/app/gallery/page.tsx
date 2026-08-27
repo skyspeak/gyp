@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LeadForm } from "@/components/lead-form";
 import { Search } from "lucide-react";
 import { buildGallery } from "@/lib/gallery";
 import { formatCents } from "@/lib/format";
@@ -146,6 +147,13 @@ export default async function GalleryPage() {
           );
         })}
       </div>
+
+      <LeadForm
+        source="gallery"
+        className="mt-10"
+        heading="Told before the window closes"
+        blurb="Most of what makes these years work is applying on time. Tell us roughly what you're after and we'll email you when a matching deadline is 30, 7 and 1 day out."
+      />
 
       <p className="mt-8 text-sm text-muted-foreground">
         None of these are recommendations and nobody paid to appear here.{" "}

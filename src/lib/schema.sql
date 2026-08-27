@@ -110,10 +110,17 @@ CREATE TABLE IF NOT EXISTS people (
   id             TEXT PRIMARY KEY,
   email          TEXT NOT NULL UNIQUE,
   display_name   TEXT,
-  role           TEXT NOT NULL,          -- student | parent | reviewer
+  role           TEXT NOT NULL,          -- student | parent | adviser | reviewer
   institution_id TEXT REFERENCES institutions(id),   -- null until phase 3
   created_at     TEXT NOT NULL,
-  unsub_token    TEXT NOT NULL UNIQUE
+  unsub_token    TEXT NOT NULL UNIQUE,
+  -- Lead capture. A person can arrive before they have picked any program,
+  -- so these describe what they said they wanted at signup.
+  intent           TEXT,     -- one of INTENTS in lib/suggest, null if skipped
+  cohort           TEXT,     -- pre_college | post_grad
+  source           TEXT,     -- page the form was submitted from
+  referrer         TEXT,     -- ?ref= value, for adviser forward attribution
+  institution_name TEXT      -- free text; advisers only, before institutions exist
 );
 
 CREATE TABLE IF NOT EXISTS plans (
