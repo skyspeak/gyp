@@ -54,6 +54,13 @@ Hobby plan Vercel runs crons **once a day** regardless of the schedule string.
 
 ## 2. Every deploy after
 
+Every command in this file runs from the project directory, not the repo root
+and not `~/Documents`:
+
+```bash
+cd /Users/gliu/Documents/Claude/Calude_Code_game_ai/gap-year-platform
+```
+
 ```bash
 npm run lint && npm run build
 ```
@@ -73,7 +80,7 @@ Vercel does **not** run migrations or seeds. Do it from your machine, against
 production, explicitly:
 
 ```bash
-cd gap-year-platform
+cd /Users/gliu/Documents/Claude/Calude_Code_game_ai/gap-year-platform
 export TURSO_DATABASE_URL="$(turso db show gap-year-platform --url)"
 export TURSO_AUTH_TOKEN="$(turso db tokens create gap-year-platform)"
 npm run db:migrate && npm run db:seed
