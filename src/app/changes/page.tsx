@@ -207,6 +207,9 @@ export default async function ChangesPage() {
           <Link href="/connect" className="inline-flex items-center gap-1 font-medium hover:underline">
             Check an operator yourself <ArrowUpRight className="size-3.5" />
           </Link>
+          <Link href="/status" className="inline-flex items-center gap-1 font-medium hover:underline">
+            Check any program&apos;s status <ArrowUpRight className="size-3.5" />
+          </Link>
           <Link href="/programs" className="inline-flex items-center gap-1 font-medium hover:underline">
             Browse what is running <ArrowUpRight className="size-3.5" />
           </Link>

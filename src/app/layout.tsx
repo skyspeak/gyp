@@ -18,7 +18,7 @@ const NAV = [
   { href: "/programs", label: "Programs" },
   { href: "/deadlines", label: "Deadlines" },
   { href: "/gallery", label: "Examples" },
-  { href: "/changes", label: "What changed" },
+  { href: "/status", label: "Still running?" },
   { href: "/connect", label: "Who to ask" },
   { href: "/design", label: "Design a year" },
 ];

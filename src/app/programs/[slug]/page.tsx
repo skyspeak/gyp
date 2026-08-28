@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import WatchButton from "./watch-button";
+import { AlertButton } from "@/components/alert-button";
 import { ShareMenu } from "@/components/share-menu";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -376,6 +377,12 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
           Official site <ExternalLink className="size-3.5" />
         </Button>
         <WatchButton programId={program.id} programName={program.name} />
+      </div>
+
+      {/* Distinct from "remind me": that tracks a deadline, this tracks
+          whether the program still exists at all. */}
+      <div className="mt-3">
+        <AlertButton slug={program.slug} programName={program.name} />
       </div>
 
       <p className="mt-5 text-xs text-muted-foreground">

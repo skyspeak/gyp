@@ -81,10 +81,18 @@ production, explicitly:
 
 ```bash
 cd /Users/gliu/Documents/Claude/Calude_Code_game_ai/gap-year-platform
+turso auth whoami || turso auth login
 export TURSO_DATABASE_URL="$(turso db show gap-year-platform --url)"
 export TURSO_AUTH_TOKEN="$(turso db tokens create gap-year-platform)"
+[ ${#TURSO_AUTH_TOKEN} -gt 120 ] || { echo "BAD TOKEN — run: turso auth login"; }
 npm run db:migrate && npm run db:seed
 ```
+
+The `whoami` and length checks are not decoration. When the Turso CLI session
+expires, `turso db tokens create` prints *"You are not logged in"* to stdout
+and `$( )` captures that sentence **as the token** — the export succeeds, the
+script still prints `→ target: REMOTE`, and the run dies on an opaque
+`SERVER_ERROR: HTTP status 400`. A real token is ~200 characters.
 
 Both scripts print their target first:
 
@@ -131,6 +139,10 @@ curl "https://gyp-psi.vercel.app/api/cron/verify?token=$CRON_SECRET"
 - **`db()` throws rather than falling back when `process.env.VERCEL` is set.**
   Deliberate: an empty `local.db` on a server produces `no such table` errors
   far from the real cause.
+- **An expired CLI session becomes a corrupt token.** `turso db tokens create`
+  writes its "not logged in" error to stdout, so command substitution captures
+  the error text as the token and every query fails with a bare HTTP 400. Run
+  `turso auth whoami` first — see §3.
 - **Turso tokens are shown once.** `turso db tokens create` mints a new one
   each time; you cannot read an existing token back.
 - **`ADMIN_EMAIL` and the extraction keys are optional by design.** Missing

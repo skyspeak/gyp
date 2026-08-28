@@ -187,6 +187,30 @@ CREATE TABLE IF NOT EXISTS review_queue (
   resolved_by   TEXT
 );
 
+-- Every funding_status transition, so "is it still running" has an audit
+-- trail and alerts have something to fire on. Nothing else records WHEN a
+-- program changed, only what it is now.
+CREATE TABLE IF NOT EXISTS status_history (
+  id          TEXT PRIMARY KEY,
+  program_id  TEXT NOT NULL REFERENCES programs(id),
+  from_status TEXT,               -- null for the first observation
+  to_status   TEXT NOT NULL,
+  note        TEXT,
+  detected_by TEXT NOT NULL,      -- cron | human | seed
+  source_url  TEXT,
+  changed_at  TEXT NOT NULL
+);
+
+-- Who to tell when a program changes. program_id NULL means "everything",
+-- which is what an adviser wants: they cannot name in advance the program
+-- that is going to die.
+CREATE TABLE IF NOT EXISTS program_alerts (
+  id         TEXT PRIMARY KEY,
+  person_id  TEXT NOT NULL REFERENCES people(id),
+  program_id TEXT REFERENCES programs(id),
+  created_at TEXT NOT NULL
+);
+
 -- @indexes -- scripts/migrate.ts splits the file here and runs everything below
 -- AFTER its additive ALTER TABLE pass, so an index can reference a column that
 -- was added to an already-existing table.
@@ -204,3 +228,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_plans_share_token ON plans(share_token) WH
 CREATE INDEX IF NOT EXISTS idx_plan_items_program ON plan_items(program_id);
 CREATE INDEX IF NOT EXISTS idx_plan_events_plan  ON plan_events(plan_id, occurred_at);
 CREATE INDEX IF NOT EXISTS idx_review_queue_status ON review_queue(status);
+
+CREATE INDEX IF NOT EXISTS idx_status_history_program ON status_history(program_id, changed_at DESC);
+CREATE INDEX IF NOT EXISTS idx_status_history_changed ON status_history(changed_at DESC);
+CREATE INDEX IF NOT EXISTS idx_program_alerts_program ON program_alerts(program_id);
+-- One row per person per target; NULLs are distinct in SQLite, so the
+-- "all programs" subscription is deduped separately in code.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_program_alerts_unique ON program_alerts(person_id, program_id);

@@ -5,6 +5,7 @@ import { fetchAndExtract } from "@/lib/verify";
 import { diffExtraction } from "@/lib/review-queue";
 import { newId, nowIso } from "@/lib/ids";
 import { sendEmail } from "@/lib/email";
+import { recordStatusChange } from "@/lib/status";
 import type { Program, Deadline } from "@/lib/programs";
 
 const RECHECK_AFTER_DAYS = 14;
@@ -25,6 +26,7 @@ export async function GET(req: NextRequest) {
   let checked = 0;
   let flagged = 0;
   let atRisk = 0;
+  let notified = 0;
   let skipped = 0;
 
   for (const row of due.rows as unknown as Program[]) {
@@ -62,10 +64,24 @@ export async function GET(req: NextRequest) {
     // still wait for a human in review_queue.
     if (extraction.suspension_language && row.funding_status === "active") {
       atRisk++;
+      const note = `Auto-flagged by verification cron: "${extraction.suspension_language}". Needs human confirmation.`;
       await client.execute({
-        sql: "UPDATE programs SET funding_status = 'at_risk', funding_note = ?, updated_at = ? WHERE id = ?",
-        args: [`Auto-flagged by verification cron: "${extraction.suspension_language}". Needs human confirmation.`, nowIso(), row.id],
+        sql: "UPDATE programs SET funding_note = ? WHERE id = ?",
+        args: [note, row.id],
       });
+      // Writes the transition, moves the status, and emails everyone watching
+      // this program (plus the watch-everything subscribers).
+      const { notified: n } = await recordStatusChange({
+        programId: row.id,
+        programName: row.name,
+        programSlug: row.slug,
+        from: "active",
+        to: "at_risk",
+        note: extraction.suspension_language,
+        detectedBy: "cron",
+        sourceUrl: row.source_url,
+      });
+      notified += n;
       if (process.env.ADMIN_EMAIL) {
         await sendEmail({
           to: process.env.ADMIN_EMAIL,
@@ -81,5 +97,5 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ ok: true, checked, flagged, atRisk, skipped });
+  return NextResponse.json({ ok: true, checked, flagged, atRisk, notified, skipped });
 }
