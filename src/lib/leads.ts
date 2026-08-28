@@ -17,6 +17,13 @@ export type LeadInput = {
   source?: string | null;
   referrer?: string | null;
   institutionName?: string | null;
+  /**
+   * True when the role was assumed rather than chosen. The alerts endpoint has
+   * to pick something, and its guess must not overwrite what a person actually
+   * told us — a student who clicked "alert me" was being silently rewritten to
+   * "adviser", corrupting the one field that measures who the audience is.
+   */
+  roleAssumed?: boolean;
 };
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -39,14 +46,14 @@ export async function captureLead(input: LeadInput): Promise<{ id: string; isNew
     const id = String(existing.rows[0].id);
     await client.execute({
       sql: `UPDATE people SET
-              role             = ?,
+              role             = ${input.roleAssumed ? "role" : "?"},
               intent           = COALESCE(?, intent),
               cohort           = COALESCE(?, cohort),
               referrer         = COALESCE(?, referrer),
               institution_name = COALESCE(?, institution_name)
             WHERE id = ?`,
       args: [
-        input.role,
+        ...(input.roleAssumed ? [] : [input.role]),
         input.intent ?? null,
         input.cohort ?? null,
         input.referrer ?? null,

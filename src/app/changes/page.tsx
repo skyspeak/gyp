@@ -4,6 +4,7 @@ import { listPrograms, type Program } from "@/lib/programs";
 import { ShareMenu } from "@/components/share-menu";
 import { LeadForm } from "@/components/lead-form";
 import { TONE_ALERT, TONE_BADGE } from "@/lib/money-ui";
+import { dedupeByName } from "@/lib/dedupe";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -49,30 +50,6 @@ const GROUPS: {
   },
 ];
 
-// The catalog holds the same closed organisation more than once when a
-// hand-checked record (Thinking Beyond Borders, via its last Form 990) and a
-// bulk-imported one (via a directory listing) describe it. Both are true, but
-// listing a closure twice on the page whose whole job is credibility reads as
-// padding the count. Collapse them, keeping the hand-verified record.
-function dedupe(rows: Program[]): Program[] {
-  const key = (n: string) =>
-    n
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "")
-      .replace(/(gapyear(semester)?|program(me)?|fellowship)$/, "");
-  const out: Program[] = [];
-  for (const p of rows) {
-    const k = key(p.name);
-    const i = out.findIndex((q) => {
-      const j = key(q.name);
-      return j.startsWith(k) || k.startsWith(j);
-    });
-    if (i === -1) out.push(p);
-    else if (p.provenance === "hand_verified" && out[i].provenance !== "hand_verified") out[i] = p;
-  }
-  return out;
-}
-
 function Row({ p }: { p: Program }) {
   return (
     <li className="py-3">
@@ -106,7 +83,7 @@ export default async function ChangesPage() {
   const all = await listPrograms({ moneyDirection: "all", includeUsIneligible: true });
 
   const byStatus = (s: string) =>
-    dedupe(all.filter((p) => p.funding_status === s && p.us_eligible === 1));
+    dedupeByName(all.filter((p) => p.funding_status === s && p.us_eligible === 1));
   const ineligible = all.filter((p) => p.us_eligible === 0);
   const affected = GROUPS.reduce((n, g) => n + byStatus(g.status).length, 0);
 

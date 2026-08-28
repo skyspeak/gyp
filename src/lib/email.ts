@@ -8,12 +8,18 @@ function client(): Resend | null {
   return resend;
 }
 
-export async function sendEmail(opts: { to: string; subject: string; html: string }) {
+/** Resolves true only when a message was actually handed to Resend. */
+export async function sendEmail(opts: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<boolean> {
   const r = client();
   if (!r) {
     console.log(`[email:skipped, no RESEND_API_KEY] to=${opts.to} subject=${opts.subject}`);
-    return;
+    return false;
   }
   const from = process.env.RESEND_FROM_EMAIL ?? "Gap Year Platform <deadlines@example.com>";
   await r.emails.send({ from, to: opts.to, subject: opts.subject, html: opts.html });
+  return true;
 }

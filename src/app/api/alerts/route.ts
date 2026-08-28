@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
     const { id: personId } = await captureLead({
       email,
       role,
+      // Nobody asked them; this is a guess to satisfy NOT NULL on a new row.
+      roleAssumed: true,
       source: slug ? `alert:${slug}` : "alert:all",
       referrer:
         typeof body?.referrer === "string" && body.referrer.trim()

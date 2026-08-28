@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { AlertButton } from "@/components/alert-button";
 import { STATUS_UI, isStale, STALE_AFTER_DAYS, type FundingStatus } from "@/lib/status";
 import { TONE_BADGE, TONE_ALERT } from "@/lib/money-ui";
+import { dedupeByName } from "@/lib/dedupe";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +27,7 @@ type Row = {
   source_url: string;
   last_verified_at: string | null;
   us_eligible: number;
+  provenance: string;
 };
 
 function hostOf(url: string): string {
@@ -50,39 +52,40 @@ export default async function StatusPage({
 }: PageProps<"/status">) {
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q.trim() : "";
-  const only = typeof sp.status === "string" ? sp.status : "";
+  // Validate once, here. Guarding only the SQL filter left the label below
+  // reading STATUS_UI[garbage].label — undefined, and .toLowerCase() on it
+  // turned ?status=anything into a 500.
+  const raw = typeof sp.status === "string" ? sp.status : "";
+  const only: FundingStatus | "" = ORDER.includes(raw as FundingStatus)
+    ? (raw as FundingStatus)
+    : "";
 
-  const where: string[] = [];
-  const args: string[] = [];
-  if (q) {
-    where.push("p.name LIKE ?");
-    args.push(`%${q}%`);
-  }
-  if (ORDER.includes(only as FundingStatus)) {
-    where.push("p.funding_status = ?");
-    args.push(only);
-  }
+  // Load once and filter in memory: the tiles and the list have to be derived
+  // from the SAME deduplicated set, or the counts contradict the rows beneath
+  // them. 381 rows is small enough that this is cheaper than staying in sync.
+  const res = await db().execute(`
+    SELECT p.id, p.slug, p.name, p.funding_status, p.funding_note, p.source_url,
+           p.last_verified_at, p.us_eligible, p.provenance
+    FROM programs p
+    ORDER BY CASE p.funding_status
+               WHEN 'defunded' THEN 0 WHEN 'paused' THEN 1
+               WHEN 'at_risk' THEN 2 ELSE 3 END,
+             p.name`);
 
-  const res = await db().execute({
-    sql: `SELECT p.id, p.slug, p.name, p.funding_status, p.funding_note, p.source_url,
-                 p.last_verified_at, p.us_eligible
-          FROM programs p
-          ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
-          ORDER BY CASE p.funding_status
-                     WHEN 'defunded' THEN 0 WHEN 'paused' THEN 1
-                     WHEN 'at_risk' THEN 2 ELSE 3 END,
-                   p.name`,
-    args,
-  });
-  const rows = res.rows as unknown as Row[];
+  const all = dedupeByName(res.rows as unknown as Row[]);
 
-  const counts = await db().execute(
-    "SELECT funding_status, COUNT(*) n FROM programs GROUP BY funding_status"
+  const tally = all.reduce<Record<string, number>>((acc, p) => {
+    acc[p.funding_status] = (acc[p.funding_status] ?? 0) + 1;
+    return acc;
+  }, {});
+  const total = all.length;
+
+  const needle = q.toLowerCase();
+  const rows = all.filter(
+    (p) =>
+      (!only || p.funding_status === only) &&
+      (!needle || p.name.toLowerCase().includes(needle))
   );
-  const tally = Object.fromEntries(
-    counts.rows.map((r) => [String(r.funding_status), Number(r.n)])
-  ) as Record<string, number>;
-  const total = Object.values(tally).reduce((a, b) => a + b, 0);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
@@ -162,7 +165,7 @@ export default async function StatusPage({
       <p className="mt-8 text-xs text-muted-foreground">
         {rows.length} {rows.length === 1 ? "program" : "programs"}
         {q && <> matching &ldquo;{q}&rdquo;</>}
-        {only && <> · {STATUS_UI[only as FundingStatus].label.toLowerCase()}</>}
+        {only && <> · {STATUS_UI[only].label.toLowerCase()}</>}
         {(q || only) && (
           <>
             {" · "}
