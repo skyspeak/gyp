@@ -102,10 +102,13 @@ believable.**
 
 ### 4. A calendar feed advisers subscribe to
 
-**256 of 381 programs have no deadline on file**, so the 125 that do are the
-scarce part. Publish them as an `.ics` feed — an adviser subscribes once and
-the deadlines appear in their own calendar every cycle, with a link back on
-each event.
+**Only 28 programs have a dated deadline** — 125 have a deadline row, but most
+are rolling with no date. That scarcity is the point: the 34 dated events are
+the whole calendar, and nobody else publishes them in a subscribable form.
+
+**Built.** `/api/calendar.ics` — subscribe once and the deadlines appear in
+your own calendar every cycle. Closed, paused and US-ineligible programs are
+excluded; `?ref=`, `?category=` and `?money=` narrow it.
 
 This is the only idea here that creates *recurring* presence without sending
 anything. It also converts the deadline data from a page someone must remember

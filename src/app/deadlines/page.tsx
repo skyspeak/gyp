@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CalendarSubscribe } from "@/components/calendar-subscribe";
 import { listUpcomingDeadlines, type UpcomingDeadline } from "@/lib/programs";
 import { formatDeadline, formatDateShort, daysUntil } from "@/lib/format";
 import { FilterPill } from "@/components/filter-pill";
@@ -77,6 +78,8 @@ export default async function DeadlinesPage({
           </>
         )}
       </p>
+
+      <CalendarSubscribe className="mt-5" />
 
       <div className="mt-5 flex flex-wrap gap-1.5">
         <FilterPill href="/deadlines" active={!degreeParam} size="sm">
