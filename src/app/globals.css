@@ -21,7 +21,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading-face), Georgia, serif;
+
+  /* Shadows are tinted with the neutral hue rather than pure black. A black
+     shadow on a hue-biased ground reads as dirt; a tinted one reads as depth. */
+  --shadow-2xs: 0 1px 1px oklch(0.22 0.02 172 / 0.04);
+  --shadow-xs: 0 1px 2px oklch(0.22 0.02 172 / 0.05);
+  --shadow-sm: 0 1px 2px oklch(0.22 0.02 172 / 0.06), 0 2px 6px oklch(0.22 0.02 172 / 0.04);
+  --shadow-md: 0 2px 4px oklch(0.22 0.02 172 / 0.05), 0 8px 20px oklch(0.22 0.02 172 / 0.06);
+  --shadow-lg: 0 4px 8px oklch(0.22 0.02 172 / 0.05), 0 16px 36px oklch(0.22 0.02 172 / 0.08);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -61,30 +69,38 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Chroma 0 on every neutral is what made this read as unfinished — a pure
+     grey is a grey nobody picked. These carry a trace of the pine accent
+     (hue 172, chroma 0.004–0.016), which is invisible as colour but makes the
+     page feel of a piece. The ground is faintly off-white so --card can be
+     pure white and actually lift. */
+  --background: oklch(0.985 0.004 172);
+  --foreground: oklch(0.19 0.014 175);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.19 0.014 175);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --popover-foreground: oklch(0.19 0.014 175);
+  /* Brand. Deliberately the same family as --earn: the palette should say
+     what the product says, which is that the good outcome is the one that
+     pays you. */
+  --primary: oklch(0.42 0.075 165);
+  --primary-foreground: oklch(0.985 0.006 170);
+  --secondary: oklch(0.955 0.007 172);
+  --secondary-foreground: oklch(0.28 0.025 172);
+  --muted: oklch(0.962 0.006 172);
+  --muted-foreground: oklch(0.505 0.017 172);
+  --accent: oklch(0.945 0.016 168);
+  --accent-foreground: oklch(0.31 0.045 166);
+  --destructive: oklch(0.556 0.207 25);
+  --border: oklch(0.905 0.009 172);
+  --input: oklch(0.905 0.009 172);
+  --ring: oklch(0.55 0.09 165);
+  --chart-1: oklch(0.52 0.13 158);
+  --chart-2: oklch(0.60 0.10 200);
+  --chart-3: oklch(0.55 0.12 45);
+  --chart-4: oklch(0.48 0.09 280);
+  --chart-5: oklch(0.42 0.06 172);
+  --radius: 0.75rem;
   --earn: oklch(0.52 0.13 158);
   --earn-foreground: oklch(0.36 0.09 158);
   --earn-muted: oklch(0.96 0.03 158);
@@ -105,24 +121,29 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: oklch(0.165 0.013 175);
+  --foreground: oklch(0.952 0.006 170);
+  --card: oklch(0.212 0.015 175);
+  --card-foreground: oklch(0.952 0.006 170);
+  --popover: oklch(0.212 0.015 175);
+  --popover-foreground: oklch(0.952 0.006 170);
+  --primary: oklch(0.76 0.12 165);
+  --primary-foreground: oklch(0.19 0.03 168);
+  --secondary: oklch(0.265 0.017 175);
+  --secondary-foreground: oklch(0.952 0.006 170);
+  --muted: oklch(0.265 0.017 175);
+  --muted-foreground: oklch(0.705 0.015 172);
+  --accent: oklch(0.30 0.032 168);
+  --accent-foreground: oklch(0.92 0.035 168);
+  --destructive: oklch(0.70 0.185 22);
+  --border: oklch(0.98 0.01 172 / 12%);
+  --input: oklch(0.98 0.01 172 / 16%);
+  --ring: oklch(0.66 0.10 165);
+  --chart-1: oklch(0.72 0.15 158);
+  --chart-2: oklch(0.70 0.11 200);
+  --chart-3: oklch(0.70 0.13 45);
+  --chart-4: oklch(0.65 0.10 280);
+  --chart-5: oklch(0.62 0.06 172);
   --earn: oklch(0.72 0.15 158);
   --earn-foreground: oklch(0.84 0.12 158);
   --earn-muted: oklch(0.28 0.05 158);
@@ -132,11 +153,6 @@
   --warn: oklch(0.78 0.14 70);
   --warn-foreground: oklch(0.87 0.11 70);
   --warn-muted: oklch(0.29 0.05 70);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -153,8 +169,56 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Contextual alternates and kerning on: small thing, but it is most of
+       the difference between "default browser text" and "set". */
+    font-feature-settings: "kern" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
   }
   html {
     @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings carry the voice. Body stays Geist for UI legibility; display is
+     a serif so a page of dates and dollar figures reads as edited rather than
+     generated. Optical sizing keeps the large sizes from looking spindly. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    font-optical-sizing: auto;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+  }
+
+  /* Any run of digits that sits in a column — money, dates, counts — should
+     line up. Tabular figures are the difference between a table and a list. */
+  th,
+  td,
+  time,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  /* One visible, consistent focus state everywhere, instead of the browser
+     default that some components were overriding away. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeToggle, THEME_INIT_SCRIPT } from "@/components/theme-toggle";
+import { NavLinks } from "@/components/nav-links";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Display face for headings. Variable optical sizing so a 40px h1 and a 20px
+// h3 are both drawn correctly rather than one being a scaled version of the
+// other.
+const newsreader = Newsreader({
+  variable: "--font-heading-face",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  style: ["normal"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Gap Year Platform — Paid gap year and post-grad paths",
@@ -40,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -50,13 +61,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
-          <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
+          <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
             <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2 sm:gap-4">
               <Link
                 href="/"
                 className="flex items-center gap-2 font-semibold tracking-tight whitespace-nowrap"
               >
-                <span className="grid size-6 place-items-center rounded-md bg-primary text-primary-foreground text-[11px] font-bold">
+                <span className="grid size-7 place-items-center rounded-lg bg-primary text-primary-foreground text-[11px] font-bold shadow-xs">
                   GY
                 </span>
                 <span className="text-sm sm:text-base">Gap Year Platform</span>
@@ -65,15 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                   nav scrolls sideways on small screens rather than truncating
                   the last items out of reach. */}
               <nav className="-mr-4 flex min-w-0 items-center gap-0 overflow-x-auto whitespace-nowrap pr-4 text-[11px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mr-0 sm:gap-1 sm:overflow-visible sm:pr-0 sm:text-sm">
-                {NAV.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="shrink-0 rounded-md px-1.5 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:px-2.5"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                <NavLinks items={NAV} />
                 <span className="ml-1 hidden sm:block">
                   <ThemeToggle />
                 </span>
