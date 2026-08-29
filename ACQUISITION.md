@@ -181,18 +181,22 @@ in small amounts.**
   terminated) and USFS Direct Hire (its *application windows* closed). All
   three would have gone out as "shut down". Read every row of `/changes`
   yourself before sending a single email.
-- **Conversion still has no denominator.** Signups now record `source`, `role`
-  and `referrer`, so forwards are attributable and the audience mix is
-  visible:
+- **Conversion is now measurable.** Cloudflare Web Analytics is live on every
+  page — cookieless, no personal data, which is the only kind of measurement
+  this product can ship without contradicting its own pitch. That supplies the
+  denominator the phase 1 gate needs (watcher signups ÷ unique visitors ≥ 15%,
+  kill below 5%). Signups already record `source`, `role` and `referrer`, so
+  forwards are attributable and the audience mix is visible:
 
   ```sql
   SELECT source, role, COUNT(*) FROM people GROUP BY 1, 2 ORDER BY 3 DESC;
   SELECT referrer, COUNT(*) FROM people WHERE referrer IS NOT NULL GROUP BY 1;
   ```
 
-  But nothing counts visitors, so the 15% watcher-conversion gate stays
-  unmeasurable. A cookieless pageview count is the last missing piece — and
-  the cheapest of everything on this page.
+  Read visitors in the Cloudflare dashboard and signups from the query above.
+  One caveat before trusting the ratio: Cloudflare's beacon is blocked by some
+  ad blockers, so visitors are undercounted and the true conversion rate is
+  somewhat *lower* than it will appear. Judge the 15% gate with that in mind.
 - **The name.** "Gap Year Platform" reads as deferral to an admissions office
   and as failure to a 22-year-old applying for Rhodes — the two audiences this
   targets. Worth settling before mass emailing anyone.

@@ -149,8 +149,23 @@ curl "https://gyp-psi.vercel.app/api/cron/verify?token=$CRON_SECRET"
   keys make the crons no-op with a log line instead of failing the request, so
   a silent cron is the expected symptom of an unset key — not an error.
 
-## 6. Known gap
+## 6. Analytics
 
-There is **no analytics**, so none of the phase 1 gate metrics (watcher
-conversion, adviser forwards) can be measured. See `ACQUISITION.md` §"The
-measurement problem" — worth closing before any outreach runs.
+Cloudflare Web Analytics runs on every page (`src/app/layout.tsx`) — cookieless
+and with no personal data. It is skipped when `NODE_ENV === "development"` so
+local runs do not inflate the numbers, and deliberately **not** gated on
+`VERCEL_ENV`: a gate that silently failed to fire in production would recreate
+the exact gap it was added to close.
+
+The beacon token is a public identifier meant to appear in page source. It is
+not a secret and grants no access, which is why it lives in the file rather
+than in an env var.
+
+Confirm it is actually serving after a deploy:
+
+```bash
+curl -s https://gyp-psi.vercel.app | grep -c cloudflareinsights
+```
+
+Anything other than `0` means the tag is on the page. Note that ad blockers
+suppress the beacon for some visitors, so real traffic is undercounted.

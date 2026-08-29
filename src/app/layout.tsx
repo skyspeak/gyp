@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeToggle, THEME_INIT_SCRIPT } from "@/components/theme-toggle";
@@ -22,6 +23,18 @@ const NAV = [
   { href: "/connect", label: "Who to ask" },
   { href: "/design", label: "Design a year" },
 ];
+
+// Cloudflare Web Analytics: cookieless, no cross-site tracking, no personal
+// data — the only kind of measurement this product can ship without
+// contradicting itself. The beacon token is a public identifier meant to sit
+// in the page source; it is not a secret and grants no access.
+//
+// Skipped in local development so `npm run dev` does not inflate the numbers
+// with page loads nobody made. Deliberately NOT gated on VERCEL_ENV: this
+// exists to fix a measurement gap, and a gate that silently fails to fire in
+// production would recreate the exact problem it was added to solve.
+const ANALYTICS_TOKEN = "fa3124e035494640a1064439634727a1";
+const ANALYTICS_ON = process.env.NODE_ENV !== "development";
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -82,6 +95,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </footer>
         </TooltipProvider>
+
+        {ANALYTICS_ON && (
+          <Script
+            id="cf-beacon"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={JSON.stringify({ token: ANALYTICS_TOKEN })}
+          />
+        )}
       </body>
     </html>
   );
