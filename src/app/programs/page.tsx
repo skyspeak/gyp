@@ -194,7 +194,7 @@ export default async function ProgramsPage({
             <Link
               key={p.id}
               href={`/programs/${p.slug}`}
-              className="group relative flex flex-col rounded-xl border bg-card p-4 transition-all hover:border-foreground/20 hover:shadow-sm"
+              className="group relative flex flex-col rounded-xl border bg-card p-4 shadow-xs transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-3">
                 <h2 className="font-medium leading-snug group-hover:underline decoration-1 underline-offset-2">

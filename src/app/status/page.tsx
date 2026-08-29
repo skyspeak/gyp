@@ -3,7 +3,7 @@ import { CircleCheck, TriangleAlert, PauseCircle, Ban, Search } from "lucide-rea
 import { db } from "@/lib/db";
 import { AlertButton } from "@/components/alert-button";
 import { STATUS_UI, isStale, STALE_AFTER_DAYS, type FundingStatus } from "@/lib/status";
-import { TONE_BADGE, TONE_ALERT } from "@/lib/money-ui";
+import { TONE_BADGE, TONE_ALERT, TONE_TEXT } from "@/lib/money-ui";
 import { dedupeByName } from "@/lib/dedupe";
 import { cn } from "@/lib/utils";
 
@@ -108,15 +108,22 @@ export default async function StatusPage({
               key={s}
               href={on ? "/status" : `/status?status=${s}`}
               className={cn(
-                "rounded-xl border p-3 transition-colors hover:bg-muted",
-                on && "ring-2 ring-ring"
+                "rounded-xl border bg-card p-3 shadow-xs transition-all hover:border-foreground/20 hover:shadow-sm",
+                on && "ring-2 ring-ring ring-offset-2 ring-offset-background"
               )}
             >
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Icon className="size-3.5" />
+                <Icon className={cn("size-3.5", TONE_TEXT[STATUS_UI[s].tone])} />
                 {STATUS_UI[s].label}
               </span>
-              <span className="mt-0.5 block text-2xl font-semibold tabular-nums">
+              {/* The count carries the tone too. Four identical black numbers
+                  made the reader parse the labels to find the bad news. */}
+              <span
+                className={cn(
+                  "mt-0.5 block text-3xl font-semibold tabular-nums",
+                  TONE_TEXT[STATUS_UI[s].tone]
+                )}
+              >
                 {tally[s] ?? 0}
               </span>
             </Link>
