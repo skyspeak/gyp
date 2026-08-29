@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { newId, nowIso } from "./ids";
 import { sendEmail } from "./email";
+import { baseUrl } from "./base-url";
 
 export type FundingStatus = "active" | "at_risk" | "paused" | "defunded";
 
@@ -91,7 +92,7 @@ async function notifyWatchers(opts: {
     args: [opts.programId],
   });
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "") ?? "";
+  const base = baseUrl();
   const wasLabel = opts.from ? STATUS_UI[opts.from].label : "Unknown";
   const nowLabel = STATUS_UI[opts.to].label;
 

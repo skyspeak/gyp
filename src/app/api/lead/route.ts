@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { baseUrl } from "@/lib/base-url";
 import { captureLead, EMAIL_RE, type LeadRole } from "@/lib/leads";
 import { sendEmail } from "@/lib/email";
 
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
       institutionName: str(body?.institutionName),
     });
 
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+    const base = baseUrl(req.nextUrl.origin);
     // A failed welcome email must not fail the signup — the lead is already
     // saved, and telling someone "something went wrong" would invite a
     // duplicate submission for a row that exists.

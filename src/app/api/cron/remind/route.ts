@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { baseUrl } from "@/lib/base-url";
 import { isAuthorizedCronRequest } from "@/lib/cron-auth";
 import { sendEmail } from "@/lib/email";
 import { newId, nowIso } from "@/lib/ids";
@@ -17,6 +18,7 @@ function dayRange(daysFromNow: number) {
 }
 
 export async function GET(req: NextRequest) {
+  const base = baseUrl(req.nextUrl.origin);
   if (!isAuthorizedCronRequest(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -62,8 +64,8 @@ export async function GET(req: NextRequest) {
             deadline.due_at as string,
             deadline.source_tz as string | null
           )}.</p>
-                 <p><a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/programs/${deadline.program_slug}">View program</a></p>
-                 <p style="color:#888;font-size:12px">Unsubscribe: ${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/unsubscribe?token=${w.unsub_token}</p>`,
+                 <p><a href="${base}/programs/${deadline.program_slug}">View program</a></p>
+                 <p style="color:#888;font-size:12px">Unsubscribe: ${base}/api/unsubscribe?token=${w.unsub_token}</p>`,
         });
 
         await client.execute({

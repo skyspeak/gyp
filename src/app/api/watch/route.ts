@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { baseUrl } from "@/lib/base-url";
 import { findOrCreatePerson, findOrCreateDraftPlan, addWatchItem, logPlanEvent } from "@/lib/people";
 import { sendEmail } from "@/lib/email";
 
@@ -26,12 +27,13 @@ export async function POST(req: NextRequest) {
   const itemId = await addWatchItem(planId, programId);
   await logPlanEvent(planId, person.id, "watch_added", { programId, itemId });
 
+  const base = baseUrl(req.nextUrl.origin);
   await sendEmail({
     to: email,
     subject: `Watching: ${program.rows[0].name}`,
     html: `<p>You're now watching <strong>${program.rows[0].name}</strong> on Gap Year Platform. We'll email you at 30, 7, and 1 day before each deadline.</p>
-           <p><a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/deadlines">See all your deadlines</a></p>
-           <p style="color:#888;font-size:12px">Unsubscribe: ${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/unsubscribe?token=${person.unsub_token}</p>`,
+           <p><a href="${base}/deadlines">See all your deadlines</a></p>
+           <p style="color:#888;font-size:12px">Unsubscribe: ${base}/api/unsubscribe?token=${person.unsub_token}</p>`,
   });
 
   return NextResponse.json({ ok: true, planId, itemId });

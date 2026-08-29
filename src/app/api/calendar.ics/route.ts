@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { baseUrl } from "@/lib/base-url";
 import { buildCalendar } from "@/lib/ics";
 import { deadlineRowsToEvents, type DeadlineRow } from "@/lib/deadline-feed";
 
@@ -49,8 +50,7 @@ export async function GET(req: NextRequest) {
 
   const rows = res.rows as unknown as DeadlineRow[];
 
-  const base =
-    process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "") ?? req.nextUrl.origin;
+  const base = baseUrl(req.nextUrl.origin);
 
   const events = deadlineRowsToEvents(rows, base, ref);
 

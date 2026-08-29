@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { baseUrl } from "@/lib/base-url";
 import { captureLead, EMAIL_RE, type LeadRole } from "@/lib/leads";
 import { newId, nowIso } from "@/lib/ids";
 import { sendEmail } from "@/lib/email";
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
         args: [newId("alert"), personId, programId, nowIso()],
       });
 
-      const base = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+      const base = baseUrl(req.nextUrl.origin);
       await sendEmail({
         to: email,
         subject: slug ? `Watching: ${programName}` : "Watching every program",

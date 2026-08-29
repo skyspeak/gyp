@@ -146,8 +146,25 @@ an open endpoint looks like a working one. To run a cron by hand:
 curl "https://gyp-psi.vercel.app/api/cron/verify?token=$CRON_SECRET"
 ```
 
+## 4b. Which keys are actually set
+
+```bash
+curl -s "https://gyp-psi.vercel.app/api/health?token=$CRON_SECRET" | python3 -m json.tool
+```
+
+Reports presence only — never a value. `missingThatMatter` lists just the
+keys whose absence breaks something, and a **blank** variable counts as
+missing, because to everything downstream it is.
+
 ## 5. Gotchas that have actually bitten
 
+- **A blank env var is not the same as an unset one, and `??` cannot tell.**
+  `process.env.X ?? fallback` returns `""` when X is set to an empty string,
+  so the fallback never runs. NEXT_PUBLIC_BASE_URL was blank in production and
+  every `?? ""` around it produced relative links: the .ics feed shipped
+  `URL:/programs/...`, which resolves to nothing in a calendar client, and
+  every email went out with dead links. Use `lib/base-url.ts`, which treats
+  blank as absent. Check for this pattern before adding any new env var.
 - **An empty env var silently seeds the wrong database.** `.env.local` in this
   repo has `TURSO_DATABASE_URL=` *present but empty*, so `. ./.env.local`
   succeeds, `db()` falls back to `file:./local.db`, and the seed prints
