@@ -104,6 +104,27 @@ Both scripts print their target first:
 not touched** — see §5. `db:migrate` is additive (it adds missing columns, it
 never drops), and `db:seed` upserts by slug, so both are safe to re-run.
 
+### Without the CLI, from the browser
+
+If the Turso CLI is not logged in and you would rather not deal with it, the
+dashboard has a SQL runner:
+
+1. Go to **https://app.turso.tech** and sign in.
+2. Open the **gap-year-platform** database.
+3. Open the **SQL runner** (also labelled "Shell" or "Query" in some views).
+4. Paste the contents of `migrations/2026-08-28-status-and-alerts.sql` and run.
+
+Every statement is guarded, and the backfill skips programs that already have
+a baseline row, so running it twice is harmless. Confirm with:
+
+```sql
+SELECT COUNT(*) FROM status_history;   -- expect 381
+SELECT COUNT(*) FROM program_alerts;   -- expect 0 until someone subscribes
+```
+
+This route only works for SQL. Reseeding the catalog (`db:seed`) still needs
+the CLI, because it reads local files.
+
 ## 4. Verify it worked
 
 ```bash
