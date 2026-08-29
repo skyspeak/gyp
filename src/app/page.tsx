@@ -30,7 +30,7 @@ export default async function Home() {
     <div>
       <section className="mx-auto max-w-4xl px-4 pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
         <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
-          The year off that pays you.
+          A year off to make sense of the world.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg text-muted-foreground text-pretty">
           {earning.length} paths with a stipend, wage, or education award — and {paying.length}{" "}
@@ -47,6 +47,11 @@ export default async function Home() {
       </section>
 
       <section className="mx-auto max-w-4xl px-4 pb-20">
+        {/* Above the listings on purpose: the deadline table is the thing
+            people came to read, so the ask has to arrive before they start
+            reading rather than after they have finished. */}
+        <LeadForm source="home" className="mb-10" />
+
         <div className="rounded-xl border overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b bg-muted/40 px-4 py-2.5">
             <h2 className="text-sm font-semibold">Closing soon</h2>
@@ -65,9 +70,19 @@ export default async function Home() {
                 <li key={d.id}>
                   <Link
                     href={`/programs/${d.program_slug}`}
-                    className="flex items-center justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-muted/50"
+                    className="flex items-start justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-muted/50"
                   >
-                    <span className="min-w-0 truncate">{d.program_name}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{d.program_name}</span>
+                      {/* A name alone does not say what the thing is. Two lines
+                          of the catalog's own summary turn the list from
+                          reminders into something worth reading. */}
+                      {d.program_summary && (
+                        <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                          {d.program_summary}
+                        </span>
+                      )}
+                    </span>
                     <span className="flex shrink-0 items-baseline gap-2 tabular-nums">
                       <span className="text-muted-foreground">{formatDateShort(d.due_at)}</span>
                       {days != null && days >= 0 && (
@@ -94,8 +109,6 @@ export default async function Home() {
 
         {/* One concrete comparison does more than a paragraph of positioning. */}
         <TopEarners />
-
-        <LeadForm source="home" className="mt-10" />
       </section>
     </div>
   );

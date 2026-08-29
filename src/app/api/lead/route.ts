@@ -20,7 +20,11 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
 
   const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
-  const role: LeadRole = ROLES.includes(body?.role) ? body.role : "student";
+  // The form no longer asks. When no role is sent we still need one to satisfy
+  // NOT NULL, but it is a guess and must not overwrite what someone already
+  // told us — same reason /api/alerts marks its role assumed.
+  const roleProvided = ROLES.includes(body?.role);
+  const role: LeadRole = roleProvided ? body.role : "student";
 
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "That email address doesn't look right." }, { status: 400 });
@@ -33,6 +37,7 @@ export async function POST(req: NextRequest) {
     const { isNew } = await captureLead({
       email,
       role,
+      roleAssumed: !roleProvided,
       intent: str(body?.intent, 40),
       cohort: body?.cohort === "pre_college" || body?.cohort === "post_grad" ? body.cohort : null,
       source: str(body?.source, 80),
