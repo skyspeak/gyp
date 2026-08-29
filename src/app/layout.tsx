@@ -26,13 +26,12 @@ export const metadata: Metadata = {
     "A free directory and deadline tracker for gap year and post-grad paths that pay you — stipends, living allowances, education awards, and wages — with honest cost comparisons against the ones that charge you. No commissions, ever.",
 };
 
+// Two destinations. Everything that was a separate tab is now reachable from
+// inside one of them: deadlines are a sort on the catalog, examples sit under
+// the builder. /connect still exists at its URL but is out of the bar.
 const NAV = [
-  { href: "/programs", label: "Programs" },
-  { href: "/deadlines", label: "Deadlines" },
-  { href: "/gallery", label: "Examples" },
-  { href: "/changes", label: "What changed" },
-  { href: "/connect", label: "Who to ask" },
-  { href: "/design", label: "Design a year" },
+  { href: "/programs", label: "Catalog" },
+  { href: "/design", label: "Design your year" },
 ];
 
 // Cloudflare Web Analytics: cookieless, no cross-site tracking, no personal

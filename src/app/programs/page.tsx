@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, ChevronDown, SlidersHorizontal, Search } from "lucide-react";
 import {
   listPrograms,
   getSoonestDeadlines,
@@ -13,7 +13,13 @@ import { FilterPill } from "@/components/filter-pill";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export const metadata = { title: "Programs — Gap Year Platform" };
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Catalog — Gap Year Platform",
+  description:
+    "Search every gap year and post-grad path we track, filter by what it pays, and sort by what closes next.",
+};
 
 const MONEY_TABS = [
   { value: undefined, label: "Pays you" },
@@ -33,6 +39,10 @@ export default async function ProgramsPage({
   const categoryParam = one("category");
   const sortParam = one("sort");
   const moneyParam = one("money");
+  const q = (one("q") ?? "").trim();
+  // Absorbed from the old deadlines page: its only real filter was "what is
+  // closing", which is a filter on the catalog, not a page of its own.
+  const soonParam = one("soon") === "1";
 
   const moneyDirection =
     moneyParam === "all" || moneyParam === "net_neutral" || moneyParam === "participant_pays"
@@ -48,7 +58,18 @@ export default async function ProgramsPage({
   const programs = await listPrograms(filters);
   const deadlineMap = await getSoonestDeadlines(programs.map((p) => p.id));
 
-  const sorted = [...programs].sort((a, b) => {
+  const needle = q.toLowerCase();
+  const matched = programs.filter((p) => {
+    if (needle && !`${p.name} ${p.operator}`.toLowerCase().includes(needle)) return false;
+    if (soonParam) {
+      const due = deadlineMap.get(p.id)?.due_at;
+      const days = due ? daysUntil(due) : null;
+      if (days == null || days < 0 || days > 60) return false;
+    }
+    return true;
+  });
+
+  const sorted = [...matched].sort((a, b) => {
     if (sortParam === "pay") return approxAnnualUsd(b) - approxAnnualUsd(a);
     const da = deadlineMap.get(a.id)?.due_at;
     const db_ = deadlineMap.get(b.id)?.due_at;
@@ -66,6 +87,7 @@ export default async function ProgramsPage({
       : null,
     degreeParam === "0" ? "No degree" : degreeParam === "1" ? "Have a degree" : null,
     categoryParam ? CATEGORY_LABELS[categoryParam] ?? categoryParam : null,
+    soonParam ? "Closing in 60 days" : null,
   ].filter((x): x is string => Boolean(x));
   const hasActiveFilters = activeSummary.length > 0;
 
@@ -76,6 +98,8 @@ export default async function ProgramsPage({
       category: categoryParam,
       sort: sortParam,
       money: moneyParam,
+      q: q || undefined,
+      soon: soonParam ? "1" : undefined,
       ...overrides,
     };
     for (const [k, v] of Object.entries(merged)) if (v) params.set(k, v);
@@ -87,9 +111,10 @@ export default async function ProgramsPage({
     <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Programs</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Catalog</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {sorted.length} paths ·{" "}
+            {sorted.length} of {programs.length} paths
+            {q && <> matching &ldquo;{q}&rdquo;</>} ·{" "}
             {moneyDirection === "participant_earns" ? "all of these pay you" : "comparison view"}
           </p>
         </div>
@@ -102,6 +127,46 @@ export default async function ProgramsPage({
             Pay
           </FilterPill>
         </div>
+      </div>
+
+      {/* Search is the first control now that this page absorbed deadlines:
+          with 381 rows, the fastest path to one program is typing its name.
+          A GET form keeps it in the querystring like every other filter, so
+          the page stays server-rendered and a shared URL reproduces exactly. */}
+      <form action="/programs" className="mt-5 flex gap-2">
+        {degreeParam && <input type="hidden" name="degree" value={degreeParam} />}
+        {categoryParam && <input type="hidden" name="category" value={categoryParam} />}
+        {sortParam && <input type="hidden" name="sort" value={sortParam} />}
+        {moneyParam && <input type="hidden" name="money" value={moneyParam} />}
+        {soonParam && <input type="hidden" name="soon" value="1" />}
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Search by program or operator"
+            aria-label="Search programs"
+            enterKeyHint="search"
+            className="min-h-11 w-full rounded-lg border bg-card pl-9 pr-3 text-base shadow-xs outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring md:text-sm"
+          />
+        </div>
+        <button
+          type="submit"
+          className="min-h-11 shrink-0 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          Search
+        </button>
+      </form>
+
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <FilterPill href={qs({ soon: soonParam ? undefined : "1" })} active={soonParam} size="sm">
+          Closing in 60 days
+        </FilterPill>
+        {(q || soonParam) && (
+          <Link href="/programs" className="ml-1 text-xs text-muted-foreground underline">
+            Clear
+          </Link>
+        )}
       </div>
 
       {/* Collapsed by default so the catalog is the first thing you see.

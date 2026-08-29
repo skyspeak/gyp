@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: role === "adviser" ? "Program status alerts" : "You're on the list",
       html: `<p>${WHAT_THEY_GET[role]}</p>
-             <p><a href="${base}/changes">See what has changed this cycle</a></p>
+             <p><a href="${base}/programs">Browse the catalog</a></p>
              <p style="color:#888;font-size:12px">No commissions, no paid placements, and we never sell your address. Unsubscribe any time: ${base}/api/unsubscribe</p>`,
     }).catch(() => {});
 

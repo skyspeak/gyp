@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
         to: email,
         subject: slug ? `Watching: ${programName}` : "Watching every program",
         html: `<p>We'll email you if <strong>${programName}</strong> changes status — shut down, paused, funding at risk, or no longer open to Americans.</p>
-               <p>Nothing else. <a href="${base}/status">See every current status</a>.</p>`,
+               <p>Nothing else. <a href="${base}/programs">Browse the catalog</a>.</p>`,
       }).catch(() => {});
     }
 

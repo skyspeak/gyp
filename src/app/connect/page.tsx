@@ -24,6 +24,8 @@ import { ShareMenu } from "@/components/share-menu";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
+  // Unlisted: reachable by URL, out of the nav and out of the index.
+  robots: { index: false, follow: false },
   title: "Who to talk to — Gap Year Platform",
   description:
     "The people already paid to help you, the communities that tell you the truth, and how to check an operator's finances before paying one.",

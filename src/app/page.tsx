@@ -56,7 +56,7 @@ export default async function Home() {
           <div className="flex items-center justify-between gap-3 border-b bg-muted/40 px-4 py-2.5">
             <h2 className="text-sm font-semibold">Closing soon</h2>
             <Link
-              href="/deadlines"
+              href="/programs?sort=deadline"
               className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
             >
               All deadlines <ArrowUpRight className="size-3" />

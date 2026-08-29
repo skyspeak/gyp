@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LeadForm } from "@/components/lead-form";
 import { Search } from "lucide-react";
 import { buildGallery } from "@/lib/gallery";
 import { formatCents } from "@/lib/format";
@@ -8,30 +7,25 @@ import { formatMonth } from "@/lib/plans";
 import { MONEY_UI, TONE_BADGE, TONE_TEXT } from "@/lib/money-ui";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import ForkButton from "./fork-button";
+import ForkButton from "@/components/gallery/fork-button";
 
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Five worked gap years — Gap Year Platform",
-  description:
-    "Five gap years built from real programs, with real durations and what each one actually pays or costs. Fork any of them.",
-};
-
-export default async function GalleryPage() {
+// Worked examples used to be their own top-level page. They belong next to the
+// builder instead: someone who cannot start from a blank form starts from one
+// of these, and the two only make sense together.
+export async function GallerySection() {
   const proposals = await buildGallery();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-      <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-balance">
-        Five years, priced.
-      </h1>
-      <p className="mt-3 max-w-2xl text-sm sm:text-base text-muted-foreground text-pretty">
-        Each one is assembled from real programs, using each program&apos;s actual term length —
-        not a guess. Take any of them as a starting point and change everything.
+    <section>
+      <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-balance">
+        Or start from one of these
+      </h2>
+      <p className="mt-2 max-w-2xl text-sm text-muted-foreground text-pretty">
+        Five years assembled from real programs, using each one&apos;s actual term length — not a
+        guess. Take any of them and change everything. Nobody paid to appear here.
       </p>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {proposals.map((p) => {
           const net = p.totals.netHigh;
           // Cost only leads when the year itself is pay-to-participate. An
@@ -147,21 +141,6 @@ export default async function GalleryPage() {
           );
         })}
       </div>
-
-      <LeadForm
-        source="gallery"
-        className="mt-10"
-        heading="Told before the window closes"
-        blurb="Most of what makes these years work is applying on time. Tell us roughly what you're after and we'll email you when a matching deadline is 30, 7 and 1 day out."
-      />
-
-      <p className="mt-8 text-sm text-muted-foreground">
-        None of these are recommendations and nobody paid to appear here.{" "}
-        <Link href="/design" className="underline">
-          Build your own instead
-        </Link>
-        .
-      </p>
-    </div>
+    </section>
   );
 }
