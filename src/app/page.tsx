@@ -4,8 +4,6 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { listUpcomingDeadlines, listPrograms } from "@/lib/programs";
 import { formatDateShort, daysUntil, formatPayShort } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { TONE_BADGE } from "@/lib/money-ui";
 import { approxAnnualUsd } from "@/lib/pay-sort";
 
 // Reads live catalog data, so it must render per request rather than being
@@ -31,10 +29,7 @@ export default async function Home() {
   return (
     <div>
       <section className="mx-auto max-w-4xl px-4 pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
-        <Badge variant="outline" className={TONE_BADGE.earn}>
-          No commissions, ever
-        </Badge>
-        <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
+        <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
           The year off that pays you.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg text-muted-foreground text-pretty">
