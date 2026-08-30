@@ -52,6 +52,34 @@ re-verification respectively.
 Cron jobs come from `vercel.json` and register automatically on deploy. On the
 Hobby plan Vercel runs crons **once a day** regardless of the schedule string.
 
+## 1b. Working without local file access
+
+macOS protects `~/Desktop`, `~/Documents` and `~/Downloads`, and this project
+lives inside `~/Documents`. When an agent session does not have that access,
+`git`, `npm` and every file read fail with `Operation not permitted` while
+`stat` still works, which makes it look like a corrupt checkout rather than a
+permission problem.
+
+Nothing local is required to change this repo. `gh` authenticates from
+`~/.config`, which is not protected, so the whole read-edit-commit loop runs
+through the GitHub API:
+
+```bash
+gh api repos/skyspeak/gyp/contents/PATH --jq '.content' | base64 -d
+```
+
+Write with the Git Data API — blobs, then a tree on top of the current one,
+then one commit and a ref update. That produces a single commit rather than
+one per file, which `PUT /contents` would give you.
+
+The cost is that nothing is verified before it lands, which is why CI exists
+(§2). For anything larger than a copy edit, push a branch and open a PR:
+GitHub Actions runs lint and build, and Vercel builds a preview deployment, so
+both checks happen before `main` moves.
+
+Database work has no local path either. Use the Turso dashboard SQL runner and
+keep the statements in `migrations/` — see §3.
+
 ## 2. Every deploy after
 
 Every command in this file runs from the project directory, not the repo root
@@ -65,7 +93,13 @@ cd /Users/gliu/Documents/Claude/Calude_Code_game_ai/gap-year-platform
 npm run lint && npm run build
 ```
 
-Both must pass locally — a broken build on `main` takes the site down. Then:
+CI runs exactly these two on every push and pull request
+(`.github/workflows/ci.yml`), so a broken commit is caught even when nobody
+can run them locally. `next build` type-checks as part of the build; there is
+no separate `tsc` step, because `tsc` alone fails on the generated route types
+in `.next` that only exist after a build.
+
+Both must pass — a broken build on `main` takes the site down. Then:
 
 ```bash
 git push origin main

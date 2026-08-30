@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A superseded run tells you nothing useful, so stop it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      # `next build` type-checks as part of the build, so there is no separate
+      # tsc step. Running tsc on its own fails on the generated route types in
+      # .next, which do not exist until a build has run.
+      #
+      # No database is needed: every DB-backed page is force-dynamic, so
+      # nothing queries at build time, and db() only throws on a missing URL
+      # when VERCEL is set, which it is not here.
+      - run: npm run build
