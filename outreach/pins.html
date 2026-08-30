@@ -1,0 +1,448 @@
+<title>Gap Year Pin Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+
+<style>
+  /* Deliberately single-theme. These are exported as images and pinned onto a
+     white feed, so they must look identical regardless of the viewer's theme.
+     Every colour is painted explicitly for that reason. */
+  :root {
+    --paper: #F7F8F7;
+    --card: #FFFFFF;
+    --ink: #14181C;
+    --ink-soft: #4A5551;
+    --ink-faint: #79847F;
+    --rule: #DFE4E1;
+    --pine: #0F5F52;
+    --pine-soft: #E6EFEB;
+    --clay: #A6341C;
+    --clay-soft: #F7E9E4;
+    --sand: #F2EDE4;
+    --display: "Newsreader", Georgia, serif;
+    --body: "Public Sans", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+  }
+
+  .sheet {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .intro { margin-bottom: 2.5rem; }
+  .intro h1 {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.6rem;
+  }
+  .intro p {
+    margin: 0 0 0.5rem;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    max-width: 40rem;
+  }
+  .intro code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    background: var(--pine-soft);
+    color: var(--pine);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 320px);
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  /* Each pin is authored at true Pinterest size (1000x1500) and scaled down
+     for preview. Printing resets the scale so a PDF export gives full-size
+     pages, one pin each. */
+  .frame {
+    /* Fixed 320px preview with a hard-coded 0.32 scale, so the pins render
+       with no JavaScript. A script that measured the width and computed the
+       scale failed silently wherever scripts are blocked, and every pin then
+       showed only its cropped top-left corner. */
+    width: 320px;
+    height: 480px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .pin {
+    width: 1000px;
+    height: 1500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+    transform: scale(0.32);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 90px 80px;
+    background: var(--card);
+  }
+
+  .pin.is-pine { background: var(--pine); }
+  .pin.is-sand { background: var(--sand); }
+  .pin.is-clay { background: var(--clay-soft); }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .is-pine .kicker { color: #A9D6C8; }
+
+  .pin h2 {
+    font-family: var(--display);
+    font-size: 104px;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .is-pine h2 { color: #FFFFFF; }
+
+  .pin .big {
+    font-family: var(--display);
+    font-size: 210px;
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--pine);
+  }
+  .is-pine .big { color: #FFFFFF; }
+  .big.is-clay { color: var(--clay); }
+
+  .pin p {
+    font-size: 34px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 760px;
+  }
+  .is-pine p { color: #C9E4DA; }
+
+  .split {
+    display: flex;
+    gap: 26px;
+    align-items: stretch;
+  }
+  .half {
+    flex: 1;
+    border-top: 6px solid var(--rule);
+    padding-top: 22px;
+  }
+  .half.win { border-top-color: var(--pine); }
+  .half.lose { border-top-color: var(--clay); }
+  .half b {
+    display: block;
+    font-family: var(--display);
+    font-size: 96px;
+    line-height: 1;
+    font-weight: 600;
+  }
+  .half.win b { color: var(--pine); }
+  .half.lose b { color: var(--clay); }
+  .half span {
+    display: block;
+    margin-top: 10px;
+    font-size: 28px;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+
+  .rows { display: flex; flex-direction: column; gap: 0; }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--rule);
+    font-size: 32px;
+  }
+  .row:last-child { border-bottom: 0; }
+  .row b { font-family: var(--mono); font-weight: 500; color: var(--clay); white-space: nowrap; }
+  .row span { color: var(--ink-soft); }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 27px;
+    color: var(--ink-faint);
+  }
+  .is-pine .foot { color: #A9D6C8; }
+  .mark {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    background: var(--pine);
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .is-pine .mark { background: #FFFFFF; color: var(--pine); }
+
+  .cap {
+    margin-top: 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+
+  @media print {
+    @page { size: 1000px 1500px; margin: 0; }
+    body { background: #FFFFFF; }
+    .sheet { max-width: none; padding: 0; }
+    .intro, .cap { display: none; }
+    .grid { display: block; }
+    .frame {
+      width: 1000px;
+      height: 1500px;
+      aspect-ratio: auto;
+      border: 0;
+      border-radius: 0;
+      page-break-after: always;
+      overflow: visible;
+    }
+    .pin { transform: none !important; }
+  }
+</style>
+
+<div class="sheet">
+  <div class="intro">
+    <h1>Gap Year Pin Sheet</h1>
+    <p>
+      Ten pins, authored at Pinterest's 1000&times;1500. To export: print this
+      page to PDF, which resets each pin to full size and puts one per page,
+      then export the PDF pages as images. Screenshotting a tile works too, but a
+      tile is 320px wide and Pinterest wants 1000, so printing is the route
+      that keeps the quality.
+    </p>
+    <p>
+      Titles, descriptions and destination links for each pin are in
+      <code>pinterest.md</code>. The ref codes are already in those links, so
+      signups get attributed to the pin that produced them.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <div>
+      <div class="frame">
+        <div class="pin">
+          <span class="kicker">Gap year, priced honestly</span>
+          <div>
+            <span class="big">231</span>
+            <h2>programs that pay you</h2>
+            <p style="margin-top:28px">
+              Not 231 that charge you. Stipends, wages and education awards for
+              the year after high school or college.
+            </p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Gap Year Platform &middot; free, no commissions</div>
+        </div>
+      </div>
+      <p class="cap">Pin 1 &middot; ref=pin-pays</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-sand">
+          <span class="kicker">What it actually costs</span>
+          <div>
+            <h2>A gap year can cost $75,000.</h2>
+            <div class="rows" style="margin-top:44px">
+              <div class="row"><span>PG year at a boarding school</span><b>$75,000</b></div>
+              <div class="row"><span>EF Gap Year</span><b>$43,750</b></div>
+              <div class="row"><span>Verto Education</span><b>$33,500</b></div>
+              <div class="row"><span>Latitudes Year</span><b>$29,800</b></div>
+            </div>
+          </div>
+          <div class="foot"><span class="mark">GY</span> 231 others pay you instead</div>
+        </div>
+      </div>
+      <p class="cap">Pin 2 &middot; ref=pin-cost</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin">
+          <span class="kicker">Conservation gap years</span>
+          <div>
+            <h2>8 charge you. 39 pay you.</h2>
+            <div class="split" style="margin-top:56px">
+              <div class="half lose"><b>8</b><span>ask for a fee</span></div>
+              <div class="half win"><b>39</b><span>pay a stipend</span></div>
+            </div>
+            <p style="margin-top:44px">The 8 advertise. The 39 mostly don't.</p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Gap Year Platform</div>
+        </div>
+      </div>
+      <p class="cap">Pin 3 &middot; ref=pin-cons &middot; strongest pin</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-clay">
+          <span class="kicker">Closing this autumn</span>
+          <div>
+            <h2>October is the crunch.</h2>
+            <div class="rows" style="margin-top:44px">
+              <div class="row"><span>Marshall</span><b>29 Sep</b></div>
+              <div class="row"><span>Fulbright ETA</span><b>6 Oct</b></div>
+              <div class="row"><span>Rhodes</span><b>7 Oct</b></div>
+              <div class="row"><span>Gates Cambridge</span><b>14 Oct</b></div>
+              <div class="row"><span>Soros</span><b>29 Oct</b></div>
+            </div>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Free deadline calendar you can subscribe to</div>
+        </div>
+      </div>
+      <p class="cap">Pin 4 &middot; ref=pin-deadlines &middot; seasonal, repost each August</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-pine">
+          <span class="kicker">Deferred a year?</span>
+          <div>
+            <h2>A gap year doesn't have to cost $40,000.</h2>
+            <p style="margin-top:36px">
+              231 programs pay a stipend, wage or education award. Conservation
+              corps, AmeriCorps positions, paid work abroad.
+            </p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Free index &middot; no sponsored listings</div>
+        </div>
+      </div>
+      <p class="cap">Pin 5 &middot; ref=pin-defer</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin">
+          <span class="kicker">Teach abroad, get paid</span>
+          <div>
+            <span class="big">28</span>
+            <h2>teaching programs that pay</h2>
+            <div class="rows" style="margin-top:40px">
+              <div class="row"><span>JET, Japan</span><b>&yen;3.36M/yr</b></div>
+              <div class="row"><span>EPIK, Korea</span><b>housing</b></div>
+              <div class="row"><span>Fulbright ETA</span><b>6 Oct</b></div>
+            </div>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Compared against the 5 that charge</div>
+        </div>
+      </div>
+      <p class="cap">Pin 6 &middot; ref=pin-teach</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-sand">
+          <span class="kicker">The exception</span>
+          <div>
+            <h2>One category where you will have to pay.</h2>
+            <div class="split" style="margin-top:56px">
+              <div class="half lose"><b>15</b><span>outdoor programs charge</span></div>
+              <div class="half win"><b>4</b><span>outdoor programs pay</span></div>
+            </div>
+            <p style="margin-top:44px">
+              Every other category has a paid alternative. This one mostly
+              doesn't. Budget for it.
+            </p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Gap Year Platform</div>
+        </div>
+      </div>
+      <p class="cap">Pin 7 &middot; ref=pin-outdoor &middot; the honest one</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin">
+          <span class="kicker">After graduation</span>
+          <div>
+            <h2>Paid options for new graduates.</h2>
+            <div class="rows" style="margin-top:44px">
+              <div class="row"><span>Churchill Scholarship</span><b>$80,000</b></div>
+              <div class="row"><span>Teach For America</span><b>$32&ndash;72k/yr</b></div>
+              <div class="row"><span>US-flag ship crew</span><b>$1,000&ndash;1,400/wk</b></div>
+            </div>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Free index with real deadlines</div>
+        </div>
+      </div>
+      <p class="cap">Pin 8 &middot; ref=pin-postgrad</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-clay">
+          <span class="kicker">Still listed, not running</span>
+          <div>
+            <h2>Some of these no longer exist.</h2>
+            <div class="rows" style="margin-top:44px">
+              <div class="row"><span>Payne Fellowship</span><b>ended Feb 2025</b></div>
+              <div class="row"><span>Mitchell Scholarship</span><b>paused Mar 2024</b></div>
+              <div class="row"><span>Pickering &amp; Rangel</span><b>2026 postponed</b></div>
+            </div>
+            <p style="margin-top:40px">All four are still on university advising pages.</p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> We track which ones are actually running</div>
+        </div>
+      </div>
+      <p class="cap">Pin 9 &middot; ref=pin-closed</p>
+    </div>
+
+    <div>
+      <div class="frame">
+        <div class="pin is-pine">
+          <span class="kicker">Plan it month by month</span>
+          <div>
+            <h2>Build the year, see what it pays.</h2>
+            <p style="margin-top:36px">
+              Real programs, real lengths, the whole year costed. Share it as a
+              link. No account needed.
+            </p>
+          </div>
+          <div class="foot"><span class="mark">GY</span> Free &middot; or start from a worked example</div>
+        </div>
+      </div>
+      <p class="cap">Pin 10 &middot; ref=pin-design</p>
+    </div>
+
+  </div>
+</div>
+
