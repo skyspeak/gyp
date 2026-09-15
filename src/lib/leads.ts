@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { db } from "./db";
 import { newId, newToken, nowIso } from "./ids";
 
@@ -86,4 +87,15 @@ export async function captureLead(input: LeadInput): Promise<{ id: string; isNew
     ],
   });
   return { id, isNew: true };
+}
+
+/**
+ * A short, stable code a subscriber can hand to a friend as ?ref=. Derived
+ * from the person's id rather than stored, so it needs no migration, and
+ * one-way, so it reveals nothing about them. Signups arriving with it land in
+ * people.referrer like any other ref; to see who referred whom, hash each
+ * person's id the same way and join on it.
+ */
+export function shareCodeFor(personId: string): string {
+  return "f-" + createHash("sha256").update(personId).digest("hex").slice(0, 8);
 }

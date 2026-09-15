@@ -5,6 +5,8 @@ import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeToggle, THEME_INIT_SCRIPT } from "@/components/theme-toggle";
 import { NavLinks } from "@/components/nav-links";
+import { SiteChrome } from "@/components/site-chrome";
+import { baseUrl } from "@/lib/base-url";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
@@ -21,6 +23,11 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
+  // Share-image URLs are absolute and built from this. Without it they come
+  // from whatever host served the page, which on Vercel can be a one-off
+  // deployment URL rather than the real domain, so previews break once that
+  // deployment is gone. baseUrl() treats a blank NEXT_PUBLIC_BASE_URL as unset.
+  metadataBase: new URL(baseUrl() || "http://localhost:3000"),
   title: "Gap Year Platform — Paid gap year and post-grad paths",
   description:
     "A free directory and deadline tracker for gap year and post-grad paths that pay you — stipends, living allowances, education awards, and wages — with honest cost comparisons against the ones that charge you. No commissions, ever.",
@@ -61,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
+          <SiteChrome>
           <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
             <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2 sm:gap-4">
               <Link
@@ -83,9 +91,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </nav>
             </div>
           </header>
+          </SiteChrome>
 
           <main className="flex-1">{children}</main>
 
+          <SiteChrome>
           <footer className="border-t mt-16">
             <div className="mx-auto max-w-6xl px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground">
               <p>No commissions. No referral fees. No paid placements — in either direction.</p>
@@ -97,6 +107,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </div>
             </div>
           </footer>
+          </SiteChrome>
         </TooltipProvider>
 
         {ANALYTICS_ON && (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { baseUrl } from "@/lib/base-url";
-import { captureLead, EMAIL_RE, type LeadRole } from "@/lib/leads";
+import { captureLead, EMAIL_RE, shareCodeFor, type LeadRole } from "@/lib/leads";
 import { sendEmail } from "@/lib/email";
 
 const ROLES: LeadRole[] = ["student", "parent", "adviser"];
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     typeof v === "string" && v.trim() ? v.trim().slice(0, max) : null;
 
   try {
-    const { isNew } = await captureLead({
+    const { id, isNew } = await captureLead({
       email,
       role,
       roleAssumed: !roleProvided,
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
              <p style="color:#888;font-size:12px">No commissions, no paid placements, and we never sell your address. Unsubscribe any time: ${base}/api/unsubscribe</p>`,
     }).catch(() => {});
 
-    return NextResponse.json({ ok: true, isNew });
+    return NextResponse.json({ ok: true, isNew, shareCode: shareCodeFor(id) });
   } catch {
     return NextResponse.json({ error: "Couldn't save that. Try again." }, { status: 500 });
   }
