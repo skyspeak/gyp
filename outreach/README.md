@@ -9,6 +9,7 @@ the only work left is proofreading and filling in names.
 | `sources.md` | The source behind every factual claim. Check before sending |
 | `send-checklist.md` | Pre-send steps, target ordering, how to read the numbers |
 | `targets.csv` | Tracking sheet. One row per person, with the `ref` code |
+| `institutions.csv` | 117 institutions in six tiers, each with the reason to email and a source link. Tier 1 pages were checked by hand on 15 Sep 2026 |
 | `reddit.md` | One r/gapyear post plus six comment templates |
 | `hacker-news.md` | Show HN title, first comment, prepared answers |
 | `pinterest.md` | Five boards, ten pin titles and descriptions |

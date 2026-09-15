@@ -64,6 +64,50 @@ program's own site, it is professionally relevant on a deadline, and the only
 **Do not** add "let me know if you have questions" or "I'd love to hear your
 thoughts." The absence of an ask is the entire strategy.
 
+## Email 1 openers for Tier 1 in `institutions.csv`
+
+These six offices have a page that still lists a closed program as open.
+Replace the first paragraph of Email 1 with the opener that matches their
+page, and change the subject line to match. Every claim below was re-checked
+on 15 September 2026, on the program's own site and on the office's page.
+
+**Payne still listed** — Maryland, Miami, Missouri
+Subject: `The Payne Fellowship on your fellowships page`
+```
+Hi {{first_name}},
+
+I maintain a free, non-commercial index of gap year and post-grad paths, and
+noticed your page on the Payne International Development Fellowship still
+presents it as open. It was terminated on 27 February 2025 alongside the USAID
+shutdown, and its application site no longer exists.
+```
+
+**Mitchell still listed** — San Francisco State
+Subject: `The Mitchell Scholarship on your fellowships page`
+```
+Hi {{first_name}},
+
+I maintain a free, non-commercial index of gap year and post-grad paths, and
+noticed your Mitchell Scholarship page still gives a May 25 campus deadline.
+The US-Ireland Alliance paused selection of future classes in March 2024, and
+the notice is still on their own application page.
+```
+
+**Pickering and Rangel still listed** — UT San Antonio, Temple
+Subject: `Pickering and Rangel on your fellowships page`
+```
+Hi {{first_name}},
+
+I maintain a free, non-commercial index of gap year and post-grad paths, and
+noticed your Pickering and Rangel page gives a September deadline for both.
+Both programs have postponed their 2026 application cycles pending guidance
+from the State Department; the notice is on each program's application site.
+```
+
+For Temple, add one line crediting them: their page already marks Payne as
+terminated, which most fellowship pages haven't done. Pointing that out is
+what makes the rest read as help rather than criticism.
+
 ---
 
 ## Email 2 — follow-up
