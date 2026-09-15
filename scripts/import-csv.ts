@@ -115,7 +115,24 @@ function inferSelectivity(raw: string): SeedProgram["selectivity"] {
 const NOT_FOR_AMERICANS =
   /\b(u\.?s\.? citizens are not eligible|united states is not|not with the united states|but not with the u\.?s|not among|does not have a (bilateral )?(working holiday|youth mobility)|no yma|us citizens? (are )?(not|ineligible))\b/i;
 
-function inferUsEligible(text: string): 0 | 1 {
+// A stated exception beats the general rule, but only when it is stated as a
+// verdict. Canada's row says US citizens are "NOT eligible ... through the
+// standard route" and then "EXCEPTION: SWAP Working Holidays ... lists US
+// citizens as eligible", and its status column opens "OPEN to US citizens".
+// Matching only the first half marked Canada closed to Americans, though
+// Canada's own government page lists SWAP as open to "Citizens of IEC
+// countries or territories and the United States".
+//
+// A looser rule, "open to US citizens" anywhere, was tried and was wrong:
+// Taiwan's row says it is "commonly mislisted as open to US citizens in blog
+// posts" and "CLOSED to US citizens". So only two things count: a status
+// that LEADS with "OPEN to US citizens", or an explicit "EXCEPTION:" naming
+// US citizens as eligible.
+const EXCEPTION_NAMES_US_ELIGIBLE = /\bexception:.{0,160}\bu\.?s\.? citizens as eligible/i;
+const STATUS_LEADS_OPEN_TO_US = /^\s*open to u\.?s\.? citizens/i;
+
+function inferUsEligible(text: string, status: string): 0 | 1 {
+  if (STATUS_LEADS_OPEN_TO_US.test(status) || EXCEPTION_NAMES_US_ELIGIBLE.test(text)) return 1;
   return NOT_FOR_AMERICANS.test(text) ? 0 : 1;
 }
 
@@ -232,7 +249,7 @@ export function loadCsvPrograms(): SeedProgram[] {
       min_age: null,
       max_age: null,
       citizenship: null,
-      us_eligible: inferUsEligible(`${name} ${what}`),
+      us_eligible: inferUsEligible(`${name} ${what}`, status),
       other_eligibility: null,
       selectivity: inferSelectivity(r[iSel] ?? ""),
       pay_type: money === "participant_pays" ? "none" : "stipend_total",
