@@ -8,10 +8,15 @@ type Dot = { code: string; name: string; cx: number; cy: number };
 // Buckets rather than a continuous scale. The United States has ~220 programs
 // and most countries have one or two, so a linear ramp would paint the US
 // solid and leave everything else indistinguishable from empty.
+//
+// The lowest step started at 25%, which in dark mode sat only a few lightness
+// units above an empty country: single-program countries like Portugal and
+// Egypt effectively vanished. Dark mode gets a higher floor because its ground
+// is darker, so the same opacity reads as less.
 export const BUCKETS = [
-  { min: 1, label: "1", fill: "fill-primary/25" },
-  { min: 2, label: "2–4", fill: "fill-primary/45" },
-  { min: 5, label: "5–9", fill: "fill-primary/70" },
+  { min: 1, label: "1", fill: "fill-primary/35 dark:fill-primary/45" },
+  { min: 2, label: "2–4", fill: "fill-primary/55 dark:fill-primary/62" },
+  { min: 5, label: "5–9", fill: "fill-primary/78 dark:fill-primary/82" },
   { min: 10, label: "10+", fill: "fill-primary" },
 ] as const;
 

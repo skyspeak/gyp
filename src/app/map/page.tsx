@@ -40,7 +40,9 @@ function ProgramRow({ p }: { p: Program }) {
       >
         <span className="min-w-0">
           <span className="block font-medium leading-snug group-hover:underline decoration-1 underline-offset-2">
-            {p.name}
+            {/* Ten imported working-holiday rows carry a research label as
+                part of their name; it reads as noise in a list. */}
+            {p.name.replace(/\s+—\s+US Eligibility Status$/i, "")}
           </span>
           <span className="mt-0.5 block truncate text-xs text-muted-foreground">{p.operator}</span>
         </span>
