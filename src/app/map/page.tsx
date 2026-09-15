@@ -14,9 +14,6 @@ export const metadata = {
     "A world map of gap year and post-grad programs. Click a country to see every gap year you can do there, with what each one pays or costs.",
 };
 
-const MONEY_VALUES = ["all", "participant_earns", "participant_pays"] as const;
-type MoneyValue = (typeof MONEY_VALUES)[number];
-
 function toMapProgram(p: Program): MapProgram {
   const money = MONEY_UI[p.money_direction];
   return {
@@ -45,8 +42,6 @@ export default async function MapPage({
   const sp = await searchParams;
   const one = (k: string) => (Array.isArray(sp[k]) ? sp[k]?.[0] : sp[k]);
 
-  const rawMoney = one("money");
-  const money: MoneyValue = MONEY_VALUES.includes(rawMoney as MoneyValue) ? (rawMoney as MoneyValue) : "all";
   const rawCountry = (one("country") ?? "").toUpperCase();
 
   // Programs that pay you come first in every country's list, then the ones
@@ -55,7 +50,7 @@ export default async function MapPage({
   // show on a site whose point is gap years that pay.
   const ORDER: Record<string, number> = { participant_earns: 0, net_neutral: 1, participant_pays: 2 };
 
-  const programs = (await listPrograms({ moneyDirection: money, includeUsIneligible: true }))
+  const programs = (await listPrograms({ moneyDirection: "all", includeUsIneligible: true }))
     // A map of where you can go has no business showing somewhere that has
     // shut down or stopped selecting.
     .filter((p) => p.funding_status !== "defunded" && p.funding_status !== "paused")
@@ -101,7 +96,6 @@ export default async function MapPage({
         counts={counts}
         closedOnly={closedOnly}
         unpinned={unpinned}
-        money={money}
         initialCountry={countries[rawCountry] ? rawCountry : undefined}
       />
 

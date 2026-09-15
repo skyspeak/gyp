@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Globe2, MousePointerClick } from "lucide-react";
 import { WorldMap, BUCKETS } from "@/components/world-map";
-import { FilterPill } from "@/components/filter-pill";
 import { cn } from "@/lib/utils";
 
 export type MapProgram = {
@@ -19,12 +18,6 @@ export type MapProgram = {
 };
 
 export type MapCountry = { code: string; name: string; open: MapProgram[]; closed: MapProgram[] };
-
-const MONEY = [
-  { value: "all", label: "Everything" },
-  { value: "participant_earns", label: "Pays you" },
-  { value: "participant_pays", label: "You pay" },
-] as const;
 
 function ProgramCard({ p }: { p: MapProgram }) {
   return (
@@ -57,27 +50,19 @@ export function MapExplorer({
   counts,
   closedOnly,
   unpinned,
-  money,
   initialCountry,
 }: {
   countries: Record<string, MapCountry>;
   counts: Record<string, number>;
   closedOnly: string[];
   unpinned: MapProgram[];
-  money: string;
   initialCountry?: string;
 }) {
   const [selected, setSelected] = useState<string | undefined>(initialCountry);
   const [hovered, setHovered] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const href = (code: string | undefined, m: string = money) => {
-    const params = new URLSearchParams();
-    if (m !== "all") params.set("money", m);
-    if (code) params.set("country", code);
-    const q = params.toString();
-    return q ? `/map?${q}` : "/map";
-  };
+  const href = (code: string | undefined) => (code ? `/map?country=${code}` : "/map");
 
   const select = (code: string | undefined) => {
     setSelected(code);
@@ -107,19 +92,11 @@ export function MapExplorer({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-1.5">
-        {MONEY.map((m) => (
-          <FilterPill key={m.value} href={href(selected, m.value)} active={money === m.value} size="sm">
-            {m.label}
-          </FilterPill>
-        ))}
-      </div>
-
       {/* minmax(0,1fr) on mobile too. With no template the single column is
           sized to its content's min-content width, and one long operator name
           meant to truncate pushed the whole page wider than the phone as soon
           as a country's list rendered. */}
-      <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
         <div className="relative min-w-0 overflow-hidden rounded-2xl border bg-card p-2 shadow-xs sm:p-4">
           {/* Live hover readout — the native tooltip takes a second to appear.
               Hidden on phones: touch has no hover, and on a small map the pill
