@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 // the builder. /connect still exists at its URL but is out of the bar.
 const NAV = [
   { href: "/programs", label: "Catalog" },
+  { href: "/map", label: "Map" },
   { href: "/design", label: "Design your year" },
 ];
 
