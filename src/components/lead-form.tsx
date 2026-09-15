@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Copy, Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +25,19 @@ export function LeadForm({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
+  const [shareCode, setShareCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const shareUrl = () => `${window.location.origin}/?ref=${shareCode}`;
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt("Copy this link", shareUrl());
+    }
+  };
 
   if (status === "done") {
     return (
@@ -41,6 +54,48 @@ export function LeadForm({
         <p className="mx-auto mt-1.5 max-w-sm text-pretty text-sm text-muted-foreground">
           {pitch} Sent to <span className="font-medium text-foreground">{email}</span>.
         </p>
+        {/* The moment right after someone signs up is when they are most
+            convinced this is useful, and a gap year is rarely decided alone —
+            there is a friend, sibling or classmate weighing the same thing.
+            One link, theirs, credited to them. */}
+        {shareCode && (
+          <div className="mx-auto mt-5 max-w-sm rounded-xl border bg-card p-3 text-left">
+            <p className="text-sm font-medium">Know someone else deciding what to do next year?</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">Send them your link.</p>
+            <div className="mt-2 flex gap-2">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({
+                        title: "Gap Year Platform",
+                        text: "Gap years that pay you instead of charging you. Free, no sponsored listings.",
+                        url: shareUrl(),
+                      });
+                      return;
+                    } catch {
+                      // Dismissed the share sheet; fall through to copy.
+                    }
+                  }
+                  await copyLink();
+                }}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                {copied ? <Check className="size-4" /> : <Send className="size-4" />}
+                {copied ? "Link copied" : "Share my link"}
+              </button>
+              <button
+                type="button"
+                aria-label="Copy link"
+                onClick={copyLink}
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border px-3 transition-colors hover:bg-muted"
+              >
+                <Copy className="size-4" />
+              </button>
+            </div>
+          </div>
+        )}
         <Link
           href="/programs"
           className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
@@ -76,6 +131,7 @@ export function LeadForm({
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data?.error ?? "Couldn't save that.");
+          setShareCode(typeof data?.shareCode === "string" ? data.shareCode : null);
           setStatus("done");
         } catch (err) {
           setError(err instanceof Error ? err.message : "Couldn't save that.");

@@ -19,11 +19,21 @@ export type MapProgram = {
 
 export type MapCountry = { code: string; name: string; open: MapProgram[]; closed: MapProgram[] };
 
-function ProgramCard({ p }: { p: MapProgram }) {
+// Inside an embed, program links leave the host site in a new tab and carry
+// the embedding site's ref, so a signup that starts on someone else's page is
+// credited to them.
+type Embed = { refCode: string; origin: string };
+
+function ProgramCard({ p, embed }: { p: MapProgram; embed?: Embed }) {
+  const href = embed
+    ? `${embed.origin}/programs/${p.slug}?ref=${encodeURIComponent(embed.refCode)}`
+    : `/programs/${p.slug}`;
   return (
     <li>
       <Link
-        href={`/programs/${p.slug}`}
+        href={href}
+        target={embed ? "_blank" : undefined}
+        rel={embed ? "noopener" : undefined}
         className="group block min-w-0 rounded-xl border bg-card p-3 transition-all hover:-translate-y-px hover:border-primary/30 hover:shadow-sm"
       >
         <span className="flex items-start justify-between gap-2">
@@ -51,18 +61,27 @@ export function MapExplorer({
   closedOnly,
   unpinned,
   initialCountry,
+  embed,
 }: {
   countries: Record<string, MapCountry>;
   counts: Record<string, number>;
   closedOnly: string[];
   unpinned: MapProgram[];
   initialCountry?: string;
+  embed?: Embed;
 }) {
   const [selected, setSelected] = useState<string | undefined>(initialCountry);
   const [hovered, setHovered] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const href = (code: string | undefined) => (code ? `/map?country=${code}` : "/map");
+  const base = embed ? "/embed/map" : "/map";
+  const href = (code: string | undefined) => {
+    const params = new URLSearchParams();
+    if (embed) params.set("ref", embed.refCode);
+    if (code) params.set("country", code);
+    const q = params.toString();
+    return q ? `${base}?${q}` : base;
+  };
 
   const select = (code: string | undefined) => {
     setSelected(code);
@@ -176,7 +195,7 @@ export function MapExplorer({
               {current.open.length > 0 && (
                 <ul className="mt-3 space-y-2">
                   {current.open.map((p) => (
-                    <ProgramCard key={p.id} p={p} />
+                    <ProgramCard key={p.id} p={p} embed={embed} />
                   ))}
                 </ul>
               )}
@@ -189,7 +208,7 @@ export function MapExplorer({
                   </p>
                   <ul className="mt-2 space-y-2 opacity-80">
                     {current.closed.map((p) => (
-                      <ProgramCard key={p.id} p={p} />
+                      <ProgramCard key={p.id} p={p} embed={embed} />
                     ))}
                   </ul>
                 </div>
@@ -231,7 +250,7 @@ export function MapExplorer({
                 </p>
                 <ul className="mt-2 space-y-2">
                   {unpinned.map((p) => (
-                    <ProgramCard key={p.id} p={p} />
+                    <ProgramCard key={p.id} p={p} embed={embed} />
                   ))}
                 </ul>
               </details>
