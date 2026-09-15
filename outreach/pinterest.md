@@ -41,12 +41,12 @@ type. That's deliberate, not padding.
 ---
 
 **Pin 1 — the headline number**
-Title: `231 gap year programs that pay you instead of charging you`
+Title: `230 gap year programs that pay you instead of charging you`
 Link: `https://gyp-psi.vercel.app/?ref=pin-pays`
 ```
 Most gap year programs you find first are the ones with a marketing budget,
 and those are the ones that charge. This free index tracks 371 programs and
-sorts them by one question: does it pay you, or do you pay it? 231 pay a
+sorts them by one question: does it pay you, or do you pay it? 230 pay a
 stipend, wage or education award. No commissions and no sponsored listings.
 ```
 
@@ -56,15 +56,15 @@ Link: `https://gyp-psi.vercel.app/programs?money=participant_pays&ref=pin-cost`
 ```
 A postgraduate year at a boarding school runs to $75,000. EF Gap Year is
 around $43,750. Verto is $33,500. Latitudes is $29,800. Here are the real
-prices for 93 gap year programs, next to 231 that pay you instead.
+prices for 89 gap year programs, next to 230 that pay you instead.
 ```
 
 **Pin 3 — the substitution, strongest pin**
-Title: `8 conservation gap years charge you. 39 pay you.`
+Title: `7 conservation gap years charge you. 40 pay you.`
 Link: `https://gyp-psi.vercel.app/programs?category=conservation&ref=pin-cons`
 ```
 If your teen wants a conservation or outdoors gap year, the programs that
-advertise are usually the ones that charge. There are 39 that pay a stipend
+advertise are usually the ones that charge. There are 40 that pay a stipend
 instead. Free comparison, no commissions.
 ```
 
@@ -82,7 +82,7 @@ subscribe to.
 Title: `Deferred college for a year? Here's what to do with it.`
 Link: `https://gyp-psi.vercel.app/?ref=pin-defer`
 ```
-A gap year before college doesn't have to cost $40,000. 231 programs pay a
+A gap year before college doesn't have to cost $40,000. 230 programs pay a
 stipend, wage or education award, including conservation corps, AmeriCorps
 positions and paid work abroad. Free index, no sponsored listings.
 ```
@@ -91,7 +91,7 @@ positions and paid work abroad. Free index, no sponsored listings.
 Title: `Teach abroad for a year and get paid: JET, EPIK, Fulbright`
 Link: `https://gyp-psi.vercel.app/programs?category=teaching_abroad&ref=pin-teach`
 ```
-28 teaching abroad programs that pay you, compared honestly against the 5 that
+29 teaching abroad programs that pay you, compared honestly against the 5 that
 charge. JET pays about ¥3.36M a year with airfare. EPIK provides housing.
 Fulbright English Teaching Assistant deadlines are in October.
 ```

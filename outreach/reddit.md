@@ -38,22 +38,22 @@ built my own index.
 
 371 programs, sorted by one question: does it pay you, or charge you?
 
-231 pay a stipend, wage, or education award. 93 charge you. 47 roughly break
-even.
+Of the ones still running, 230 pay a stipend, wage, or education award. 89
+charge you. 43 roughly break even. The other 9 have shut down or paused.
 
 The priced ones cost more than most people expect. A postgraduate year at a
 boarding school runs to $75,000. EF Gap Year is around $43,750. Verto is
 $33,500.
 
 Almost every category that gets sold to families has a paying equivalent.
-Conservation: 8 charge, 39 pay. Teaching abroad: 5 charge, 28 pay.
+Conservation: 7 charge, 40 pay. Teaching abroad: 5 charge, 29 pay.
 
 Outdoor and wilderness is the exception. 15 charge, 4 pay. If that's the year
 you want, you're probably going to pay for it. Seemed worth saying instead of
 pretending the pattern holds everywhere.
 
-I also found 17 programs that aren't operating but are still listed as open on
-university advising pages. The Payne Fellowship was terminated in February
+Some programs that have stopped are still listed as open on university
+fellowship pages. The Payne Fellowship was terminated in February
 2025. Mitchell paused selection in March 2024. Pickering and Rangel both
 postponed their 2026 cycles.
 

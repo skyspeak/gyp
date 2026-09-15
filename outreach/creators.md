@@ -40,7 +40,7 @@ listings, which is unusual in this space and the reason I can publish what
 follows.
 
 I tracked 371 programs and sorted them by whether they pay you or charge you.
-231 pay. 93 charge. The priced ones run higher than most people say out loud:
+230 pay. 89 charge. The priced ones run higher than most people say out loud:
 a postgraduate year at a boarding school reaches $75,000, EF is around
 $43,750.
 
@@ -61,7 +61,7 @@ Hi [name],
 You get asked about deferral a lot, so this might be useful.
 
 I keep a free index of 371 gap year programs, sorted by which pay a stipend
-and which charge a fee. 231 pay. 93 charge, and the fees go up to $75,000 for
+and which charge a fee. 230 pay. 89 charge, and the fees go up to $75,000 for
 a postgraduate year at a boarding school.
 
 There's also a list of programs still on university advising pages that aren't
@@ -84,7 +84,7 @@ A spending pattern you might not have looked at: families routinely pay
 $30,000 to $75,000 for a gap year that has a paid equivalent.
 
 A postgraduate year at a boarding school runs to $75,000. EF Gap Year is
-around $43,750. Meanwhile 231 programs pay a stipend, wage or education award
+around $43,750. Meanwhile 230 programs pay a stipend, wage or education award
 for a similar year. Conservation is the clearest case: 8 programs charge, 39
 pay.
 

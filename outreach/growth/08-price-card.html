@@ -1,0 +1,44 @@
+<title>Gap Year Price Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  /* A 1080x1080 image for screenshots. Single light theme on purpose: it is
+     posted as a picture into feeds that are light for most people. */
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9eeeb; display: grid; place-items: center; min-height: 100vh; padding: 24px; font-family: "Public Sans", Helvetica, Arial, sans-serif; }
+  .card { width: 1080px; height: 1080px; background: #f8fbfa; color: #14181c; padding: 84px 88px; display: flex; flex-direction: column; }
+  .kicker { font: 500 26px "IBM Plex Mono", monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #79847f; }
+  h1 { font: 600 76px/1.04 "Newsreader", Georgia, serif; letter-spacing: -0.02em; margin: 20px 0 0; }
+  .rows { margin-top: 36px; }
+  .row { display: grid; grid-template-columns: 1fr 190px 190px; align-items: center; padding: 17px 0; border-bottom: 2px solid #dfe4e1; }
+  .row.head { padding-top: 0; font: 500 22px "IBM Plex Mono", monospace; letter-spacing: 0.08em; text-transform: uppercase; color: #79847f; }
+  .row .label { font-size: 38px; }
+  .n { text-align: right; font: 600 60px "IBM Plex Mono", monospace; }
+  .row.head .n { font: 500 22px "IBM Plex Mono", monospace; }
+  .charge { color: #8a2a3b; }
+  .pay { color: #1b5a43; }
+  .row.exception .label::after { content: "  mostly charge"; font-size: 24px; color: #79847f; }
+  .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; font-size: 24px; color: #4a5551; }
+  .foot b { color: #14181c; }
+  @media (max-width: 1130px) { body { place-items: start; overflow-x: auto; } }
+</style>
+
+<div class="card">
+  <div class="kicker">Before you pay for a gap year</div>
+  <h1>For most kinds of gap year, more programs pay you than charge you.</h1>
+
+  <div class="rows">
+    <div class="row head"><span>Kind of year</span><span class="n">Charge</span><span class="n">Pay you</span></div>
+    <div class="row"><span class="label">Conservation</span><span class="n charge">7</span><span class="n pay">40</span></div>
+    <div class="row"><span class="label">Service</span><span class="n charge">11</span><span class="n pay">34</span></div>
+    <div class="row"><span class="label">Teaching abroad</span><span class="n charge">5</span><span class="n pay">29</span></div>
+    <div class="row exception"><span class="label">Travel &amp; study</span><span class="n charge">44</span><span class="n pay">31</span></div>
+    <div class="row exception"><span class="label">Outdoor</span><span class="n charge">15</span><span class="n pay">4</span></div>
+  </div>
+
+  <div class="foot">
+    <span>Programs still running and open to US citizens, Sept 2026</span>
+    <b>Gap Year Platform</b>
+  </div>
+</div>

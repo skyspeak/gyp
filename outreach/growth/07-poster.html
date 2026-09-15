@@ -1,0 +1,70 @@
+<title>Gap Year Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<!--
+  Printable poster for counseling offices and college fairs.
+  Print to PDF at Letter (or Tabloid for a bigger wall), no margins scaling.
+
+  The QR code below points to https://gyp-psi.vercel.app/?ref=poster
+  For a specific school, regenerate it with that school's code:
+    npx qrcode -t svg -o qr.svg "https://gyp-psi.vercel.app/?ref=poster-SCHOOLCODE"
+  and replace the <svg class="qr"> element with the new file's contents.
+
+  Deliberately single light theme: it is printed, not viewed on the site.
+-->
+<style>
+  @page { size: letter; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #ffffff; color: #14181c; }
+  body { font-family: "Public Sans", Helvetica, Arial, sans-serif; }
+  .poster { width: 8.5in; height: 11in; margin: 0 auto; padding: 0.75in 0.7in 0.6in; display: flex; flex-direction: column; }
+  .kicker { font: 500 11pt "IBM Plex Mono", monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #79847f; }
+  h1 { font: 600 46pt/1.02 "Newsreader", Georgia, serif; letter-spacing: -0.015em; margin: 10pt 0 0; }
+  .dek { font-size: 16pt; line-height: 1.35; color: #4a5551; margin: 14pt 0 0; max-width: 6.4in; }
+  .rows { margin-top: 28pt; border-top: 2px solid #14181c; }
+  .row { display: grid; grid-template-columns: 1fr 1.1in 1.1in; align-items: baseline; padding: 9pt 0; border-bottom: 1px solid #dfe4e1; font-size: 14.5pt; }
+  .row.head { font: 500 9pt "IBM Plex Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; color: #79847f; }
+  .row .n { text-align: right; font: 600 20pt "IBM Plex Mono", monospace; }
+  .row.head .n { font: 500 9pt "IBM Plex Mono", monospace; }
+  .charge { color: #8a2a3b; }
+  .pay { color: #1b5a43; }
+  .note { margin-top: 12pt; font-size: 11pt; color: #4a5551; }
+  .bottom { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.4in; }
+  .cta { font: 600 22pt/1.15 "Newsreader", Georgia, serif; max-width: 4.8in; }
+  .cta small { display: block; margin-top: 8pt; font: 400 11pt "Public Sans", Helvetica, Arial, sans-serif; color: #4a5551; }
+  .qrwrap { text-align: center; }
+  .qr { width: 1.9in; height: 1.9in; display: block; }
+  .url { margin-top: 6pt; font: 500 10pt "IBM Plex Mono", monospace; color: #14181c; }
+  .brand { margin-top: 18pt; font-size: 9.5pt; color: #79847f; }
+  @media screen { body { background: #eef1ef; padding: 24px 0; } .poster { background: #ffffff; box-shadow: 0 2px 12px rgba(20,24,28,.12); } }
+</style>
+
+<div class="poster">
+  <div class="kicker">Before you pay for a gap year</div>
+  <h1>Most gap years don&rsquo;t cost money. Some pay you.</h1>
+  <p class="dek">The programs families hear about first are the ones with marketing budgets. For most kinds of year, more programs pay a stipend than charge a fee.</p>
+
+  <div class="rows">
+    <div class="row head"><span>Kind of year</span><span class="n">Charge you</span><span class="n">Pay you</span></div>
+    <div class="row"><span>Conservation</span><span class="n charge">7</span><span class="n pay">40</span></div>
+    <div class="row"><span>Service</span><span class="n charge">11</span><span class="n pay">34</span></div>
+    <div class="row"><span>Teaching abroad</span><span class="n charge">5</span><span class="n pay">29</span></div>
+    <div class="row"><span>Trades</span><span class="n charge">3</span><span class="n pay">13</span></div>
+    <div class="row"><span>Travel and study</span><span class="n charge">44</span><span class="n pay">31</span></div>
+    <div class="row"><span>Outdoor and wilderness</span><span class="n charge">15</span><span class="n pay">4</span></div>
+  </div>
+  <p class="note">Travel-and-study and outdoor are where most programs charge, and they&rsquo;re shown here on purpose. Outdoor has almost no paid option at all. Counts from the Gap Year Platform catalog, September 2026, programs still running and open to US citizens.</p>
+
+  <div class="bottom">
+    <div class="cta">
+      See every gap year you can do, and what each one pays or costs.
+      <small>Free. No commissions. Nothing on it is sponsored.</small>
+    </div>
+    <div class="qrwrap">
+      <svg class="qr" role="img" aria-label="QR code linking to gyp-psi.vercel.app" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h29v29H0z"/><path stroke="#14181c" d="M0 0.5h7m2 0h1m2 0h1m3 0h4m2 0h7M0 1.5h1m5 0h1m3 0h2m2 0h2m1 0h1m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h5m1 0h1m2 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h2m4 0h1m1 0h1m1 0h3m1 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m4 0h1m1 0h2m1 0h1m1 0h1m1 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h3m1 0h1m7 0h1M0 8.5h1m1 0h5m3 0h2m3 0h3m4 0h5M2 9.5h1m1 0h1m2 0h3m1 0h1m1 0h1m2 0h1m2 0h2m1 0h3m3 0h1M1 10.5h1m1 0h1m2 0h1m2 0h1m3 0h4m1 0h1m1 0h2m1 0h2M0 11.5h2m2 0h2m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1M0 12.5h2m2 0h4m1 0h1m1 0h1m2 0h1m2 0h1m7 0h2M0 13.5h1m3 0h2m2 0h2m2 0h1m3 0h1m2 0h2m1 0h1m1 0h1m3 0h1M0 14.5h2m2 0h3m3 0h2m3 0h1m2 0h1m2 0h1m2 0h3M0 15.5h3m1 0h2m1 0h1m3 0h2m1 0h2m2 0h2m2 0h1m1 0h1m2 0h1M1 16.5h7m3 0h1m3 0h4m1 0h1m2 0h1m1 0h2M0 17.5h5m3 0h1m2 0h4m1 0h9m1 0h1m1 0h1M0 18.5h1m1 0h2m2 0h3m1 0h8m2 0h5m1 0h1M0 19.5h1m2 0h1m3 0h1m2 0h2m1 0h1m1 0h2m3 0h1m6 0h1M0 20.5h1m1 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h3m1 0h5m1 0h3M8 21.5h1m3 0h1m4 0h1m2 0h1m3 0h5M0 22.5h7m3 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h3M0 23.5h1m5 0h1m1 0h1m2 0h2m1 0h1m1 0h1m2 0h2m3 0h1m2 0h2M0 24.5h1m1 0h3m1 0h1m1 0h2m5 0h1m1 0h1m2 0h5m1 0h1M0 25.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m3 0h2m1 0h1m1 0h4M0 26.5h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h6m1 0h7M0 27.5h1m5 0h1m2 0h2m1 0h5m1 0h3m1 0h2m1 0h1m1 0h1M0 28.5h7m1 0h1m4 0h1m1 0h1m1 0h1m1 0h1m1 0h4m1 0h1"/></svg>
+      <div class="url">gyp-psi.vercel.app</div>
+    </div>
+  </div>
+  <div class="brand">Gap Year Platform</div>
+</div>

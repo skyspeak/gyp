@@ -17,6 +17,14 @@ the only work left is proofreading and filling in names.
 | `creators.md` | Outreach to gap year, counselor and personal-finance creators |
 | `linkedin-and-x.md` | Four LinkedIn posts, four for X |
 
+## Growth hacks
+
+`growth/GROWTH-HACKS.md` is ten step-by-step hacks, each with its own
+materials in the same folder: embed kit, referral note, press pitch and
+printable data sheet, dataset launch, counselor newsletter block, paying
+programs kit, QR poster, parent group price card, video scripts and page
+audit template.
+
 ## The two things that gate all of it
 
 **Send between 1 and 4 September.** Marshall closes 29 September, Fulbright
