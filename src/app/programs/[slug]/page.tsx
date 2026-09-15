@@ -35,11 +35,39 @@ import WatchButton from "./watch-button";
 import { AlertButton } from "@/components/alert-button";
 import { ShareMenu } from "@/components/share-menu";
 
+// The title states whether the program is running, because that is often the
+// question the searcher typed. Nobody publishes closures, so "is the Payne
+// Fellowship still running" has no good answer in search today; a page whose
+// title answers it does. Only funding_status is used, which a person confirms,
+// so the title never claims more than the data does.
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const program = await getProgramBySlug(slug);
   if (!program) return {};
-  return { title: `${program.name} — Gap Year Platform` };
+  const name = program.name.replace(/\s+—\s+US Eligibility Status$/i, "");
+
+  const title =
+    program.funding_status === "defunded"
+      ? `Is ${name} still running? No, it has shut down`
+      : program.funding_status === "paused"
+        ? `Is ${name} still running? Paused, not taking applications`
+        : program.funding_status === "at_risk"
+          ? `${name}: still running, funding at risk`
+          : `${name}: what it pays, deadlines and eligibility`;
+
+  const status =
+    program.funding_status === "defunded"
+      ? "This program has shut down."
+      : program.funding_status === "paused"
+        ? "This program is paused and not currently accepting applications."
+        : program.us_eligible === 0
+          ? "Not open to US citizens."
+          : "";
+
+  return {
+    title: `${title} — Gap Year Platform`,
+    description: [status, program.summary].filter(Boolean).join(" ").slice(0, 300),
+  };
 }
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: string }) {

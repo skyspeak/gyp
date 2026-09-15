@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DesignForm from "./design-form";
 import { GallerySection } from "@/components/gallery/gallery-section";
 
@@ -19,6 +20,13 @@ export default function DesignPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           Answer that and we&apos;ll lay out a year using each program&apos;s real length — then you
           can argue with it. No account, and you get a link to send.
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Already admitted to college?{" "}
+          <Link href="/deferral-letter" className="font-medium text-foreground underline">
+            Use the deferral letter template
+          </Link>
+          .
         </p>
         <DesignForm />
       </div>
