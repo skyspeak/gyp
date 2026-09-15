@@ -25,6 +25,10 @@ jobs:
 
       - run: npm run lint
 
+      # The /map location parser has regressed silently more than once; each
+      # case is a real catalog string that was once placed in the wrong country.
+      - run: npm run check:geo
+
       # `next build` type-checks as part of the build, so there is no separate
       # tsc step. Running tsc on its own fails on the generated route types in
       # .next, which do not exist until a build has run.
