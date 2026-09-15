@@ -25,15 +25,18 @@ function fillFor(n: number): string | null {
   return null;
 }
 
-// Server component, and deliberately plain: every country is an <a> with a
-// native <title> tooltip, so the map works with JavaScript off and ships no
-// mapping library. The geometry is pre-projected at build-free generation
-// time and imported as static path strings.
+// Every country is a real <a>, so the map still navigates with JavaScript off.
+// When it runs inside the explorer, onSelect intercepts the click and the list
+// updates in place — the first version only navigated, reloading the page and
+// leaving the list below the fold, so a click looked like it did nothing.
+// Hook-free on purpose so it renders from either a server or client parent.
 export function WorldMap({
   counts,
   closedOnly,
   selected,
   hrefFor,
+  onSelect,
+  onHover,
 }: {
   /** Programs a US applicant can do there, by ISO alpha-2 code. */
   counts: Record<string, number>;
@@ -41,6 +44,8 @@ export function WorldMap({
   closedOnly: string[];
   selected?: string;
   hrefFor: (code: string) => string;
+  onSelect?: (code: string) => void;
+  onHover?: (code: string | null) => void;
 }) {
   const closed = new Set(closedOnly);
   const shapes = map.shapes as Shape[];
@@ -51,6 +56,21 @@ export function WorldMap({
   const ordered = selected
     ? [...shapes.filter((s) => s.code !== selected), ...shapes.filter((s) => s.code === selected)]
     : shapes;
+
+  const handlers = (code: string) => ({
+    onClick: onSelect
+      ? (e: React.MouseEvent) => {
+          // Let cmd/ctrl-click open the country in a new tab as a link would.
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+          e.preventDefault();
+          onSelect(code);
+        }
+      : undefined,
+    onMouseEnter: onHover ? () => onHover(code) : undefined,
+    onMouseLeave: onHover ? () => onHover(null) : undefined,
+    onFocus: onHover ? () => onHover(code) : undefined,
+    onBlur: onHover ? () => onHover(null) : undefined,
+  });
 
   const label = (code: string) => {
     const n = counts[code] ?? 0;
@@ -95,11 +115,11 @@ export function WorldMap({
             d={s.d}
             fill={isClosed ? "url(#not-open)" : undefined}
             vectorEffect="non-scaling-stroke"
-            strokeWidth={isSelected ? 2 : 0.6}
+            strokeWidth={isSelected ? 2.5 : 0.6}
             className={cn(
               isClosed ? "" : (fill ?? "fill-muted"),
               isSelected ? "stroke-foreground" : "stroke-background",
-              interactive && "transition-opacity hover:opacity-75"
+              interactive && "cursor-pointer transition-opacity hover:opacity-70"
             )}
           >
             <title>{label(s.code)}</title>
@@ -107,7 +127,7 @@ export function WorldMap({
         );
 
         return interactive ? (
-          <a key={s.code} href={hrefFor(s.code)} aria-label={label(s.code)}>
+          <a key={s.code} href={hrefFor(s.code)} aria-label={label(s.code)} {...handlers(s.code)}>
             {path}
           </a>
         ) : (
@@ -123,7 +143,7 @@ export function WorldMap({
         .map((d) => {
           const n = counts[d.code] ?? 0;
           return (
-            <a key={d.code} href={hrefFor(d.code)} aria-label={label(d.code)}>
+            <a key={d.code} href={hrefFor(d.code)} aria-label={label(d.code)} {...handlers(d.code)}>
               <circle
                 cx={d.cx}
                 cy={d.cy}
@@ -131,7 +151,7 @@ export function WorldMap({
                 fill={n ? undefined : "url(#not-open)"}
                 vectorEffect="non-scaling-stroke"
                 strokeWidth={d.code === selected ? 2 : 1.2}
-                className={cn(n ? (fillFor(n) ?? "fill-muted") : "", "stroke-foreground/60")}
+                className={cn(n ? (fillFor(n) ?? "fill-muted") : "", "cursor-pointer stroke-foreground/60")}
               >
                 <title>{label(d.code)}</title>
               </circle>
