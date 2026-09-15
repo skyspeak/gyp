@@ -126,9 +126,10 @@ own page.
 
 **"This is US-centric."**
 ```
-It is. The eligibility data is written for US citizens, including 10 working
-holiday visa schemes that are running fine but that Americans can't use, which
-blog posts routinely get wrong. Broadening it is possible but I'd rather have
+It is. The eligibility data is written for US citizens, including working
+holiday schemes that run fine but aren't open to Americans, like Hong Kong's
+and Taiwan's, which blog posts routinely get wrong. It cuts both ways: Canada's
+is open to Americans, but only through one organization. Broadening it is possible but I'd rather have
 one accurate country than five vague ones.
 ```
 

@@ -3,7 +3,7 @@
 Ideas that would work for any product are not worth writing down. Everything
 below is built on something only this catalog has: 381 tracked paths, of which
 **234 pay the participant, 93 charge them, 17 are not operating normally, and
-10 are recommended to Americans who cannot use them**.
+9 are recommended to Americans who cannot use them**.
 
 The channel was already chosen in the spec — campus fellowship advisers. What
 follows is that bet, plus the assets worth building around it, ranked by

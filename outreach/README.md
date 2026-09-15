@@ -19,7 +19,7 @@ the only work left is proofreading and filling in names.
 
 ## Growth hacks
 
-`growth/GROWTH-HACKS.md` is ten step-by-step hacks, each with its own
+`growth/GROWTH-HACKS.md` and `growth/GROWTH-HACKS-2.md` are twenty step-by-step hacks, each with its own
 materials in the same folder: embed kit, referral note, press pitch and
 printable data sheet, dataset launch, counselor newsletter block, paying
 programs kit, QR poster, parent group price card, video scripts and page
