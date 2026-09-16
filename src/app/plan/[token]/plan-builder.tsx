@@ -111,15 +111,6 @@ export default function PlanBuilder({
         <ShareButton token={token} />
       </header>
 
-      {/* A parent-built plan is a proposal, not an instruction. Saying so is the
-          difference between the student engaging and ignoring it. */}
-      {plan.createdBy === "parent" && (
-        <p className="mt-4 rounded-lg border bg-muted/40 p-3 text-sm text-muted-foreground">
-          Anyone with this link can edit it. Send it to{" "}
-          {plan.studentName ?? "them"} — it&apos;s a starting point to argue with, not a done deal.
-        </p>
-      )}
-
       <MoneyBar totals={totals} itemCount={items.length} />
 
       <section className="mt-8">
