@@ -43,7 +43,9 @@ export default function ForkButton({
 
   return (
     <div>
-      <Button variant="outline" className="w-full" onClick={fork} disabled={status === "loading"}>
+      {/* The primary action on the page: taking a year that already works is
+          the path most people should be on. */}
+      <Button className="h-10 w-full" onClick={fork} disabled={status === "loading"}>
         {status === "loading" ? (
           <>
             <Loader2 className="size-4 animate-spin" /> Copying…

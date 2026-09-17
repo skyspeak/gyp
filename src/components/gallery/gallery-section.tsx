@@ -9,16 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import ForkButton from "@/components/gallery/fork-button";
 
-// Worked examples used to be their own top-level page. They belong next to the
-// builder instead: someone who cannot start from a blank form starts from one
-// of these, and the two only make sense together.
+// The worked examples are the way in. Asking someone to describe the year
+// they want before they have seen one is the harder job; picking the year
+// that sounds closest and arguing with it is the easy one.
 export async function GallerySection() {
   const proposals = await buildGallery();
 
   return (
     <section>
       <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-balance">
-        Or start from one of these
+        Start from one of these
       </h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground text-pretty">
         Five years assembled from real programs, using each one&apos;s actual term length — not a
@@ -131,7 +131,7 @@ export async function GallerySection() {
                     card, already filtered. */}
                 <Link
                   href={p.moreLike.href}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted sm:flex-1"
+                  className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-medium transition-colors hover:bg-muted sm:flex-1"
                 >
                   <Search className="size-3.5 text-muted-foreground" />
                   {p.moreLike.count} {p.moreLike.label}
