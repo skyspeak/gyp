@@ -130,7 +130,14 @@ export async function getSoonestDeadlines(programIds: string[]): Promise<Map<str
   return map;
 }
 
-export type UpcomingDeadline = Deadline & { program_name: string; program_slug: string; program_summary: string; program_degree_required: number };
+export type UpcomingDeadline = Deadline & {
+  program_name: string;
+  program_slug: string;
+  program_summary: string;
+  program_degree_required: number;
+  program_money_direction: string;
+  program_category: string;
+};
 
 export async function listUpcomingDeadlines(filters: { degreeRequired?: 0 | 1 } = {}): Promise<UpcomingDeadline[]> {
   const where = ["d.due_at IS NOT NULL", "d.due_at > datetime('now')"];
@@ -140,7 +147,9 @@ export async function listUpcomingDeadlines(filters: { degreeRequired?: 0 | 1 } 
     args.push(filters.degreeRequired);
   }
   const res = await db().execute({
-    sql: `SELECT d.*, p.name as program_name, p.slug as program_slug, p.summary as program_summary, p.degree_required as program_degree_required
+    sql: `SELECT d.*, p.name as program_name, p.slug as program_slug, p.summary as program_summary,
+                 p.degree_required as program_degree_required, p.money_direction as program_money_direction,
+                 p.category as program_category
           FROM deadlines d JOIN programs p ON p.id = d.program_id
           WHERE ${where.join(" AND ")}
           ORDER BY d.due_at ASC`,
