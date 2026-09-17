@@ -48,16 +48,22 @@ export async function POST(req: NextRequest) {
     const base = baseUrl(req.nextUrl.origin);
     // A failed welcome email must not fail the signup — the lead is already
     // saved, and telling someone "something went wrong" would invite a
-    // duplicate submission for a row that exists.
-    await sendEmail({
+    // duplicate submission for a row that exists. But it must not vanish
+    // either: this used to be `.catch(() => {})`, so a misconfigured sender
+    // meant every signup looked perfect and no email ever arrived.
+    const emailed = await sendEmail({
       to: email,
       subject: role === "adviser" ? "Program status alerts" : "You're on the list",
       html: `<p>${WHAT_THEY_GET[role]}</p>
              <p><a href="${base}/programs">Browse the catalog</a></p>
              <p style="color:#888;font-size:12px">No commissions, no paid placements, and we never sell your address. Unsubscribe any time: ${base}/api/unsubscribe</p>`,
-    }).catch(() => {});
+    });
 
-    return NextResponse.json({ ok: true, isNew, shareCode: shareCodeFor(id) });
+    if (!emailed) {
+      console.error(`[lead] saved ${email} but the welcome email was not sent — see the [email:*] line above`);
+    }
+
+    return NextResponse.json({ ok: true, isNew, emailed, shareCode: shareCodeFor(id) });
   } catch {
     return NextResponse.json({ error: "Couldn't save that. Try again." }, { status: 500 });
   }

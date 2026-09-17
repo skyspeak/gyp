@@ -41,7 +41,11 @@ re-verification respectively.
 
    Optional, each enabling one feature:
    - `ADMIN_USER` + `ADMIN_PASSWORD` — unlocks `/admin/review`
-   - `RESEND_API_KEY` + `RESEND_FROM_EMAIL` — deadline reminder emails
+   - `RESEND_API_KEY` **and** `RESEND_FROM_EMAIL` — every email the app sends
+     (welcome, watch confirmations, deadline reminders, closure alerts). Both
+     are required: there is no default sender, and a send is refused without
+     one. `RESEND_FROM_EMAIL` must be an address on a domain verified in
+     Resend, e.g. `Gap Year Platform <deadlines@yourdomain.com>`
    - `GEMINI_API_KEY` **or** `ANTHROPIC_API_KEY` — nightly verification cron
      (Gemini wins if both are set)
    - `ADMIN_EMAIL` — where funding-risk alerts go

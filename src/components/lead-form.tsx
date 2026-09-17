@@ -26,6 +26,9 @@ export function LeadForm({
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
   const [shareCode, setShareCode] = useState<string | null>(null);
+  // Whether the welcome email actually reached Resend. "Check your inbox" is
+  // a promise, and the card must not make it when nothing was sent.
+  const [emailed, setEmailed] = useState(true);
   const [copied, setCopied] = useState(false);
 
   const shareUrl = () => `${window.location.origin}/?ref=${shareCode}`;
@@ -50,9 +53,20 @@ export function LeadForm({
         <div className="mx-auto grid size-11 place-items-center rounded-full bg-earn-muted text-earn-foreground">
           <Check className="size-5" />
         </div>
-        <h3 className="mt-3 text-lg font-semibold tracking-tight">Check your inbox</h3>
+        <h3 className="mt-3 text-lg font-semibold tracking-tight">
+          {emailed ? "Check your inbox" : "You're on the list"}
+        </h3>
         <p className="mx-auto mt-1.5 max-w-sm text-pretty text-sm text-muted-foreground">
-          {pitch} Sent to <span className="font-medium text-foreground">{email}</span>.
+          {pitch}{" "}
+          {emailed ? (
+            <>
+              Sent to <span className="font-medium text-foreground">{email}</span>.
+            </>
+          ) : (
+            <>
+              Saved as <span className="font-medium text-foreground">{email}</span>.
+            </>
+          )}
         </p>
         {/* The moment right after someone signs up is when they are most
             convinced this is useful, and a gap year is rarely decided alone —
@@ -132,6 +146,7 @@ export function LeadForm({
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data?.error ?? "Couldn't save that.");
           setShareCode(typeof data?.shareCode === "string" ? data.shareCode : null);
+          setEmailed(data?.emailed !== false);
           setStatus("done");
         } catch (err) {
           setError(err instanceof Error ? err.message : "Couldn't save that.");

@@ -108,7 +108,7 @@ async function notifyWatchers(opts: {
              ${opts.sourceUrl ? `<p>Source checked: <a href="${opts.sourceUrl}">${opts.sourceUrl}</a></p>` : ""}
              <p><a href="${base}/programs/${opts.programSlug}">See the program</a> · <a href="${base}/programs">Browse the catalog</a></p>
              <p style="color:#888;font-size:12px">You asked to be told when this changed. Unsubscribe: ${base}/api/unsubscribe?token=${row.unsub_token}</p>`,
-    }).catch(() => false);
+    });
     if (ok) sent++;
   }
   return sent;
