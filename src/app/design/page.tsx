@@ -18,29 +18,32 @@ export default function DesignPage() {
           into a year laid out from real programs, so the header should read
           like the start of a conversation rather than the top of a form. */}
       <section className="border-b bg-gradient-to-b from-muted/60 to-background">
-        <div className="mx-auto max-w-2xl px-4 py-14 text-center sm:py-20">
+        {/* Kept short on purpose: the three questions are the page, and a
+            header that fills the screen buries them. */}
+        <div className="mx-auto max-w-2xl px-4 py-8 text-center sm:py-10">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             Free · no account · takes a minute
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-balance sm:text-4xl">
             What should this year do for them?
           </h1>
-          <p className="mx-auto mt-4 max-w-lg text-base text-muted-foreground text-pretty">
+          <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground text-pretty">
             Answer three questions and we&apos;ll lay out a year using each program&apos;s real
             length — then you can argue with it. You get a link to send.
           </p>
-          <Link
-            href="/deferral-letter"
-            className="mt-6 inline-flex items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm shadow-xs transition-colors hover:bg-muted"
-          >
-            <FileText className="size-3.5 text-muted-foreground" />
-            Already admitted? Use the deferral letter template
-          </Link>
         </div>
       </section>
 
-      <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:py-10">
         <DesignForm />
+
+        <Link
+          href="/deferral-letter"
+          className="mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+        >
+          <FileText className="size-3.5" />
+          Already admitted? Use the deferral letter template
+        </Link>
       </div>
 
       {/* A blank builder is intimidating. The worked examples were a separate
