@@ -247,37 +247,115 @@ function MoneyBar({ totals, itemCount }: { totals: PlanTotals; itemCount: number
   );
 }
 
-// A 12-month strip. On a phone this is the fastest way to see shape and gaps
-// without reading a single number.
+// One labelled row per block, spanning the months it actually runs, coloured
+// by whether it pays you. The strip this replaced was twelve anonymous
+// squares: you could see that something filled November without ever learning
+// what, and three of the twelve month labels were the letter J.
+// A bar is read as colour and length before it is read as text, so it needs
+// more fill than the badges in the list below.
+const BAR_TONE: Record<string, string> = {
+  earn: "border-earn/45 bg-earn/30 text-earn-foreground",
+  neutral: "border-border bg-muted-foreground/20 text-foreground",
+  pay: "border-pay/45 bg-pay/30 text-pay-foreground",
+};
+
+const TRACK =
+  "grid grid-cols-[6.5rem_repeat(12,minmax(0,1fr))] sm:grid-cols-[10rem_repeat(12,minmax(0,1fr))] items-center gap-x-1";
+
 function Timeline({ months, items, gaps }: { months: string[]; items: Item[]; gaps: string[] }) {
   const gapSet = new Set(gaps);
-  const colorFor = (m: string) => {
-    const idx = items.findIndex((i) => i.startsOn && i.endsOn && m >= i.startsOn && m <= i.endsOn);
-    if (idx === -1) return null;
-    return idx;
+  const scheduled = items.filter((i) => i.startsOn && i.endsOn);
+  const undated = items.filter((i) => !i.startsOn || !i.endsOn);
+  if (items.length === 0) return null;
+
+  // A block can start before the plan's window or run past it. Clamp to the
+  // edge rather than dropping the row: a bar that runs off the side is true,
+  // an invisible bar is not.
+  const indexFor = (ym: string) => {
+    const i = months.indexOf(ym);
+    if (i !== -1) return i;
+    return ym < months[0] ? 0 : months.length - 1;
   };
-  const PALETTE = ["bg-earn/70", "bg-primary/60", "bg-warn/60", "bg-earn/40", "bg-primary/35"];
 
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border">
-      <div className="flex">
-        {months.map((m) => {
-          const idx = colorFor(m);
-          return (
-            <div key={m} className="flex-1 border-r last:border-r-0">
-              <div
+    <div className="mt-3 overflow-x-auto pb-1">
+      <div className="min-w-[32rem] space-y-1">
+        <div className={cn(TRACK, "pb-0.5")}>
+          <span />
+          {months.map((m) => {
+            const [name, year] = formatMonth(m).split(" ");
+            return (
+              <span
+                key={m}
                 className={cn(
-                  "h-8",
-                  idx !== null ? PALETTE[idx % PALETTE.length] : gapSet.has(m) ? "bg-muted" : "bg-muted/40"
+                  "text-center text-[10px] font-medium",
+                  gapSet.has(m) ? "text-warn-foreground" : "text-muted-foreground"
                 )}
                 title={formatMonth(m)}
-              />
-              <div className="border-t py-1 text-center text-[9px] text-muted-foreground">
-                {formatMonth(m).slice(0, 1)}
-              </div>
+              >
+                {name}
+                {name === "Jan" && <span className="block opacity-70">{year}</span>}
+              </span>
+            );
+          })}
+        </div>
+
+        {scheduled.map((item) => {
+          const start = indexFor(item.startsOn!);
+          const span = Math.max(1, indexFor(item.endsOn!) - start + 1);
+          const tone = item.program
+            ? (MONEY_UI[item.program.moneyDirection] ?? MONEY_UI.participant_earns).tone
+            : "neutral";
+          const label = item.program?.name ?? item.note ?? "Untitled block";
+
+          return (
+            <div key={item.id} className={TRACK}>
+              <span className="truncate text-xs font-medium" title={label}>
+                {label}
+              </span>
+              <span
+                style={{ gridColumn: `${start + 2} / span ${span}` }}
+                className={cn(
+                  "flex h-7 items-center justify-center rounded-md border px-1.5 text-[10px] font-medium tabular-nums",
+                  BAR_TONE[tone] ?? BAR_TONE.neutral
+                )}
+                title={`${formatMonth(item.startsOn!)} – ${formatMonth(item.endsOn!)}`}
+              >
+                {span > 1 && `${span} mo`}
+              </span>
             </div>
           );
         })}
+
+        {undated.map((item) => {
+          const label = item.program?.name ?? item.note ?? "Untitled block";
+          return (
+            <div key={item.id} className={TRACK}>
+              <span className="truncate text-xs font-medium text-muted-foreground" title={label}>
+                {label}
+              </span>
+              <span className="col-span-12 flex h-7 items-center rounded-md border border-dashed px-2 text-[10px] text-muted-foreground">
+                No start month yet
+              </span>
+            </div>
+          );
+        })}
+
+        {gaps.length > 0 && (
+          <div className={cn(TRACK, "pt-0.5")}>
+            <span className="truncate text-xs text-warn-foreground">Unplanned</span>
+            {months.map((m) => (
+              <span
+                key={m}
+                className={cn(
+                  "h-2 rounded-sm",
+                  gapSet.has(m) ? "bg-warn/40" : "bg-transparent"
+                )}
+                title={gapSet.has(m) ? `${formatMonth(m)} — nothing planned` : undefined}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
