@@ -26,17 +26,30 @@ export default async function Home() {
     .filter((d) => !seen.has(d.program_slug) && seen.add(d.program_slug))
     .slice(0, 6);
 
+  // One real date in the hero. A promise about deadlines is worth more when
+  // the page can immediately name the one closing next.
+  const soonest = next.find((d) => {
+    const days = daysUntil(d.due_at);
+    return days != null && days >= 0;
+  });
+  const soonestDays = soonest ? daysUntil(soonest.due_at) : null;
+
   return (
     <div>
-      <section className="mx-auto max-w-4xl px-4 pt-16 pb-12 sm:pt-24 sm:pb-16 text-center">
+      <section className="mx-auto max-w-4xl px-4 pt-12 pb-8 sm:pt-16 sm:pb-10 text-center">
         <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
           A year off to make sense of the world.
         </h1>
+        {/* The promise, not the inventory. Anyone can list programs; what
+            this does is watch the dates and say something before one passes,
+            which is why it belongs above the fold rather than in the fine
+            print of a signup box halfway down. */}
         <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg text-muted-foreground text-pretty">
-          {earning.length} paths with a stipend, wage, or education award — and {paying.length}{" "}
-          that charge you, priced honestly so you can tell the difference.
+          Gap year deadlines pass quietly, and you find out afterwards. We track them for{" "}
+          {earning.length} paths that pay you and {paying.length} that charge, and email you before
+          one closes — or if the program shuts down for good.
         </p>
-        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5">
           <Button size="lg" nativeButton={false} render={<Link href="/design" />}>
             Design a gap year <ArrowRight className="size-4" />
           </Button>
@@ -44,13 +57,32 @@ export default async function Home() {
             Find my fit
           </Button>
         </div>
+
+        {soonest && (
+          <p className="mt-6 text-sm text-muted-foreground">
+            Closing next:{" "}
+            <Link
+              href={`/programs/${soonest.program_slug}`}
+              className="font-medium text-foreground underline underline-offset-4"
+            >
+              {soonest.program_name}
+            </Link>
+            {soonestDays != null && soonestDays >= 0 && (
+              <>
+                {" "}
+                in {soonestDays} day{soonestDays === 1 ? "" : "s"}
+              </>
+            )}
+            .
+          </p>
+        )}
+
+        <div className="mx-auto mt-4 max-w-md">
+          <LeadForm source="home" />
+        </div>
       </section>
 
       <section className="mx-auto max-w-4xl px-4 pb-20">
-        {/* Above the listings on purpose: the deadline table is the thing
-            people came to read, so the ask has to arrive before they start
-            reading rather than after they have finished. */}
-        <LeadForm source="home" className="mb-10" />
 
         <div className="rounded-xl border overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b bg-muted/40 px-4 py-2.5">
