@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeToggle, THEME_INIT_SCRIPT } from "@/components/theme-toggle";
@@ -109,6 +110,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </footer>
           </SiteChrome>
         </TooltipProvider>
+
+        {/* Vercel Web Analytics, alongside Cloudflare's. Same bargain:
+            cookieless, no cross-site tracking, no personal data. It reports
+            per-route numbers next to the deploys, which Cloudflare's dashboard
+            cannot do. The component no-ops outside a Vercel deployment, so a
+            local run adds nothing. */}
+        <Analytics />
 
         {ANALYTICS_ON && (
           <Script
