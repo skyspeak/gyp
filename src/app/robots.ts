@@ -8,7 +8,7 @@ import { baseUrl } from "@/lib/base-url";
 // nothing worth crawling.
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/admin/"] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/admin/", "/deadlinks"] },
     sitemap: `${baseUrl() || "https://gyp-psi.vercel.app"}/sitemap.xml`,
   };
 }

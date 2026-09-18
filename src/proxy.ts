@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const config = { matcher: ["/admin/:path*"] };
+// /deadlinks is an internal research page (who still links to closed
+// programs, with office contacts), so it sits behind the same login.
+export const config = { matcher: ["/admin/:path*", "/deadlinks"] };
 
 function unauthorized() {
   return new NextResponse("Authentication required.", {
