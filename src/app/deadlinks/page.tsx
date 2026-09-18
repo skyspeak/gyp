@@ -14,9 +14,11 @@ import { TONE_BADGE } from "@/lib/money-ui";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-// Private. Gated by the admin login in src/proxy.ts, kept out of the sitemap
-// and nav, disallowed in robots.txt, and marked noindex in case a link to it
-// ever escapes.
+// Unlisted rather than private: no login, kept out of the sitemap and nav,
+// disallowed in robots.txt and marked noindex. Anyone who types the path can
+// read it, so keep what goes on this page to facts already published
+// elsewhere — the office addresses here are printed on the universities' own
+// contact pages.
 export const metadata = {
   title: "Dead links — Gap Year Platform",
   robots: { index: false, follow: false },
@@ -119,7 +121,7 @@ export default async function DeadLinksPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
       <p className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        <Lock className="size-3" /> Private · not indexed
+        <Lock className="size-3" /> Unlisted · not indexed · anyone with the link can read it
       </p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
         Dead links
