@@ -203,7 +203,7 @@ export default function DesignForm() {
         </div>
         {status === "error" && (
           <p className="mt-2 text-sm text-destructive">
-            Couldn&apos;t build that — try again, or{" "}
+            Couldn&apos;t build that. Try again, or{" "}
             <Link href="/programs" className="underline">
               browse programs directly
             </Link>

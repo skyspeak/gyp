@@ -84,7 +84,7 @@ export default function ConnectPage() {
         </p>
         <p className="mt-1 text-muted-foreground">
           Nobody on this page pays to be here and nobody is paid to speak to you. We have no
-          network to sell you — these are the same directories an insider would use, handed over
+          network to sell you. These are the same directories an insider would use, handed over
           directly.
         </p>
       </div>
@@ -225,8 +225,8 @@ export default function ConnectPage() {
         Found something out of date, or a person worth adding?{" "}
         <Link href="/programs" className="underline">
           Every program page links its own source
-        </Link>{" "}
-        — that is always the authority over us.
+        </Link>
+        . That source is always the authority over us.
       </p>
     </div>
   );

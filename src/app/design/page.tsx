@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Design a gap year — Gap Year Platform",
   description:
-    "Start from one of five gap years built out of real programs, see what each pays or costs, and change everything. Or answer three questions and we'll draft one. No account needed.",
+    "Start from one of five gap years built out of programs in the catalog, see what each pays or costs, and change everything. Or answer three questions and we'll draft one. No account needed.",
 };
 
 export default function DesignPage() {
@@ -24,8 +24,9 @@ export default function DesignPage() {
             What should this year do for them?
           </h1>
           <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground text-pretty">
-            Five answers, each built from real programs at their real length, with what the year
-            pays or costs. Take the closest one and argue with it — you get a link to send.
+            Five answers, each built from programs in the catalog, at the length each one runs, with
+            what the year pays or costs. Take the closest one and argue with it. You get a link to
+            send.
           </p>
         </div>
       </section>

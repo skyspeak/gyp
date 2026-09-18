@@ -27,7 +27,7 @@ export default function WatchButton({
   if (status === "done") {
     return (
       <p className="flex items-center gap-1.5 text-sm text-earn-foreground">
-        <Check className="size-4" /> Watching {programName} — reminders go to {email}
+        <Check className="size-4" /> Watching {programName}. Reminders go to {email}
       </p>
     );
   }

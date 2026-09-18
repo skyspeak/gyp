@@ -41,7 +41,7 @@ export default async function ReviewQueuePage() {
     <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Review queue</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        {rows.length} pending. Nothing here is live until you confirm it — deadlines and pay never
+        {rows.length} pending. Nothing here is live until you confirm it. Deadlines and pay never
         auto-publish.
       </p>
 

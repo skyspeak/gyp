@@ -47,7 +47,7 @@ export default function Image() {
             A year off to make sense of the world.
           </div>
           <div style={{ marginTop: 26, fontSize: 34, color: OG.soft, maxWidth: 940, lineHeight: 1.35 }}>
-            Gap years that pay you, next to the ones that charge you, priced honestly.
+            Gap years that pay you, next to the ones that charge you, with both prices shown.
           </div>
         </div>
 

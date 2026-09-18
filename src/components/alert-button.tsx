@@ -26,7 +26,7 @@ export function AlertButton({
     return (
       <p className={cn("flex items-center gap-1.5 text-sm text-earn-foreground", className)}>
         <Check className="size-4 shrink-0" />
-        Watching{programName ? ` ${programName}` : ""} — we&apos;ll email {email} if it changes.
+        Watching{programName ? ` ${programName}` : ""}. We&apos;ll email {email} if it changes.
       </p>
     );
   }

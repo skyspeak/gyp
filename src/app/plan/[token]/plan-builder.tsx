@@ -226,7 +226,7 @@ function MoneyBar({ totals, itemCount }: { totals: PlanTotals; itemCount: number
         </p>
         {totals.netLow < 0 && totals.netHigh > 0 && (
           <p className="mt-0.5 text-[11px] text-warn-foreground">
-            Could go either way — depends which options you land
+            Could go either way, depending which options you land
           </p>
         )}
         {totals.educationAward > 0 && (
@@ -351,7 +351,7 @@ function Timeline({ months, items, gaps }: { months: string[]; items: Item[]; ga
                   "h-2 rounded-sm",
                   gapSet.has(m) ? "bg-warn/40" : "bg-transparent"
                 )}
-                title={gapSet.has(m) ? `${formatMonth(m)} — nothing planned` : undefined}
+                title={gapSet.has(m) ? `${formatMonth(m)}: nothing planned` : undefined}
               />
             ))}
           </div>

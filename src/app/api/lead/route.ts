@@ -9,11 +9,11 @@ const ROLES: LeadRole[] = ["student", "parent", "adviser"];
 // stakes; the closure alerts are the part nobody else can send, so they lead.
 const WHAT_THEY_GET: Record<LeadRole, string> = {
   student:
-    "We'll email you when a deadline that fits what you're after is 30, 7 and 1 day out — and if a program you're counting on shuts down or pauses.",
+    "We'll email you when a deadline that fits what you're after is 30, 7 and 1 day out, and if a program you're counting on shuts down or pauses.",
   parent:
-    "We'll email you when a deadline that fits is 30, 7 and 1 day out — and if a program you're counting on shuts down or pauses. Nothing here is a paid placement.",
+    "We'll email you when a deadline that fits is 30, 7 and 1 day out, and if a program you're counting on shuts down or pauses. Nothing here is a paid placement.",
   adviser:
-    "We'll email you when a program changes status — closed, paused, or newly unavailable to Americans — so your advising page never sends a student somewhere that no longer exists.",
+    "We'll email you when a program changes status, whether closed, paused or newly unavailable to Americans, so your advising page never sends a student somewhere that no longer exists.",
 };
 
 export async function POST(req: NextRequest) {

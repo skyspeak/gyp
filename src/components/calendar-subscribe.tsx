@@ -61,7 +61,7 @@ export function CalendarSubscribe({ className }: { className?: string }) {
 
           <p className="mt-2.5 text-xs text-muted-foreground">
             Google Calendar: use <span className="font-medium">Other calendars → From URL</span> and
-            paste the copied link — Google does not accept the subscribe button.
+            paste the copied link. Google does not accept the subscribe button.
           </p>
         </div>
       </div>

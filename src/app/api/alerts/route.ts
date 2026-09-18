@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       const emailed = await sendEmail({
         to: email,
         subject: slug ? `Watching: ${programName}` : "Watching every program",
-        html: `<p>We'll email you if <strong>${programName}</strong> changes status — shut down, paused, funding at risk, or no longer open to Americans.</p>
+        html: `<p>We'll email you if <strong>${programName}</strong> changes status: shut down, paused, funding at risk, or no longer open to Americans.</p>
                <p>Nothing else. <a href="${base}/programs">Browse the catalog</a>.</p>`,
       });
       if (!emailed) {
