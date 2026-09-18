@@ -150,7 +150,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
           </p>
           <p className="mt-1 text-muted-foreground">
             Imported from a bulk scan and not yet confirmed against the operator&apos;s own page.
-            Details below are quoted as written — check them at the source before relying on them.
+            Details below are quoted as written. Check them at the source before relying on them.
           </p>
         </div>
       )}
@@ -161,7 +161,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
             <Info className="size-4" /> Not open to U.S. citizens
           </p>
           <p className="mt-1 text-muted-foreground">
-            Listed because it&apos;s widely — and wrongly — recommended to Americans.
+            Listed because it&apos;s widely, and wrongly, recommended to Americans.
           </p>
         </div>
       )}
@@ -190,9 +190,9 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
               title={program.name}
               summary={
                 isPaying
-                  ? `Costs ${cost ?? "money"} — ${program.operator}`
+                  ? `${program.operator}: costs ${cost ?? "money"}`
                   : hasFigure
-                    ? `Pays ${formatPayShort(program)} — ${program.operator}`
+                    ? `${program.operator}: pays ${formatPayShort(program)}`
                     : program.operator
               }
             />
@@ -359,7 +359,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                 <p className="mt-2">
                   In general: merit money usually rides through a deferral, need-based aid usually
                   needs a refiled FAFSA, and earning credit anywhere can turn a deferred admit into
-                  a transfer applicant — forfeiting the original offer and its scholarships. Get it
+                  a transfer applicant, forfeiting the original offer and its scholarships. Get it
                   in writing from admissions first.
                 </p>
               </AccordionContent>

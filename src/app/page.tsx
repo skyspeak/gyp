@@ -48,9 +48,9 @@ export default async function Home() {
             which is why it belongs above the fold rather than in the fine
             print of a signup box halfway down. */}
         <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg text-muted-foreground text-pretty">
-          Gap year deadlines pass quietly, and you find out afterwards. We track them for{" "}
+          Most gap year deadlines pass without a word, and you find out afterwards. We track them for{" "}
           {earning.length} paths that pay you and {paying.length} that charge, and email you before
-          one closes — or if the program shuts down for good.
+          one closes, or if the program shuts down for good.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5">
           <Button size="lg" nativeButton={false} render={<Link href="/design" />}>

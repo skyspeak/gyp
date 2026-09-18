@@ -21,8 +21,8 @@ export async function GallerySection() {
         Start from one of these
       </h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground text-pretty">
-        Five years assembled from real programs, using each one&apos;s actual term length — not a
-        guess. Take any of them and change everything. Nobody paid to appear here.
+        Five years assembled from programs in the catalog, using the term length each one
+        publishes. Take any of them and change everything. Nobody paid to appear here.
       </p>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
@@ -76,7 +76,7 @@ export async function GallerySection() {
               {p.couldHaveEarned != null && (
                 <p className="mt-2 rounded-lg border border-earn/25 bg-earn-muted/50 p-2.5 text-xs text-earn-foreground">
                   The same {p.monthsFilled} months on the best-paying option we list would have
-                  earned about <strong>{formatCents(p.couldHaveEarned)}</strong> instead — a swing
+                  earned about <strong>{formatCents(p.couldHaveEarned)}</strong> instead, a swing
                   of roughly {formatCents(p.couldHaveEarned + p.totals.costHigh)}.
                 </p>
               )}

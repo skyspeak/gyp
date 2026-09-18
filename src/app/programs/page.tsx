@@ -234,7 +234,7 @@ export default async function ProgramsPage({
             <p className="mt-1 text-sm text-muted-foreground">
               {moneyDirection === "participant_earns"
                 ? "Every one of these pays you."
-                : "Comparison view — some of these charge."}
+                : "Comparison view. Some of these charge."}
             </p>
           </div>
           <div className="flex items-center gap-1 text-sm">
@@ -321,7 +321,7 @@ export default async function ProgramsPage({
                       )}
                     </span>
                   ) : (
-                    <span>Rolling — no fixed deadline</span>
+                    <span>Rolling, no fixed deadline</span>
                   )}
                 </div>
               </Link>

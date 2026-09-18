@@ -40,7 +40,7 @@ export default async function MapPage({
       />
 
       <p className="mt-10 text-xs text-muted-foreground">
-        Countries come from what each program&apos;s own description names — nothing is inferred
+        Countries come from what each program&apos;s own description names. Nothing is inferred
         from an operator&apos;s home base. Closed and paused programs are left off.{" "}
         <Link href="/programs" className="inline-flex items-center gap-0.5 underline">
           Search the catalog <ArrowUpRight className="size-3" />

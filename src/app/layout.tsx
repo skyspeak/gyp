@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl() || "http://localhost:3000"),
   title: "Gap Year Platform — Paid gap year and post-grad paths",
   description:
-    "A free directory and deadline tracker for gap year and post-grad paths that pay you — stipends, living allowances, education awards, and wages — with honest cost comparisons against the ones that charge you. No commissions, ever.",
+    "A free directory and deadline tracker for gap year and post-grad paths that pay you: stipends, living allowances, education awards and wages, with the price of the ones that charge you set beside them. No commissions, ever.",
 };
 
 // Two destinations. Everything that was a separate tab is now reachable from
@@ -99,7 +99,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteChrome>
           <footer className="border-t mt-16">
             <div className="mx-auto max-w-6xl px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground">
-              <p>No commissions. No referral fees. No paid placements — in either direction.</p>
+              <p>No commissions. No referral fees. No paid placements, in either direction.</p>
               <div className="flex items-center gap-3">
                 <span className="sm:hidden">
                   <ThemeToggle />

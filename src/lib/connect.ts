@@ -44,7 +44,7 @@ export const PEOPLE: { section: string; blurb: string; items: Contact[] }[] = [
       {
         role: "Your admissions office",
         who: "The person who signs off deferrals at the college holding your seat.",
-        why: "Deferral policies differ wildly, and earning college credit during the year can convert a deferred admit into a transfer applicant — forfeiting the original offer and its scholarships.",
+        why: "Deferral policies differ wildly, and earning college credit during the year can convert a deferred admit into a transfer applicant, forfeiting the original offer and its scholarships.",
         ask: "If I enrol for credit during my deferral, do I return as a first-year or a transfer, and what happens to my merit award? Please confirm in writing.",
         href: "/programs?money=participant_pays",
         hrefLabel: "See which programs grant credit",
@@ -52,7 +52,7 @@ export const PEOPLE: { section: string; blurb: string; items: Contact[] }[] = [
       },
       {
         role: "AmeriCorps program contact",
-        who: "Each AmeriCorps program — NCCC, VISTA, and every state corps — lists its own recruiter or program manager rather than a national desk.",
+        who: "NCCC, VISTA and every state corps list their own recruiter or program manager rather than a national desk.",
         why: "Living allowances, start dates and site placements vary by program and are frequently out of date on third-party sites.",
         ask: "What is the current living allowance for this term, and is the education award the full or prorated amount?",
         href: "https://www.americorps.gov/serve",
@@ -88,7 +88,7 @@ export const PEOPLE: { section: string; blurb: string; items: Contact[] }[] = [
         role: "Program alumni networks",
         who: "Most established programs run an alumni association or will connect prospective applicants with a current participant if asked.",
         why: "Operators put you in touch with people who enjoyed it. Ask for someone who left early, and notice whether they will.",
-        ask: "Can you connect me with a current participant — and with someone who did not finish the term?",
+        ask: "Can you connect me with a current participant, and with someone who did not finish the term?",
         href: "/programs",
         hrefLabel: "Find a program, then ask its operator",
         free: true,
@@ -126,7 +126,7 @@ export const DUE_DILIGENCE: Reference[] = [
     what: "Ratings and financial summaries for larger US charities.",
     use: "Quicker than reading a 990, and flags going-concern problems.",
     href: "https://www.charitynavigator.org/",
-    caveat: "Only covers organisations above a revenue threshold — a blank result is not a red flag by itself.",
+    caveat: "Only covers organisations above a revenue threshold, so a blank result is not a red flag by itself.",
   },
   {
     name: "UK Companies House",
@@ -137,7 +137,7 @@ export const DUE_DILIGENCE: Reference[] = [
   {
     name: "USAJOBS",
     what: "Every federal job, including seasonal wildland fire and park service roles.",
-    use: "Federal fire hiring runs on a much earlier calendar than other seasonal work — announcements post in autumn for the following summer.",
+    use: "Federal fire hiring runs on a much earlier calendar than other seasonal work. Announcements post in autumn for the following summer.",
     href: "https://www.usajobs.gov/",
     caveat: "Its resume format is unusually strict; a normal one-page resume is routinely auto-rejected.",
   },
@@ -160,7 +160,7 @@ export const CHECK_FUNDING: Reference[] = [
   {
     name: "BBB Wise Giving Alliance",
     what: "Charity accountability reports against twenty published standards.",
-    use: "Covers governance and truthfulness of appeals, not just finances — useful where a 990 looks fine but the marketing does not.",
+    use: "Covers governance and truthfulness of appeals, not just finances, which is useful where a 990 looks fine but the marketing does not.",
     href: "https://www.give.org/",
   },
   {
@@ -188,7 +188,7 @@ export const BEFORE_YOU_GO: Reference[] = [
   {
     name: "Federal Student Aid",
     what: "The official source on FAFSA, Pell and federal loans.",
-    use: "The authority on whether a program is aid-eligible — over any operator's marketing claim about it.",
+    use: "The authority on whether a program is aid-eligible, over any operator's marketing claim about it.",
     href: "https://studentaid.gov/",
   },
 ];
@@ -256,7 +256,7 @@ export const QUESTION_BANK: { situation: string; blurb: string; questions: Quest
         why: "Alaska seafood processing pays well on overtime and nothing when the fish do not run. Wildland fire earnings are back-loaded onto deployments that a quiet season may not produce.",
       },
       {
-        q: "What are the upfront costs before my first paycheque — certification, gear, travel to the site?",
+        q: "What are the upfront costs before my first paycheque: certification, gear, travel to the site?",
         why: "Yacht crew needs STCW certification at $900-$2,800 before anyone will hire you. Fire crews often buy their own boots.",
       },
     ],
@@ -290,7 +290,7 @@ export const QUESTION_BANK: { situation: string; blurb: string; questions: Quest
       "The fee is rarely the whole cost, and two operators in this catalog were still selling places while winding up.",
     questions: [
       {
-        q: "What is excluded from the fee — airfare, insurance, visa, deposit, personal expenses?",
+        q: "What is excluded from the fee: airfare, insurance, visa, deposit, personal expenses?",
         why: "A $18,750 headline is realistically $20,000-$21,000 once airfare and visa are counted. The exclusions are usually listed, just not next to the price.",
       },
       {
@@ -343,7 +343,7 @@ export const QUESTION_BANK: { situation: string; blurb: string; questions: Quest
         why: "A yen or won salary converts poorly to a US savings goal. Ask what it covers where you will live, not what it converts to.",
       },
       {
-        q: "When does the application actually close — and do you close early once places fill?",
+        q: "When does the application close, and do you close early once places fill?",
         why: "EPIK reviews on a rolling basis and stops when full, regardless of the published window.",
       },
     ],

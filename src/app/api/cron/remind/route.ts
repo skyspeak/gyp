@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
         await sendEmail({
           to: String(w.email),
           subject: `${offset} day${offset === 1 ? "" : "s"} left: ${deadline.program_name}`,
-          html: `<p><strong>${deadline.program_name}</strong> — ${deadline.cycle_label} ${String(deadline.kind).replace("_", " ")} deadline is ${formatDeadline(
+          html: `<p><strong>${deadline.program_name}</strong>: ${deadline.cycle_label} ${String(deadline.kind).replace("_", " ")} deadline is ${formatDeadline(
             deadline.due_at as string,
             deadline.source_tz as string | null
           )}.</p>
