@@ -47,7 +47,7 @@ million yen a year. Nothing on this map is sponsored. Link's in my bio.
 **Voiceover:**
 ```
 A postgraduate year at a boarding school can cost seventy-five thousand
-dollars. EF Gap Year is about forty-four thousand. But there are 230 gap year
+dollars. EF Gap Year is about forty-four thousand. But there are 232 gap year
 programs that pay you instead: conservation corps, teaching abroad, AmeriCorps.
 Most people just never hear about them, because they don't have ad budgets.
 ```

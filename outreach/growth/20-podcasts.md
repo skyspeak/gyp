@@ -35,7 +35,7 @@ listeners probably haven't heard:
    was terminated in February 2025. Pickering and Rangel postponed their 2026
    cycles.
 
-2. Families mostly hear about gap years that cost up to $75,000, while 230
+2. Families mostly hear about gap years that cost up to $75,000, while 232
    programs still running pay participants instead.
 
 I take no commissions and nothing on the site is sponsored, so I can talk
@@ -52,9 +52,9 @@ Attach `03-data-sheet.html`, printed to PDF.
 Say these numbers exactly. They're from the catalog on 15 September 2026;
 recheck before recording.
 
-- **230** gap year and post-grad programs still running pay the participant.
-  **89** charge.
-- Conservation: **7** charge, **40** pay. Teaching abroad: **5** charge, **29** pay.
+- **232** gap year and post-grad programs still running pay the participant.
+  **93** charge.
+- Conservation: **8** charge, **40** pay. Teaching abroad: **5** charge, **29** pay.
 - Travel and study, and outdoor, are where most charge. Outdoor has almost no
   paid option: **15** charge, **4** pay.
 - Prices: postgraduate year at a boarding school up to **$75,000**; EF Gap
@@ -69,7 +69,7 @@ recheck before recording.
 - Don't name the universities whose pages list closed fellowships. The
   pattern is the story; naming offices burns relationships you want.
 - Don't say every category has a paid option. Outdoor mostly doesn't.
-- Don't round 230 up to "hundreds that pay". The precise number is more
+- Don't round 232 up to "hundreds that pay". The precise number is more
   believable.
 
 ## Ask for

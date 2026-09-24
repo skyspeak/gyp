@@ -29,8 +29,8 @@ college, send them this:
 
 https://gyp-psi.vercel.app/?ref=seed
 
-It's free, nothing on it is sponsored, and it separates the 230 gap years that
-pay you from the 89 that charge you.
+It's free, nothing on it is sponsored, and it separates the 232 gap years that
+pay you from the 93 that charge you.
 
 That's it. Thanks.
 

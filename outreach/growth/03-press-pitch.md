@@ -15,7 +15,7 @@ page, and read two of their recent stories before writing to them.
 | Angle | Beat | Where it fits |
 |---|---|---|
 | A. Fellowships that ended are still advertised | Higher education | Inside Higher Ed, The Chronicle of Higher Education, The Hechinger Report |
-| B. $75,000 gap years vs 230 that pay | Personal finance, parenting | Money columns, family finance desks, parenting sections |
+| B. $75,000 gap years vs 232 that pay | Personal finance, parenting | Money columns, family finance desks, parenting sections |
 | C. The one category where you'll pay | Travel, outdoors, education | Outdoor and travel outlets, education newsletters |
 
 ## Angle A — fellowships that ended are still listed
@@ -58,7 +58,7 @@ https://gyp-psi.vercel.app/?ref=press-{{outlet}}
 Best in December, when early decision results arrive and families start
 talking about deferring.
 
-**Subject:** `The $75,000 gap year, and the 230 that pay instead`
+**Subject:** `The $75,000 gap year, and the 232 that pay instead`
 
 ```
 Hi {{first_name}},
@@ -68,10 +68,10 @@ budgets, and those are the ones that charge. A postgraduate year at a
 boarding school runs up to $75,000. EF Gap Year is around $43,750. Verto's
 semester abroad is $33,500.
 
-I track 371 gap year and post-grad programs, and 230 of the ones still
+I track 372 gap year and post-grad programs, and 232 of the ones still
 running pay the participant a stipend, wage or education award. In most
 categories the paid programs outnumber the priced ones: in conservation,
-7 programs charge and 40 pay. In teaching abroad, 5 charge and 29 pay.
+8 programs charge and 40 pay. In teaching abroad, 5 charge and 29 pay.
 
 Happy to send the full category breakdown and sources. Nothing on the site is
 sponsored and it takes no commissions, which is why it can publish the
@@ -90,7 +90,7 @@ Hi {{first_name}},
 
 I track gap year programs and sort them by whether they pay you or charge
 you. Most categories lean heavily toward paying: conservation is 7 priced
-programs against 40 that pay. Travel-and-study is mixed, 44 charge and 31
+programs against 40 that pay. Travel-and-study is mixed, 47 charge and 32
 pay, but there are still plenty of paid options there.
 
 Outdoor and wilderness programs are the exception: 15 charge and only 4

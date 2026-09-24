@@ -176,7 +176,7 @@ to Americans through one organization. Only use the claims marked verified.
 
 **Why it works.** College admissions and personal finance podcasts need
 guests with something new to say. "Fellowships that ended are still being
-advertised" and "$75,000 gap years next to 230 that pay" are both new.
+advertised" and "$75,000 gap years next to 232 that pay" are both new.
 
 1. Find shows with the search approach in `20-podcasts.md`.
 2. Send the pitch, with the data sheet attached.

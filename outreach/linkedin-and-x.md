@@ -43,10 +43,10 @@ around $43,750. Verto is $33,500.
 Those are the gap year programs families find first, because those are the
 ones with a marketing budget.
 
-There are also 230 programs that pay a stipend, wage or education award for a
+There are also 232 programs that pay a stipend, wage or education award for a
 comparable year. Conservation is the clearest case: 7 programs charge, 40 pay.
 
-I built a free index of 371 of them, sorted by that one question. No
+I built a free index of 372 of them, sorted by that one question. No
 commissions from any program, in either direction, which is the only reason it
 can say what it says.
 ```
@@ -57,7 +57,7 @@ Link in the first comment: `https://gyp-psi.vercel.app/?ref=li-cost`
 Something I'd rather publish than hide.
 
 The argument behind the index I built is that most gap year categories have a
-paid alternative to the ones families get sold. Conservation: 7 charge, 40
+paid alternative to the ones families get sold. Conservation: 8 charge, 40
 pay. Teaching abroad: 5 charge, 29 pay.
 
 Outdoor and wilderness breaks the pattern. 15 charge, 4 pay. If that's the
@@ -94,8 +94,8 @@ Post the same material, shorter. No threads longer than four posts.
 Every "best gap year programs" list is paid placement. The operator pays to be
 on it, so nothing is ever recommended against.
 
-Built the opposite. 371 programs sorted by whether they pay you or charge you.
-230 pay. 89 charge, up to $75,000.
+Built the opposite. 372 programs sorted by whether they pay you or charge you.
+232 pay. 93 charge, up to $75,000.
 
 No commissions, ever.
 

@@ -12,7 +12,7 @@ turso db shell gap-year-platform "SELECT referrer, COUNT(*) FROM people WHERE re
 ```
 
 Numbers used throughout, from the live catalog on 15 September 2026, counting
-only programs that are still running and open to Americans: **230 pay you, 89
+only programs that are still running and open to Americans: **232 pay you, 93
 charge you, 55 countries.**
 
 | # | Hack | Effort | Ref code | Start |
@@ -71,7 +71,7 @@ Your first subscribers are the most motivated people you'll ever have.
 
 **Why it works.** Reporters need numbers nobody else has. You have three:
 fellowships that ended but are still advertised, $75,000 gap years next to
-230 that pay, and the one category where the paid option mostly doesn't
+232 that pay, and the one category where the paid option mostly doesn't
 exist.
 
 1. Pick one angle per outlet from `03-press-pitch.md`. Never pitch all three

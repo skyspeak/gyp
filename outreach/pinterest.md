@@ -12,7 +12,7 @@ or print to PDF and export pages as images.
 Business account, not personal. Name it `Gap Year Platform`. Bio:
 
 ```
-Free index of 371 gap year programs, sorted by which ones pay you and which
+Free index of 372 gap year programs, sorted by which ones pay you and which
 ones charge you. No commissions, no sponsored listings.
 ```
 
@@ -41,12 +41,12 @@ type. That's deliberate, not padding.
 ---
 
 **Pin 1 — the headline number**
-Title: `230 gap year programs that pay you instead of charging you`
+Title: `232 gap year programs that pay you instead of charging you`
 Link: `https://gyp-psi.vercel.app/?ref=pin-pays`
 ```
 Most gap year programs you find first are the ones with a marketing budget,
-and those are the ones that charge. This free index tracks 371 programs and
-sorts them by one question: does it pay you, or do you pay it? 230 pay a
+and those are the ones that charge. This free index tracks 372 programs and
+sorts them by one question: does it pay you, or do you pay it? 232 pay a
 stipend, wage or education award. No commissions and no sponsored listings.
 ```
 
@@ -56,7 +56,7 @@ Link: `https://gyp-psi.vercel.app/programs?money=participant_pays&ref=pin-cost`
 ```
 A postgraduate year at a boarding school runs to $75,000. EF Gap Year is
 around $43,750. Verto is $33,500. Latitudes is $29,800. Here are the real
-prices for 89 gap year programs, next to 230 that pay you instead.
+prices for 93 gap year programs, next to 232 that pay you instead.
 ```
 
 **Pin 3 — the substitution, strongest pin**
@@ -82,7 +82,7 @@ subscribe to.
 Title: `Deferred college for a year? Here's what to do with it.`
 Link: `https://gyp-psi.vercel.app/?ref=pin-defer`
 ```
-A gap year before college doesn't have to cost $40,000. 230 programs pay a
+A gap year before college doesn't have to cost $40,000. 232 programs pay a
 stipend, wage or education award, including conservation corps, AmeriCorps
 positions and paid work abroad. Free index, no sponsored listings.
 ```
@@ -102,7 +102,7 @@ Link: `https://gyp-psi.vercel.app/programs?category=outdoor&ref=pin-outdoor`
 ```
 Almost every gap year category has a paid alternative. Outdoor and wilderness
 mostly doesn't. 15 programs charge, only 4 pay. If that's the year your teen
-wants, budget for it. Honest comparison of all 371 programs, free.
+wants, budget for it. Honest comparison of all 372 programs, free.
 ```
 
 **Pin 8 — post-grad**
