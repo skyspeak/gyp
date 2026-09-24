@@ -29,16 +29,16 @@ shadowban on the first try.
 
 r/gapyear only. Once. Don't cross-post, that's the fastest way to get flagged.
 
-**Title:** `I tracked 371 gap year programs and sorted them by whether they pay you or charge you`
+**Title:** `I tracked 372 gap year programs and sorted them by whether they pay you or charge you`
 
 ```
 Every "best gap year programs" list I found turned out to be paid placement.
 The operator pays to be listed, so nothing ever gets recommended against. So I
 built my own index.
 
-371 programs, sorted by one question: does it pay you, or charge you?
+372 programs, sorted by one question: does it pay you, or charge you?
 
-Of the ones still running, 230 pay a stipend, wage, or education award. 89
+Of the ones still running, 232 pay a stipend, wage, or education award. 93
 charge you. 43 roughly break even. The other 9 have shut down or paused.
 
 The priced ones cost more than most people expect. A postgraduate year at a
@@ -46,7 +46,7 @@ boarding school runs to $75,000. EF Gap Year is around $43,750. Verto is
 $33,500.
 
 Almost every category that gets sold to families has a paying equivalent.
-Conservation: 7 charge, 40 pay. Teaching abroad: 5 charge, 29 pay.
+Conservation: 8 charge, 40 pay. Teaching abroad: 5 charge, 29 pay.
 
 Outdoor and wilderness is the exception. 15 charge, 4 pay. If that's the year
 you want, you're probably going to pay for it. Seemed worth saying instead of
@@ -78,7 +78,7 @@ in one sub.
 Depends which one. The ones marketed hardest are the ones that charge. A
 postgraduate year at a boarding school runs to $75,000. EF is around $43,750.
 
-There are also about 230 that pay a stipend or wage instead. Conservation
+There are also about 232 that pay a stipend or wage instead. Conservation
 corps, AmeriCorps positions, teaching abroad. Same year, opposite cash flow.
 
 Worth working out which of those two you're actually shopping for first.

@@ -29,7 +29,7 @@ I run a free, non-commercial index of gap year and post-grad programs, and
 I think it fits the students your advisers work with.
 
 The gap year programs families hear about first are the expensive ones:
-EF Gap Year is around $43,750, and some run higher. But there are 230
+EF Gap Year is around $43,750, and some run higher. But there are 232
 programs still running that pay the participant a stipend, wage or education
 award: conservation corps, AmeriCorps positions, teaching programs abroad.
 For a first-generation student considering a year before college, that's

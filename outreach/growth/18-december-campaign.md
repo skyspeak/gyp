@@ -49,7 +49,7 @@ free things that might help:
    want in the plan:
    https://gyp-psi.vercel.app/deferral-letter?ref=dec-{{schoolcode}}
 
-2. An index that separates gap years that pay participants (230 still
+2. An index that separates gap years that pay participants (232 still
    running) from the ones that charge, some up to $75,000:
    https://gyp-psi.vercel.app/?ref=dec-{{schoolcode}}
 
@@ -65,7 +65,7 @@ Early decision results are out, and some students are about to ask whether
 they should take a year first.
 
 Worth knowing before that conversation: the gap year programs families hear
-about first are the ones that charge, some up to $75,000. There are 230 that
+about first are the ones that charge, some up to $75,000. There are 232 that
 pay a stipend, wage or education award instead: conservation corps,
 AmeriCorps, teaching abroad.
 

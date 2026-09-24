@@ -23,7 +23,7 @@ with a practicing counselor.
 **Description (for the program listing):**
 ```
 Families considering a gap year mostly hear about programs that charge,
-some up to $75,000. Yet 230 gap year and post-grad programs still running pay
+some up to $75,000. Yet 232 gap year and post-grad programs still running pay
 participants a stipend, wage or education award. This session gives
 counselors a practical way to talk about gap years with families across
 income levels: which kinds of year usually pay and which usually cost, how to
@@ -41,7 +41,7 @@ deferral. Participants leave with a checklist and a free deadline calendar.
 | Min | Section | Content |
 |---|---|---|
 | 0–5 | The question families ask | "Is a gap year worth it?" And why the answer depends on which door they walk through |
-| 5–15 | Priced vs paid | Category table: conservation 7 charge / 40 pay; teaching abroad 5 / 29; service 11 / 34; travel & study 44 / 31; outdoor 15 / 4 |
+| 5–15 | Priced vs paid | Category table: conservation 8 charge / 40 pay; teaching abroad 5 / 29; service 11 / 34; travel & study 47 / 32; outdoor 15 / 4 |
 | 15–25 | What things cost and pay | $75,000 PG year, $43,750 EF Gap Year; Teach For America $32,000–72,000; NIH IRTA $46,100–59,300 |
 | 25–33 | Programs that stopped | Payne terminated Feb 2025; Pickering and Rangel 2026 cycles postponed; Mitchell paused since Mar 2024. How to check any program in 2 minutes |
 | 33–40 | The deferral request | What a strong plan includes; walk through the template |

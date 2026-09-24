@@ -3,6 +3,10 @@
 Everything needed to run the first acquisition push. Copy is ready to send;
 the only work left is proofreading and filling in names.
 
+**Start at [`campaign/`](campaign/README.md)**: who we write to, in what
+order, through which channel, and the numbers every asset has to agree with.
+The files below are the ammunition it spends.
+
 | File | What it is |
 |---|---|
 | `emails.md` | Four adviser emails, reply snippets, listserv post, sending rules |
@@ -53,7 +57,7 @@ lower than it will look.
 
 - `RESEND_API_KEY` may be unset in production. If it is, people subscribe and
   never hear anything. Check `emailEnabled` at `/api/health` before sending.
-- 225 of 371 catalog rows are unverified bulk imports. None are cited in this
+- 225 of 372 catalog rows are unverified bulk imports. None are cited in this
   copy. The fellowships are hand-checked, since that is what this audience
   looks at first.
 - The closure list has no page. It lived at `/changes`, which was deleted, so

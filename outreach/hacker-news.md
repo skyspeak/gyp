@@ -18,7 +18,7 @@ Show HN: A gap year directory that takes no commissions, so it can say what clos
 Backups if you want a different angle:
 
 ```
-Show HN: I tracked 371 gap year programs; 8 have quietly shut down or paused
+Show HN: I tracked 372 gap year programs; 8 have quietly shut down or paused
 Show HN: Gap year programs sorted by whether they pay you or charge you
 ```
 
@@ -43,8 +43,8 @@ tell you an operator is in trouble. Nobody publishes closures.
 So the index takes no money from any program, in either direction, and the
 main thing it can do that the others can't is say what stopped running.
 
-371 programs. Of the ones still running, 230 pay a stipend, wage or
-education award. 89 charge you, and
+372 programs. Of the ones still running, 232 pay a stipend, wage or
+education award. 93 charge you, and
 the prices are higher than most people assume: a postgraduate year at a
 boarding school runs to $75,000, EF Gap Year around $43,750.
 
